@@ -36,3 +36,5 @@ yarn-error.*
 
 # idea
 .idea
+/ios/
+/android/

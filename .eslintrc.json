@@ -1,0 +1,42 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true,
+        "node": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "plugin:react-native/all"
+    ],
+    "parserOptions": {
+        "ecmaVersion": 2018,
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "jsx": true
+        }
+    },
+    "plugins": [
+        "react",
+        "react-native",
+        "react-hooks"
+    ],
+    "rules": {
+        "react-hooks/rules-of-hooks": "error",
+        "react-hooks/exhaustive-deps": "warn",
+        "react-native/no-unused-styles": "error",
+        "react-native/split-platform-components": "warn",
+        "react-native/no-inline-styles": "warn",
+        "react-native/no-color-literals": "warn",
+        "react-native/no-raw-text": "warn",
+        "indent": ["error", 2],
+        "linebreak-style": ["error", "unix"],
+        "quotes": ["error", "double"],
+        "semi": ["error", "always"]
+    },
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    }
+}
