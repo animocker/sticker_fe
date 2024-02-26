@@ -5,3 +5,9 @@ export interface Animation {
     type: string;
     element: string;
 }
+
+export interface Element {
+    id: number;
+    type: string;
+    idx_nbr: number;
+}

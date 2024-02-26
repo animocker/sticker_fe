@@ -1,22 +1,17 @@
-import {SQLiteDatabase} from "react-native-sqlite-storage";
+import {useSQLiteContext} from "expo-sqlite/next";
+import {Element} from "./model";
 
-export interface Element {
-    id: number;
-    type: string;
-    idx_nbr: number;
-}
+const db = useSQLiteContext()
 
-export const findByTypeAndIndexNumber = async (db: SQLiteDatabase, elementType: String, number: Number): Promise<Element> => {
+export const findByTypeAndIndexNumber =  (elementType: string, number: number): Element => {
     try {
-        console.log(db.dbname)
-        const results = await db.executeSql(`SELECT * FROM element WHERE type = ? AND idx_nbr = ?`, [elementType, number])
-        console.log(results)
-        if (results.length !== 1) {
-            console.log("findByTypeAndIndexNumber: No element found")
-            return null;
-        } else {
-            return results[0];
-        }
+        console.log(db)
+        const result = db.getFirstSync<Element>(
+            `SELECT * FROM element WHERE type = ? AND idx_nbr = ?`,
+            [elementType, number]
+        )
+        console.log(result)
+        return result
     } catch (error) {
         console.error(error)
         throw Error("Failed to get findByTypeAndIndexNumber from database")

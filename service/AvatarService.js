@@ -1,4 +1,3 @@
-import Database from "../db/Database";
 import jp from 'jsonpath';
 import {findByTypeAndIndexNumber} from "../db/elements";
 
