@@ -1,11 +1,17 @@
-import {useSQLiteContext} from "expo-sqlite/next";
-import {Element} from "./model";
+import db from "./db";
 
-const db = useSQLiteContext()
+export interface Element {
+    uuid: string;
+    type: string;
+    idx_nbr: number;
+    icon: String;
+}
 
-export const findByTypeAndIndexNumber =  (elementType: string, number: number): Element => {
+
+export const findByTypeAndIndexNumber = (elementType: string, number: number): Element => {
     try {
-        console.log(db)
+        console.log(elementType)
+        console.log(number)
         const result = db.getFirstSync<Element>(
             `SELECT * FROM element WHERE type = ? AND idx_nbr = ?`,
             [elementType, number]

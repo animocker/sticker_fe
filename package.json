@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@expo/metro-config": "^0.17.4",
+    "@lottiefiles/lottie-js": "^0.4.2",
     "@react-native/metro-config": "^0.73.5",
     "@react-navigation/native": "^6.1.12",
     "@react-navigation/native-stack": "^6.9.20",
