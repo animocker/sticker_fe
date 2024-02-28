@@ -1,5 +1,5 @@
 import {Element} from "./elements";
-import db from "./db";
+import {db} from "./db";
 
 export interface Animation {
     uuid: string;
