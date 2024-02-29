@@ -38,7 +38,7 @@ export default function App() {
   }
   );
   AvatarService.changeElement({elementType: ElementType.HAT, number: 2});
-  var lottie = AvatarService.getAnimation("HELLO");
+  const lottie = AvatarService.getAnimation("HELLO");
   return (
     <NavigationContainer>
       <Stack.Navigator

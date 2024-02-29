@@ -19,3 +19,8 @@ export enum ElementType {
     HEAD,
     BODY
 }
+
+export enum AnimationType {
+    IDLE = "IDLE",
+    HELLO = "HELLO"
+}

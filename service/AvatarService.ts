@@ -1,7 +1,7 @@
 import {findByTypeAndIndexNumber} from "../db/elements";
 import {findByTypeAndElement} from "../db/animations";
 import {Animation} from "@lottiefiles/lottie-js";
-import {ElementType} from "../db/enum";
+import {AnimationType, ElementType} from "../db/enum";
 
 class Avatar {
     private readonly elements: Map<ElementType, Element>;
@@ -23,9 +23,12 @@ class Avatar {
 
     changeElement(request) {
       const element = findByTypeAndIndexNumber(request.elementType, request.number);
+      console.log(element);
       if (element != null) {
         this.elements[request.elementType] = element;
       }
+
+      return this.getAnimation(AnimationType.IDLE);
     }
 
     transformToLottie(jsonArray: string[]): Record<string, any> {
@@ -52,9 +55,6 @@ class Avatar {
         .flatMap(json => json)
         .map(json => JSON.stringify(json));
       const lottieJson = this.transformToLottie(elementsArray);
-      Object.values(lottieJson).forEach(value => {
-        console.log(value["ind"]);
-      });
       return new Animation().fromJSON(lottieJson);
     }
 }
