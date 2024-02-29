@@ -6,6 +6,7 @@
     },
     "extends": [
         "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
         "plugin:react/recommended",
         "plugin:react-native/all"
     ],
@@ -14,12 +15,14 @@
         "sourceType": "module",
         "ecmaFeatures": {
             "jsx": true
-        }
+        },
+        "project": "./tsconfig.json"
     },
     "plugins": [
         "react",
         "react-native",
-        "react-hooks"
+        "react-hooks",
+        "@typescript-eslint"
     ],
     "rules": {
         "react-hooks/rules-of-hooks": "error",
@@ -29,6 +32,8 @@
         "react-native/no-inline-styles": "warn",
         "react-native/no-color-literals": "warn",
         "react-native/no-raw-text": "warn",
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/no-unused-vars": "warn",
         "indent": ["error", 2],
         "linebreak-style": ["error", "unix"],
         "quotes": ["error", "double"],
