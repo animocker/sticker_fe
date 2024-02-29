@@ -1,18 +1,22 @@
 import {findByTypeAndIndexNumber} from "../db/elements";
 import {findByTypeAndElement} from "../db/animations";
 import {Animation} from "@lottiefiles/lottie-js";
-import {AnimationType, ElementType} from "../db/enum";
+import {allElements, AnimationType, ElementType} from "../db/enum";
+import {Element} from "../db/elements";
 
 class Avatar {
-    private readonly elements: Map<ElementType, Element>;
+    private readonly elements: Map<string|ElementType, Element>;
 
     constructor() {
+      console.log("init");
       this.elements = new Map<ElementType, Element>();
-      Object.values(ElementType)
-        .filter(it => isNaN(Number(it)))
-        .forEach(elementType => {
-          this.changeElement({elementType: elementType, number: 1});
-        });
+      allElements.forEach(elementType => {
+        this.changeElement({elementType: elementType, number: 1});
+      });
+      //log elements
+      this.elements.forEach((element, type) => {
+        console.log("Type: " + type + " Element: " + element.idx_nbr);
+      });
     }
 
     addLottieBody(layersString: string) {
@@ -23,32 +27,22 @@ class Avatar {
 
     changeElement(request) {
       const element = findByTypeAndIndexNumber(request.elementType, request.number);
-      console.log(element);
       if (element != null) {
         this.elements[request.elementType] = element;
       }
-
-      return this.getAnimation(AnimationType.IDLE);
     }
 
     transformToLottie(jsonArray: string[]): Record<string, any> {
       const layers = jsonArray.sort((a, b) => {
-        //console.log("A: " + a)
         const aInd = JSON.parse(a)["ind"];
-        //console.log("B: " + b)
         const bInd = JSON.parse(b)["ind"];
-        console.log("Comparing " + aInd + " and " + bInd);
         return aInd - bInd;
       }).join(",");
       const lottieJson = this.addLottieBody(layers);
-      console.log(lottieJson);
-      const jsons = JSON.parse(lottieJson);
-      console.log("parsed");
-      return jsons;
+      return JSON.parse(lottieJson);
     }
 
-    getAnimation(animationType: string): Animation {
-
+    getAnimation(animationType: string | AnimationType): Animation {
       const elementsArray = Object.values(this.elements)
         .map(element => findByTypeAndElement(animationType, element))
         .map(animation => JSON.parse("[" + animation.value_array + "]"))

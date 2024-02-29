@@ -1,26 +1,32 @@
 //TODO add enum types for animation type and element type ??
+
+
 export enum ElementType {
-    HAT,
-    GLASSES,
-    HAIR,
-    EYEBROW,
-    EYE,
-    EAR,
-    NOUSE,
-    MOUSTACHE,
-    BEARD_PART,
-    BEARD_FULL,
-    JOWLS,
-    LIPS,
-    HAND,
-    COMMON,
-    UNDER_CLOTH,
-    CHIN,
-    HEAD,
-    BODY
+    HAT= "HAT",
+    GLASSES = "GLASSES",
+    HAIR = "HAIR",
+    EYEBROW = "EYEBROW",
+    EYE = "EYE",
+    EAR = "EAR",
+    NOUSE = "NOUSE",
+    MOUSTACHE = "MOUSTACHE",
+    BEARD_PART = "BEARD_PART",
+    BEARD_FULL = "BEARD_FULL",
+    JOWLS = "JOWLS",
+    LIPS = "LIPS",
+    HAND = "HAND",
+    COMMON = "COMMON",
+    UNDER_CLOTH = "UNDER_CLOTH",
+    CHIN = "CHIN",
+    HEAD = "HEAD",
+    BODY = "BODY"
 }
 
+export const allElements = Object.values(ElementType);
+
 export enum AnimationType {
-    IDLE = "IDLE",
-    HELLO = "HELLO"
+    IDLE= "IDLE",
+    HELLO = "HELLO",
 }
+
+export const allAnimations = Object.values(AnimationType);

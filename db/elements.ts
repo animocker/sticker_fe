@@ -5,18 +5,21 @@ export interface Element {
     uuid: string;
     type: string;
     idx_nbr: number;
-    icon: String;
+    icon: string;
 }
 
 
 export const findByTypeAndIndexNumber = (elementType: string | ElementType, number: number): Element => {
-    try {
-        return db.getFirstSync<Element>(
-            `SELECT * FROM element WHERE type = ? AND idx_nbr = ?`,
-            [elementType, number]
-        )
-    } catch (error) {
-        console.error(error)
-        throw Error("Failed to get findByTypeAndIndexNumber from database")
-    }
-}
+  try {
+    console.log("Requesting element: " + elementType + " " + number);//TODO in logs once Requesting element: undefined undefined why?
+    const result = db.getFirstSync<Element>(
+      "SELECT * FROM element WHERE type = ? AND idx_nbr = ?",
+      [elementType, number]
+    );
+    //console.log("Type: " + elementType + " Number: " + number + " Result: " + JSON.stringify(result));
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw Error("Failed to get findByTypeAndIndexNumber from database");
+  }
+};

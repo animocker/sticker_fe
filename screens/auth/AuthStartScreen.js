@@ -5,8 +5,8 @@ import LottieView from "lottie-react-native";
 import {ElementType} from "../../db/enum";
 
 const AuthStartScreen = ({ navigation }) => {
-  let lottie = AvatarService.getAnimation("IDLE");
-  lottie =   AvatarService.changeElement(lottie, ElementType.GLASSES, 2);
+  AvatarService.changeElement(ElementType.GLASSES, 2);
+  let lottie = AvatarService.getAnimation("STATIC");
 
   return (
     <View style={styles.container}>

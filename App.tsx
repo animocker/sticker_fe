@@ -1,12 +1,12 @@
-import {StyleSheet, View} from "react-native";
+import {StyleSheet,} from "react-native";
 import * as FileSystem from "expo-file-system";
 import {Asset} from "expo-asset";
 import React, {useEffect} from "react";
 import AvatarService from "./service/AvatarService";
-import {ElementType} from "./db/enum";
+import {AnimationType, ElementType} from "./db/enum";
 
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
+import {NavigationContainer} from "@react-navigation/native";
+import {createStackNavigator} from "@react-navigation/stack";
 import AuthStartScreen from "./screens/auth/AuthStartScreen";
 import AuthLegalScreen from "./screens/auth/AuthLegalScreen";
 import AuthLoginScreen from "./screens/auth/AuthLoginScreen";
@@ -38,7 +38,7 @@ export default function App() {
   }
   );
   AvatarService.changeElement({elementType: ElementType.HAT, number: 2});
-  const lottie = AvatarService.getAnimation("HELLO");
+  const lottie = AvatarService.getAnimation(AnimationType.IDLE);
   return (
     <NavigationContainer>
       <Stack.Navigator
