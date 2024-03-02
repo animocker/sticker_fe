@@ -1,25 +1,34 @@
 import React, { useState }  from "react";
 import { View, Button, StyleSheet, Text, TextInput } from "react-native";
+import Slider from "@react-native-community/slider";
 import { Picker } from "@react-native-picker/picker";
 import AvatarService from "../../service/AvatarService";
 import LottieView from "lottie-react-native";
 import {AnimationType, ElementType} from "../../db/enum";
+import NumberInput from "../../components/ui/NumberInput";
 
 const MainScreen = () => {
   const [selectedValue, setSelectedValue] = useState(ElementType.HAT);
   const [selectedAnimation, setSelectedAnimation] = useState(AnimationType.IDLE);
-  const [inputValue, setInputValue] = useState("");
-  const [lottie, setLottie] = useState(AvatarService.getAnimation(AnimationType.IDLE));
+  const [inputValue, setInputValue] = useState(1);
+  const [lottie, setLottie] = useState(AvatarService.getAnimation(selectedAnimation));
+  const [size, setSize] = useState(50);
 
   const changeElement = () => {
     AvatarService.changeElement({elementType: selectedValue, number: inputValue});
-    setLottie(AvatarService.getAnimation(AnimationType.IDLE));
+    setLottie(AvatarService.getAnimation(selectedAnimation));
   };
 
-  const changeAnimation = () => {
-    console.log(selectedAnimation);
+  const changeAnimation = (value) => {
+    setSelectedAnimation(value);
     AvatarService.getAnimation(selectedAnimation);
-    setLottie(AvatarService.getAnimation(AnimationType.IDLE));
+    setLottie(AvatarService.getAnimation(selectedAnimation));
+  };
+
+  const changeSize = (value) => {
+    setSize(value);
+    AvatarService.changeSize(value);
+    AvatarService.changeSize({size: value});
   };
 
   return (
@@ -37,12 +46,7 @@ const MainScreen = () => {
             <Picker.Item key={value} label={value} value={value} />
           ))}
         </Picker>
-        <TextInput
-          style={styles.input}
-          onChangeText={setInputValue}
-          value={inputValue}
-          placeholder="Enter text"
-        />
+        <NumberInput inputValue={inputValue} setInputValue={setInputValue} />
         <Button
           title="Change Element"
           onPress={changeElement}
@@ -52,15 +56,22 @@ const MainScreen = () => {
       <View style={styles.block}>
         <Picker
           selectedValue={selectedAnimation}
-          onValueChange={setSelectedAnimation}
+          onValueChange={changeAnimation}
         >
           {Object.values(AnimationType).map((value) => (
             <Picker.Item key={value} label={value} value={value} />
           ))}
         </Picker>
-        <Button
-          title="Change Animation"
-          onPress={changeAnimation}
+      </View>
+
+      <View style={styles.block}>
+        <Slider
+          style={styles.slider}
+          minimumValue={1}
+          maximumValue={100}
+          step={1}
+          value={size}
+          onValueChange={changeSize}
         />
       </View>
     </View>
@@ -89,6 +100,11 @@ const styles = StyleSheet.create({
   lottieContainer: {
     height: 200,
     width: 200
+  },
+  slider: {
+    height: 40,
+    marginTop: 10,
+    width: 200,
   }
 });
 

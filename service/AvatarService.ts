@@ -32,6 +32,14 @@ class Avatar {
       }
     }
 
+    changeSize(request) {
+      console.log(request);
+    }
+
+    changeColor(request) {
+      console.log(request);
+    }
+
     transformToLottie(jsonArray: string[]): Record<string, any> {
       const layers = jsonArray.sort((a, b) => {
         const aInd = JSON.parse(a)["ind"];
