@@ -13,6 +13,7 @@ import AuthLoginScreen from "./screens/auth/AuthLoginScreen";
 import OnboardingStartScreen from "./screens/onboarding/OnboardingStartScreen";
 import OnboardingSelfieScreen from "./screens/onboarding/OnboardingSelfieScreen";
 import OnboardingManualCreateCharacterScreen from "./screens/onboarding/OnboardingManualCreateCharacterScreen";
+import MainScreen from "./screens/main/MainScreen";
 
 const Stack = createStackNavigator();
 
@@ -42,7 +43,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="AuthStart"
+        initialRouteName="MainScreen"
       >
         <Stack.Screen name="AuthStart" component={AuthStartScreen} options={{ headerShown: false }}  />
         <Stack.Screen name="AuthLegal" component={AuthLegalScreen} />
@@ -50,6 +51,7 @@ export default function App() {
         <Stack.Screen name="OnboardingStart" component={OnboardingStartScreen} />
         <Stack.Screen name="OnboardingSelfie" component={OnboardingSelfieScreen} />
         <Stack.Screen name="OnboardingManualCreateCharacter" component={OnboardingManualCreateCharacterScreen} />
+        <Stack.Screen name="MainScreen" component={MainScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
