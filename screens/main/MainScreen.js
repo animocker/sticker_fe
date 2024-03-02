@@ -1,21 +1,23 @@
 import React, { useState }  from "react";
-import { View, Button, StyleSheet, Text, TextInput } from "react-native";
+import { View, Button, StyleSheet, ScrollView } from "react-native";
 import Slider from "@react-native-community/slider";
 import { Picker } from "@react-native-picker/picker";
 import AvatarService from "../../service/AvatarService";
 import LottieView from "lottie-react-native";
 import {AnimationType, ElementType} from "../../db/enum";
 import NumberInput from "../../components/ui/NumberInput";
+import ColorPicker from "react-native-wheel-color-picker";
 
 const MainScreen = () => {
-  const [selectedValue, setSelectedValue] = useState(ElementType.HAT);
+  const [selectedType, setSelectedType] = useState(ElementType.HAT);
   const [selectedAnimation, setSelectedAnimation] = useState(AnimationType.IDLE);
   const [inputValue, setInputValue] = useState(1);
   const [lottie, setLottie] = useState(AvatarService.getAnimation(selectedAnimation));
   const [size, setSize] = useState(50);
+  const [color, setColor] = useState("");
 
   const changeElement = () => {
-    AvatarService.changeElement({elementType: selectedValue, number: inputValue});
+    AvatarService.changeElement({elementType: selectedType, number: inputValue});
     setLottie(AvatarService.getAnimation(selectedAnimation));
   };
 
@@ -27,20 +29,26 @@ const MainScreen = () => {
 
   const changeSize = (value) => {
     setSize(value);
-    AvatarService.changeSize(value);
-    AvatarService.changeSize({size: value});
+    AvatarService.changeSize({elementType: selectedType, number: size});
+    setLottie(AvatarService.getAnimation(selectedAnimation));
+  };
+
+  const changeColor = (value) => {
+    setColor(value);
+    AvatarService.changeColor({elementType: selectedType, color});
+    setLottie(AvatarService.getAnimation(selectedAnimation));
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView>
       <View style={styles.lottieContainer}>
         <LottieView source={lottie} autoPlay loop  style={styles.lottie} />
       </View>
 
       <View style={styles.block}>
         <Picker
-          selectedValue={selectedValue}
-          onValueChange={setSelectedValue}
+          selectedValue={selectedType}
+          onValueChange={setSelectedType}
         >
           {Object.values(ElementType).map((value) => (
             <Picker.Item key={value} label={value} value={value} />
@@ -74,18 +82,20 @@ const MainScreen = () => {
           onValueChange={changeSize}
         />
       </View>
-    </View>
+      <View style={styles.block}>
+
+        <ColorPicker
+          color={color}
+          onColorChange={changeColor}
+        />
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   block: {
-    marginBottom: 60
-  },
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    paddingHorizontal: 10,
+    marginBottom: 40
   },
   input: {
     borderColor: "gray",
