@@ -16,7 +16,8 @@ const MainScreen = () => {
   const [size, setSize] = useState(50);
   const [color, setColor] = useState("");
 
-  const changeElement = () => {
+  const changeElement = (value) => {
+    setInputValue(value);
     AvatarService.changeElement({elementType: selectedType, number: inputValue});
     setLottie(AvatarService.getAnimation(selectedAnimation));
   };
@@ -54,11 +55,7 @@ const MainScreen = () => {
             <Picker.Item key={value} label={value} value={value} />
           ))}
         </Picker>
-        <NumberInput inputValue={inputValue} setInputValue={setInputValue} />
-        <Button
-          title="Change Element"
-          onPress={changeElement}
-        />
+        <NumberInput inputValue={inputValue} setInputValue={changeElement} />
       </View>
 
       <View style={styles.block}>
