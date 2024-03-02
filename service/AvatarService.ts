@@ -45,8 +45,7 @@ class Avatar {
     getAnimation(animationType: string | AnimationType): Animation {
       const elementsArray = Object.values(this.elements)
         .map(element => findByTypeAndElement(animationType, element))
-        .map(animation => JSON.parse("[" + animation.value_array + "]"))
-        .flatMap(json => json)
+        .flatMap(animation => JSON.parse("[" + animation.value_array + "]"))
         .map(json => JSON.stringify(json));
       const lottieJson = this.transformToLottie(elementsArray);
       return new Animation().fromJSON(lottieJson);

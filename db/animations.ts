@@ -11,12 +11,10 @@ export interface Animation {
 export const findByTypeAndElement = (animationType: string | AnimationType, value: Element): Animation => {
   try {
     console.log("Requesting animation: " + animationType + " " + value.type + ":" + value.idx_nbr);
-    const result = db.getFirstSync<Animation>(
+    return db.getFirstSync<Animation>(
       "SELECT * FROM animation WHERE type = ? AND el_uuid = ?",
       [animationType, value.uuid]
     );
-    //console.log("Type: " + animationType + " Element: " + value.type + ":" +value.idx_nbr + " Result: " + result.value_array);
-    return result;
   } catch (error) {
     console.error(error);
     throw Error("Failed to get findByTypeAndElement from database");
