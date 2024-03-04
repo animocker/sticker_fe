@@ -13,25 +13,23 @@ const MainScreen = () => {
   const [selectedAnimation, setSelectedAnimation] = useState(AnimationType.IDLE);
   const [inputValue, setInputValue] = useState(1);
   const [lottie, setLottie] = useState(AvatarService.getAnimation(selectedAnimation));
-  const [size, setSize] = useState(50);
+  const [size, setSize] = useState(0);
   const [color, setColor] = useState("");
 
   const changeElement = (value) => {
     setInputValue(value);
     AvatarService.changeElement({elementType: selectedType, number: inputValue});
-    setLottie(AvatarService.getAnimation(selectedAnimation));
   };
 
   const changeAnimation = (value) => {
     setSelectedAnimation(value);
-    AvatarService.getAnimation(selectedAnimation);
     setLottie(AvatarService.getAnimation(selectedAnimation));
   };
 
   const changeSize = (value) => {
     setSize(value);
-    AvatarService.changeSize({elementType: selectedType, number: size});
-    setLottie(AvatarService.getAnimation(selectedAnimation));
+    let lottie = AvatarService.changeSize({elementType: selectedType, changeSizePercent: size});
+    setLottie(lottie);
   };
 
   const changeColor = (value) => {
@@ -72,8 +70,8 @@ const MainScreen = () => {
       <View style={styles.block}>
         <Slider
           style={styles.slider}
-          minimumValue={1}
-          maximumValue={100}
+          minimumValue={-50}
+          maximumValue={50}
           step={1}
           value={size}
           onValueChange={changeSize}
