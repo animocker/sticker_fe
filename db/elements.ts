@@ -21,3 +21,15 @@ export const findByTypeAndIndexNumber = (elementType: string | ElementType, numb
     throw Error("Failed to get findByTypeAndIndexNumber from database");
   }
 };
+
+export const findByType = (elementType: string | ElementType): Element[] => {
+  try {
+    return db.getAllSync<Element>(
+      "SELECT * FROM element WHERE type = ?",
+      [elementType]
+    );
+  } catch (error) {
+    console.error(error);
+    throw Error("Failed to get findByTypeAndIndexNumber from database");
+  }
+};

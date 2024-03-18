@@ -14,6 +14,7 @@ import OnboardingStartScreen from "./screens/onboarding/OnboardingStartScreen";
 import OnboardingSelfieScreen from "./screens/onboarding/OnboardingSelfieScreen";
 import OnboardingManualCreateCharacterScreen from "./screens/onboarding/OnboardingManualCreateCharacterScreen";
 import MainScreen from "./screens/main/MainScreen";
+import {ConstructorScreen} from "./screens/constructor/ConstructorScreen";
 
 const Stack = createStackNavigator();
 
@@ -52,6 +53,7 @@ export default function App() {
         <Stack.Screen name="OnboardingSelfie" component={OnboardingSelfieScreen} />
         <Stack.Screen name="OnboardingManualCreateCharacter" component={OnboardingManualCreateCharacterScreen} />
         <Stack.Screen name="MainScreen" component={MainScreen} />
+        <Stack.Screen name="ConstructorScreen" component={ConstructorScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
