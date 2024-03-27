@@ -1,4 +1,4 @@
-import {Element, findByTypeAndIndexNumber} from "../db/elements";
+import {Element, findByTypeAndIndexNumber, findByType} from "../db/elements";
 import {findByTypeAndElement} from "../db/animations";
 import {Animation, Property} from "@lottiefiles/lottie-js";
 import {allElements, AnimationType, ElementType} from "../db/enum";
@@ -75,6 +75,7 @@ class Avatar {
       this.animation = new Animation().fromJSON(lottieJson);
       return this.animation;
     }
+
 }
 
 export default new Avatar();
