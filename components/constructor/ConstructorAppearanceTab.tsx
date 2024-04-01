@@ -1,50 +1,67 @@
-import React, { useState }  from "react";
-import {StyleSheet, Dimensions, View, Text, Button} from "react-native";
+import React, { useState, useRef, useEffect }  from "react";
+import {StyleSheet, Dimensions, View, Text, Button, PanResponder, Animated} from "react-native";
 import LottieView from "lottie-react-native";
 import AvatarService from "../../service/AvatarService";
 import {AnimationType, ElementType} from "../../db/enum";
 import {findByType} from "../../db/elements";
-import { SvgUri } from "react-native-svg";
+import Svg, { Circle, Rect } from "react-native-svg";
+import { SvgXml } from "react-native-svg";
+
 export const ConstructorAppearanceTab = () => {
   const [selectedAnimation, setSelectedAnimation] = useState(AnimationType.IDLE);
   const [lottie, setLottie] = useState(AvatarService.getAnimation(selectedAnimation));
   const [settingsHat, sesSettingsHat] = useState(findByType(ElementType.HAT));
+  const [isFullMenuView, setIsFullMenuView] = useState(true);
+  const menuHeight = useRef(new Animated.Value(300)).current; // Initial height
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: () => true,
+      onPanResponderRelease: (evt, gestureState) => {
+        if (gestureState.dy > 0) {
+          setIsFullMenuView(false);
+          Animated.timing(menuHeight, {
+            toValue: 150,
+            duration: 500,
+            useNativeDriver: false,
+          }).start();
+        } else if (gestureState.dy < 0) {
+          setIsFullMenuView(true);
+          Animated.timing(menuHeight, {
+            toValue: 300,
+            duration: 500,
+            useNativeDriver: false,
+          }).start();
+        }
+      }
+    }),
+  ).current;
 
   return (
-    <View>
-      <View style={styles.lottieContainer}>
-        <LottieView source={lottie} autoPlay style={styles.lottie} />
+    <View style={styles.container}>
+      <View style={styles.content}>
+        <Text>tab</Text>
       </View>
-      {settingsHat.slice(0, 4).map((hat, index) => (
-        <Button
-          key={index}
-          title={`${hat.icon}`}
-          onPress={() => console.log(`Button ${index + 1} pressed`)}
-        >
-          <SvgUri width="50" height="50" uri={hat.icon} />
-        </Button>
-      ))}
+      <Animated.View
+        {...panResponder.panHandlers}
+        style={[styles.menu, { height: menuHeight }]}
+      />
     </View>
 
   );
 };
 
 const styles = StyleSheet.create({
-  lottie: {
-    height: 300,
-    overflow: "hidden",
-    transform: [
-      { scale: 2 },
-      {translateY: 35}
-    ],
-    width: Dimensions.get("window").width * 0.7
+  container: {
+    flex: 1,
+    flexDirection: "column",
+    height: "100%"
   },
-  lottieContainer: {
-    alignSelf: "center",
-    borderColor: "blue",
-    borderWidth: 2,
-    height: 300,
-    overflow: "hidden",
-    width: Dimensions.get("window").width * 0.7,
+  content: {
+    flexGrow: 1,
+  },
+  menu: {
+    backgroundColor: "blue",
+    width: "100%",
   },
 });

@@ -11,7 +11,7 @@ export interface Element {
 
 export const findByTypeAndIndexNumber = (elementType: string | ElementType, number: number): Element => {
   try {
-    console.log("Requesting element: " + elementType + " " + number);//TODO in logs once Requesting element: undefined undefined why?
+    // console.log("Requesting element: " + elementType + " " + number);//TODO in logs once Requesting element: undefined undefined why?
     return db.getFirstSync<Element>(
       "SELECT * FROM element WHERE type = ? AND idx_nbr = ?",
       [elementType, number]

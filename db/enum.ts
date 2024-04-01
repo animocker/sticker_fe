@@ -8,7 +8,7 @@ export enum ElementType {
     EYEBROW = "EYEBROW",
     EYE = "EYE",
     EAR = "EAR",
-    NOUSE = "NOUSE",
+    NOSE = "NOSE",
     MOUSTACHE = "MOUSTACHE",
     BEARD_PART = "BEARD_PART",
     BEARD_FULL = "BEARD_FULL",

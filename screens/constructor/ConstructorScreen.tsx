@@ -4,8 +4,6 @@ import { TabView, SceneMap } from "react-native-tab-view";
 import {ConstructorAppearanceTab} from "../../components/constructor/ConstructorAppearanceTab";
 import {ConstructorClothTab} from "../../components/constructor/ConstructorClothTab";
 
-
-
 export const ConstructorScreen = () => {
   const [index, setIndex] = useState(0);
   const [routes] = useState([
