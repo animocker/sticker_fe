@@ -21,6 +21,7 @@ export const ConstructorScreen = () => {
       navigationState={{ index, routes }}
       renderScene={renderScene}
       onIndexChange={setIndex}
+      swipeEnabled={false}
     />
   );
 };
