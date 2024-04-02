@@ -40,3 +40,4 @@ yarn-error.*
 .idea
 /ios/
 /android/
+/.env

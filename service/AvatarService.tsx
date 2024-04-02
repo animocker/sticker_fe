@@ -66,12 +66,12 @@ class Avatar {
       return JSON.parse(lottieJson);
     }
 
-    getAnimation(animationType: string | AnimationType): Animation {
-      const elementsArray = Object.values(this.elements)
-        .map(element => findByTypeAndElement(animationType, element))
-        .flatMap(animation => JSON.parse("[" + animation.value_array + "]"))
-        .map(json => JSON.stringify(json));
-      const lottieJson = this.transformToLottie(elementsArray);
+    async getAnimation(animationType: string | AnimationType): Promise<Animation> {
+      const elementsArray = await Promise.all(
+        Object.values(this.elements).map(async element => await findByTypeAndElement(animationType, element))
+      );
+      const flat = elementsArray.flat();
+      const lottieJson = this.transformToLottie(flat);
       this.animation = new Animation().fromJSON(lottieJson);
       return this.animation;
     }
