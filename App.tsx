@@ -3,7 +3,7 @@ import * as FileSystem from "expo-file-system";
 import {Asset} from "expo-asset";
 import React, {useEffect} from "react";
 import AvatarService from "./service/AvatarService";
-import {AnimationType, ElementType} from "./db/enum";
+import {AnimationType, ElementType} from "./types/enum";
 
 import {NavigationContainer} from "@react-navigation/native";
 import {createStackNavigator} from "@react-navigation/stack";

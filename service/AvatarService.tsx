@@ -1,19 +1,20 @@
-import {Element, findByTypeAndIndexNumber, findByType} from "../db/elements";
-import {findByTypeAndElement} from "../db/animations";
-import {Animation, Property} from "@lottiefiles/lottie-js";
-import {allElements, AnimationType, ElementType} from "../db/enum";
+import { findByTypeAndIndexNumber} from "./elements";
+import {findByTypeAndElement} from "./animations";
+import {Animation} from "@lottiefiles/lottie-js";
+import {allElements, AnimationType, ElementType} from "../types/enum";
+import {ElementEntity} from "../types/table.types";
 
 class Avatar {
-    private readonly elements  = new Map<ElementType, Element>();
+    private readonly elements  = new Map<ElementType, ElementEntity>();
     private readonly elementSize  = new Map<ElementType, number>();
     private animation: Animation
 
     constructor() {
       console.log("init");
-      allElements.forEach(elementType => {
-        this.changeElementWithoutAnimation({elementType: elementType, number: 1});
+      Promise.all(allElements.map(async elementType => {
         this.elementSize[elementType] = 0;
-      });
+        this.elements[elementType] = await findByTypeAndIndexNumber(elementType, 1);
+      }));
     }
 
     private addLottieBody(layersString: string) {
@@ -28,13 +29,10 @@ class Avatar {
     }
 
     private changeElementWithoutAnimation(request) {
-      const element = findByTypeAndIndexNumber(request.elementType, request.number);
-      if (element != null) {
-        this.elements[request.elementType] = element;
-      }
+      findByTypeAndIndexNumber(request.elementType, request.number);
     }
 
-    //$[layer.ind].ks.s.k [width,height, ???]
+    //$[layer.ind].ks.s.k=[width,height, ???]
     changeSize(request): Animation {      //TODO animation changes when size changed, need to fix it
       this.elementSize[request.elementType] = request.changeSizePercent;
       const elementNumber = this.elements[request.elementType].idx_nbr;
