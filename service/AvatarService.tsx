@@ -3,18 +3,23 @@ import {findByTypeAndElement} from "./animations";
 import {Animation} from "@lottiefiles/lottie-js";
 import {allElements, AnimationType, ElementType} from "../types/enum";
 import {ElementEntity} from "../types/table.types";
+import {resolve} from "react-native-svg/lib/typescript/lib/resolve";
 
 class Avatar {
-    private readonly elements  = new Map<ElementType, ElementEntity>();
+    private readonly elements  = new Map<ElementType, Promise<ElementEntity>>();
     private readonly elementSize  = new Map<ElementType, number>();
     private animation: Animation
 
     constructor() {
       console.log("init");
-      Promise.all(allElements.map(async elementType => {
+      this.init();
+    }
+
+    private init(): Promise<ElementEntity>[] {
+      return  allElements.map(elementType => {
         this.elementSize[elementType] = 0;
-        this.elements[elementType] = await findByTypeAndIndexNumber(elementType, 1);
-      }));
+        return this.changeElementWithoutAnimation({elementType, number: 1});
+      });
     }
 
     private addLottieBody(layersString: string) {
@@ -29,13 +34,14 @@ class Avatar {
     }
 
     private changeElementWithoutAnimation(request) {
-      findByTypeAndIndexNumber(request.elementType, request.number);
+      this.elements.set(request.elementType, findByTypeAndIndexNumber(request.elementType, request.number));
+      return this.elements.get(request.elementType);
     }
 
     //$[layer.ind].ks.s.k=[width,height, ???]
-    changeSize(request): Animation {      //TODO animation changes when size changed, need to fix it
-      this.elementSize[request.elementType] = request.changeSizePercent;
-      const elementNumber = this.elements[request.elementType].idx_nbr;
+    async changeSize(request): Promise<Animation> {      //TODO animation changes when size changed, need to fix it
+      this.elementSize.set(request.elementType, request.changeSizePercent);
+      const elementNumber = (await this.elements.get(request.elementType)).idx_nbr;
       const searchedLayerName =`${request.elementType}_${elementNumber}`;
       const layer = this.animation.layers.find(layer => layer.name.toUpperCase().startsWith(searchedLayerName));
       const scale = layer.transform.scale.toJSON();
@@ -65,15 +71,24 @@ class Avatar {
     }
 
     async getAnimation(animationType: string | AnimationType): Promise<Animation> {
-      const elementsArray = await Promise.all(
-        Object.values(this.elements).map(async element => await findByTypeAndElement(animationType, element))
-      );
+      await Promise.all(this.init());
+      console.log("Requesting animation: " + animationType);
+      console.log(this.elements.values());
+      const animationPromises =  Array.from(this.elements.values())
+        .map(element => element.then(it => findByTypeAndElement(animationType, it)));
+      const elementsArray = await Promise.all(animationPromises);
       const flat = elementsArray.flat();
-      const lottieJson = this.transformToLottie(flat);
-      this.animation = new Animation().fromJSON(lottieJson);
-      return this.animation;
+      return new Promise(resolve => {
+        const lottieJson = this.transformToLottie(flat);
+        this.animation = new Animation().fromJSON(lottieJson);
+        console.log("Lottie json: " + JSON.stringify(lottieJson));
+        console.log("Animation: " + this.animation.layers);
+        resolve(this.animation);
+      });
     }
 
 }
 
-export default new Avatar();
+const instance = Object.freeze(new Avatar());
+
+export default instance;

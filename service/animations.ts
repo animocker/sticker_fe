@@ -4,14 +4,12 @@ import {supabase} from "./supabase";
 
 export const findByTypeAndElement = async (animationType: string | AnimationType, value: ElementEntity): Promise<string[]> => {
   console.log("Requesting animation: " + animationType + " " + value.type + ":" + value.idx_nbr);
-  const response = await supabase.from("animation")
+  return supabase.from("animation")
     .select("value_array")
     .eq("type", animationType)
     .eq("el_uuid", value.uuid)
     .limit(1)
-    .single<string[]>();
-  if (response.error) {
-    throw Error(response.error.message);
-  }
-  return response.data;
+    .single()
+    .throwOnError()
+    .then(it => it.data.value_array);
 };

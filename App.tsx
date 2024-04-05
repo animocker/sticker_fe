@@ -39,8 +39,6 @@ export default function App() {
     loadDatabase().then(() => console.log("Database loaded")).catch((e) => console.error(e));
   }
   );
-  AvatarService.changeElement({elementType: ElementType.HAT, number: 2});
-  const lottie = AvatarService.getAnimation(AnimationType.IDLE);
   return (
     <NavigationContainer>
       <Stack.Navigator

@@ -9,7 +9,7 @@ import NumberInput from "../../components/ui/NumberInput";
 import ColorPicker from "react-native-wheel-color-picker";
 import { CharacterPicker } from "../../components/characters/CharacterPicker";
 import { useNavigation } from "@react-navigation/native";
-
+import { Animation } from "@lottiefiles/lottie-js";
 const MainScreen = () => {
   const navigation = useNavigation();
 
@@ -19,10 +19,6 @@ const MainScreen = () => {
   const [lottie, setLottie] = useState<Animation>();
   const [size, setSize] = useState(0);
   const [color, setColor] = useState("");
-
-  useEffect(() => {
-    AvatarService.getAnimation(selectedAnimation).then(animation => setLottie(animation));
-  });
 
   const changeElement = (value) => {
     setInputValue(value);
