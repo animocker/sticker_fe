@@ -2,7 +2,7 @@ import React from "react";
 import {View, Text, ScrollView, TouchableOpacity, StyleSheet} from "react-native";
 import { SvgXml } from "react-native-svg";
 import { SETTINGS_CLOTH } from "./types";
-import {ICONS_CLOTH} from "./icons";
+import {ICONS_CLOTH} from "./icons/icons_element_menu";
 
 export const ConstructorClothMenu = () => {
   const buttonTitles = Object.values(SETTINGS_CLOTH);
