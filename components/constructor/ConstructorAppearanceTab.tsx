@@ -2,14 +2,14 @@ import React, { useState }  from "react";
 import {StyleSheet, Dimensions, View, Text} from "react-native";
 import AvatarService from "../../service/AvatarService";
 import {AnimationType, ElementType} from "../../types/enum";
-import {findByType} from "../../service/elements";
+import {findElementsByType} from "../../service/elements";
 import {SwipablePanel} from "../ui/SwipablePanel";
 import {ConstructorAppearanceMenu} from "./ConstructorAppearanceMenu";
 
 export const ConstructorAppearanceTab = () => {
   const [selectedAnimation, setSelectedAnimation] = useState(AnimationType.IDLE);
   const [lottie, setLottie] = useState(AvatarService.getAnimation(selectedAnimation));
-  const [settingsHat, sesSettingsHat] = useState(findByType(ElementType.HAT));
+  const [settingsHat, sesSettingsHat] = useState(findElementsByType(ElementType.HAT));
 
   return (
     <View style={styles.container}>

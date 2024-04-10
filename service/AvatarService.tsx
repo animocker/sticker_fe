@@ -1,16 +1,17 @@
-import { findByTypeAndIndexNumber} from "./elements";
-import {findByTypeAndElement, findByTypeAndElements} from "./animations";
-import {Animation} from "@lottiefiles/lottie-js";
+import {findElementByTypeAndIndexNumber} from "./elements";
+import {Animation, Layer, ShapeLayer} from "@lottiefiles/lottie-js";
 import {allElements, AnimationType, ElementType} from "../types/enum";
-import {ElementEntity} from "../types/table.types";
-import {resolve} from "react-native-svg/lib/typescript/lib/resolve";
-import {ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand} from "./command-queue/Command";
+import {ChangeColorCommand, ChangeSizeCommand} from "./command-queue/Command";
+import {findAnimationByTypeAndElements} from "./animations";
 
 class State {
     readonly elements  = new Map<ElementType, number>();
     readonly elementSize  = new Map<ElementType, number>();
 
     equals(other: State): boolean {
+      if (other === undefined) {
+        return false;
+      }
       other.elements.forEach((value, key) => {
         if (this.elements.get(key) !== value) {
           return false;
@@ -31,11 +32,6 @@ class Avatar {
     private animation: Animation;
 
     constructor() {
-      console.log("init");
-      this.init();
-    }
-
-    private init(){
       allElements.map(elementType => {
         this.state.elementSize[elementType] = 0;
         return this.changeElement({elementType, number: 1});
@@ -53,7 +49,7 @@ class Avatar {
     }
 
     //$[layer.ind].ks.s.k=[width,height, ???]
-    changeSize(request: ChangeSizeCommand){      //TODO animation changes when size changed, need to fix it
+    changeSize(request: ChangeSizeCommand){
       this.state.elementSize.set(request.elementType, request.sizePercent);
     }
 
@@ -92,23 +88,22 @@ class Avatar {
     }
 
     async getAnimation(animationType: string | AnimationType): Promise<Animation> {
-      if (this.lastState.equals(this.state)) {
+      if (this.state.equals(this.lastState)) {
         return this.animation;
       }
       console.log("Requesting animation: " + animationType);
-      console.log(this.elements.values());
-      const animationPromises =  Array.from(this.elements.values())
-        .map(element => element.then(it => findByTypeAndElements(animationType, it)));
-      const elementsArray = await Promise.all(animationPromises);
-      const flat = elementsArray.flat();
-      const lottieJson = this.transformToLottie(flat);
+      const promises: Promise<string[]>[] = [];
+      for (const [key, value] of this.state.elements) {
+        const promise =  findElementByTypeAndIndexNumber(key, value)
+          .then(element => findAnimationByTypeAndElements(animationType, element));
+        promises.push(promise);
+      }
+      const layers = (await Promise.all(promises)).flat();
+      const lottieJson = this.transformToLottie(layers.flat());
       this.animation = new Animation().fromJSON(lottieJson);
-      console.log("Lottie json: " + JSON.stringify(lottieJson));
-      console.log("Animation: " + this.animation.layers);
+      this.lastState = this.state;
       return this.animation;
     }
 }
 
-const instance = Object.freeze(new Avatar());
-
-export default instance;
+export default new Avatar();

@@ -2,7 +2,7 @@ import {ElementType} from "../types/enum";
 import {ElementEntity} from "../types/table.types";
 import {supabase} from "./supabase";
 
-export const findByTypeAndIndexNumber = async (elementType: string | ElementType, number: number): Promise<ElementEntity[]> => {
+export const findElementByTypeAndIndexNumber = async (elementType: string | ElementType, number: number): Promise<ElementEntity[]> => {
 
   console.log("Requesting element: " + elementType + " " + number);//TODO in logs once Requesting element: undefined undefined why?
   return supabase.from("element")
@@ -10,12 +10,11 @@ export const findByTypeAndIndexNumber = async (elementType: string | ElementType
     .eq("type", elementType)
     .eq("idx_nbr", number)
     .in("gender", ["MALE", "UNISEX"]) //TODO change to variable
-    .limit(1)
     .throwOnError()
     .then(it => it.data);
 };
 
-export const findByType = async (elementType: string | ElementType): Promise<ElementEntity[]> => {
+export const findElementsByType = async (elementType: string | ElementType): Promise<ElementEntity[]> => {
   return  supabase.from("element")
     .select()
     .eq("type", elementType)
