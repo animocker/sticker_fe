@@ -33,7 +33,7 @@ export const ConstructorHair = ({ changeElement }) => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {HAIR_SETTINGS.map((item, index) => (
-        <TouchableOpacity key={index} style={styles.button} onPress={() => changeElement(ElementType.HAIR, index)}>
+        <TouchableOpacity key={index} style={styles.button} onPress={() => changeElement(ElementType.HAIR, index + 1)}>
           {item.icon}
         </TouchableOpacity>
       ))}

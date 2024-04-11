@@ -107,12 +107,13 @@ class Avatar {
     const promises: Promise<string[]>[] = [];
     for (const [key, value] of this.state.elements) {
       const promise =  findElementByTypeAndIndexNumber(key, value)
-          .then(element => findAnimationByTypeAndElements(animationType, element));
+        .then(element => findAnimationByTypeAndElements(animationType, element));
       promises.push(promise);
     }
     const layers = (await Promise.all(promises)).flat();
     const lottieJson = this.transformToLottie(layers.flat());
     this.animation = new Animation().fromJSON(lottieJson);
+    this.changeElementsSize();
     this.lastState = this.state.copy();
     return this.animation;
   }

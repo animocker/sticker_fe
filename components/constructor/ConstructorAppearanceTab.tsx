@@ -22,8 +22,6 @@ export const ConstructorAppearanceTab = () => {
     const request = {elementType, number} as ChangeElementCommand;
     AvatarService.changeElement(request);
     AvatarService.getAnimation(selectedAnimation).then(animation => {
-      console.log(animation);
-
       animationRef.current?.pause();
       setLottie(animation);
       animationRef.current?.play();
@@ -34,6 +32,21 @@ export const ConstructorAppearanceTab = () => {
     });
   };
 
+  const changeSize = (elementType, changeSizePercent) => {
+    console.log(elementType);
+    console.log(changeSizePercent);
+    // AvatarService.changeSize({elementType, changeSizePercent});
+    // AvatarService.getAnimation(selectedAnimation).then(animation => {
+    //   animationRef.current?.pause();
+    //   setLottie(animation);
+    //   animationRef.current?.play();
+    //
+    //   setTimeout(() => {
+    //     animationRef.current?.play();
+    //   }, 100);
+    // });
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.lottieContainer}>
@@ -41,7 +54,7 @@ export const ConstructorAppearanceTab = () => {
       </View>
       <View>
         <SwipablePanel>
-          <ConstructorAppearanceMenu changeElement={changeElement} />
+          <ConstructorAppearanceMenu changeElement={changeElement} changeSize={changeSize} />
         </SwipablePanel>
       </View>
     </View>
