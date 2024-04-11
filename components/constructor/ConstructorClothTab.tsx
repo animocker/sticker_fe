@@ -2,7 +2,7 @@ import React, { useState }  from "react";
 import {StyleSheet, Dimensions, View, Text, Button} from "react-native";
 import LottieView from "lottie-react-native";
 import AvatarService from "../../service/AvatarService";
-import {AnimationType} from "../../db/enum";
+import {AnimationType} from "../../types/enum";
 import {SwipablePanel} from "../ui/SwipablePanel";
 import {ConstructorClothMenu} from "./ConstructorClothMenu";
 

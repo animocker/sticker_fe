@@ -3,7 +3,7 @@ import * as FileSystem from "expo-file-system";
 import {Asset} from "expo-asset";
 import React, {useEffect} from "react";
 import AvatarService from "./service/AvatarService";
-import {AnimationType, ElementType} from "./db/enum";
+import {AnimationType, ElementType} from "./types/enum";
 
 import {NavigationContainer} from "@react-navigation/native";
 import {createStackNavigator} from "@react-navigation/stack";
@@ -39,8 +39,6 @@ export default function App() {
     loadDatabase().then(() => console.log("Database loaded")).catch((e) => console.error(e));
   }
   );
-  AvatarService.changeElement({elementType: ElementType.HAT, number: 2});
-  const lottie = AvatarService.getAnimation(AnimationType.IDLE);
   return (
     <NavigationContainer>
       <Stack.Navigator
