@@ -34,14 +34,34 @@ class State {
       newState.elementSize.set(key, value);
     });
     return newState;
+  }
 
+  getDifference(other: State): State {
+    if (other === undefined) {
+      return this;
+    }
+    const newState = new State();
+    this.elements.forEach((value, key) => {
+      if (value !== other.elements.get(key)) {
+        newState.elements.set(key, value);
+      }
+    });
+    this.elementSize.forEach((value, key) => {
+      if (value !== other.elementSize.get(key)) {
+        newState.elementSize.set(key, value);
+      }
+    });
+    return newState;
   }
 }
+const BASIC_LOTTIE_BODY = "{\"v\":\"5.9.0\",\"fr\":30,\"ip\":0,\"op\":90,\"w\":430,\"h\":430,\"nm\":\"avatar\",\"ddd\":0,\"assets\":[],\"layers\":[]}";
 
 class Avatar {
-  private state : State = new State();
+  private readonly state : State = new State();
   private lastState : State;
+  private readonly layersIndexes = new Map<ElementType, number[]>();
   private animation: Animation;
+
 
   constructor() {
     allElements.map(elementType => {
@@ -50,11 +70,15 @@ class Avatar {
     });
   }
 
+
   private addLottieBody(layersString: string) {
     const LOTTIE_BODY = "{\"v\":\"5.9.0\",\"fr\":30,\"ip\":0,\"op\":90,\"w\":430,\"h\":430,\"nm\":\"avatar\",\"ddd\":0,\"assets\":[],{layersSpot}}";
     return LOTTIE_BODY.replace("{layersSpot}", `"layers": [${layersString}]`);
   }
 
+  private getEmptyAnimation(): Animation {
+    return new Animation().fromJSON(JSON.parse(BASIC_LOTTIE_BODY));
+  }
 
   changeElement(request) {
     this.state.elements.set(request.elementType, request.number);
@@ -66,7 +90,8 @@ class Avatar {
   }
 
   private changeElementsSize() {
-    this.state.elementSize.forEach((elementSize, elementType) => {
+    const stateDifference = this.state.getDifference(this.lastState);
+    stateDifference.elementSize.forEach((elementSize, elementType) => {
       if (elementSize === 0) {
         return;
       }
@@ -90,32 +115,71 @@ class Avatar {
   }
 
   private transformToLottie(jsonArray: string[]): Record<string, any> {
-    const layers = jsonArray.sort((a, b) => {
-      const aInd = JSON.parse(a)["ind"];
-      const bInd = JSON.parse(b)["ind"];
-      return aInd - bInd;
-    }).join(",");
+    const start = Date.now();
+
+    // Extract the 'ind' value from the JSON strings using a regular expression
+    const parsedArray = jsonArray.map(str => {
+      const match = str.match(/"ind":(\d+)/);
+      const ind = match ? Number(match[1]) : 0;
+      return { str, ind };
+    });
+
+    // Sort the array using the extracted 'ind' values
+    parsedArray.sort((a, b) => a.ind - b.ind);
+
+    // Join the original strings of the sorted array
+    const layers = parsedArray.map(item => item.str).join(",");
+
     const lottieJson = this.addLottieBody(layers);
-    return JSON.parse(lottieJson);
+    const result = JSON.parse(lottieJson);
+
+    const timeTaken = Date.now() - start;
+    console.log("Transform to lottie took: " + timeTaken + "ms");
+
+    return result;
   }
 
   async getAnimation(animationType: string | AnimationType): Promise<Animation> {
+    const globalStart = Date.now();
     if (this.state.equals(this.lastState)) {
       return this.animation;
     }
+    const stateDifference = this.state.getDifference(this.lastState);
     console.log("Requesting animation: " + animationType);
     const promises: Promise<string[]>[] = [];
-    for (const [key, value] of this.state.elements) {
+    for (const [key, value] of stateDifference.elements) {
       const promise =  findElementByTypeAndIndexNumber(key, value)
-          .then(element => findAnimationByTypeAndElements(animationType, element));
+        .then(element => findAnimationByTypeAndElements(animationType, element));
       promises.push(promise);
     }
+    let start = Date.now();
     const layers = (await Promise.all(promises)).flat();
+    let timeTaken = Date.now() - start;
+    console.log("Request took: " + timeTaken + "ms");
+    const isFirstRequest = this.lastState === undefined;
+    start = Date.now();
+    if (!isFirstRequest) { //if it's not first request, update required layers, otherwise keep all
+      const changedTypes = Array.from(stateDifference.elements.keys()).map(it => it.toLowerCase());
+      const layersToKeep= this.animation.layers
+        .filter(layer => !changedTypes.includes(layer.name.split("_")[0].toLowerCase()))
+        .map(layer => layer.toJSON())
+        .map(layer => JSON.stringify(layer));
+      layers.push(...layersToKeep);
+    }
     const lottieJson = this.transformToLottie(layers.flat());
+    const animationStart = Date.now();
     this.animation = new Animation().fromJSON(lottieJson);
+    timeTaken = Date.now() - animationStart;
+    console.log("Animation creation took: " + timeTaken + "ms");
+    this.changeElementsSize();
     this.lastState = this.state.copy();
+    timeTaken = Date.now() - start;
+    console.log("Transform took: " + timeTaken + "ms");
+    console.log("Global took: " + (Date.now() - globalStart) + "ms");
     return this.animation;
   }
 }
+
+
 
 export default new Avatar();
