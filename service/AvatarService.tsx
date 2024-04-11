@@ -1,5 +1,5 @@
 import {findElementByTypeAndIndexNumber} from "./elements";
-import {Animation, Layer, ShapeLayer} from "@lottiefiles/lottie-js";
+import {Animation} from "@lottiefiles/lottie-js";
 import {allElements, AnimationType, ElementType} from "../types/enum";
 import {ChangeColorCommand, ChangeSizeCommand} from "./command-queue/Command";
 import {findAnimationByTypeAndElements} from "./animations";
@@ -12,17 +12,29 @@ class State {
       if (other === undefined) {
         return false;
       }
-      other.elements.forEach((value, key) => {
-        if (this.elements.get(key) !== value) {
+      for(const key of this.elements.keys()){
+        if (this.elements.get(key) !== other.elements.get(key)) {
           return false;
         }
-      });
-      other.elementSize.forEach((value, key) => {
-        if (this.elementSize.get(key) !== value) {
+      }
+      for (const key of other.elementSize.keys()) {
+        if (this.elementSize.get(key) !== other.elementSize.get(key)) {
           return false;
         }
-      });
+      }
       return true;
+    }
+
+    copy(): State {
+      const newState = new State();
+      this.elements.forEach((value, key) => {
+        newState.elements.set(key, value);
+      });
+      this.elementSize.forEach((value, key) => {
+        newState.elementSize.set(key, value);
+      });
+      return newState;
+
     }
 }
 
@@ -101,7 +113,7 @@ class Avatar {
       const layers = (await Promise.all(promises)).flat();
       const lottieJson = this.transformToLottie(layers.flat());
       this.animation = new Animation().fromJSON(lottieJson);
-      this.lastState = this.state;
+      this.lastState = this.state.copy();
       return this.animation;
     }
 }
