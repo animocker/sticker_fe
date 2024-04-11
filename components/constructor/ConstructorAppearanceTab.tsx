@@ -1,25 +1,43 @@
-import React, { useState }  from "react";
+import React, { useState, useRef }  from "react";
 import {StyleSheet, Dimensions, View, Text} from "react-native";
 import AvatarService from "../../service/AvatarService";
 import {AnimationType, ElementType} from "../../types/enum";
-import {findElementsByType} from "../../service/elements";
 import {SwipablePanel} from "../ui/SwipablePanel";
 import {ConstructorAppearanceMenu} from "./ConstructorAppearanceMenu";
 import LottieView from "lottie-react-native";
+import {ChangeElementCommand} from "../../service/command-queue/Command";
+import {Animation} from "@lottiefiles/lottie-js";
 
 export const ConstructorAppearanceTab = () => {
+  const animationRef = useRef<LottieView>(null);
   const [selectedAnimation, setSelectedAnimation] = useState(AnimationType.IDLE);
-  const [lottie, setLottie] = useState(AvatarService.getAnimation(selectedAnimation));
+  const [lottie, setLottie] = useState<Animation>();
 
-  const changeElement = (type, index) => {
-    AvatarService.changeElement({type, index});
-    setLottie(AvatarService.getAnimation(selectedAnimation));
+  AvatarService.getAnimation(selectedAnimation).then(animation => {
+    console.log("Animation received" + animation);
+    setLottie(animation);}
+  );
+
+  const changeElement = (elementType, number) => {
+    const request = {elementType, number} as ChangeElementCommand;
+    AvatarService.changeElement(request);
+    AvatarService.getAnimation(selectedAnimation).then(animation => {
+      console.log(animation);
+
+      animationRef.current?.pause();
+      setLottie(animation);
+      animationRef.current?.play();
+
+      setTimeout(() => {
+        animationRef.current?.play();
+      }, 100);
+    });
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.lottieContainer}>
-        <LottieView source={lottie} autoPlay style={styles.lottie} />
+        {!lottie ? <Text>Loading...</Text> : <LottieView source={lottie} autoPlay style={styles.lottie}   ref={animationRef} />}
       </View>
       <View>
         <SwipablePanel>
@@ -27,7 +45,6 @@ export const ConstructorAppearanceTab = () => {
         </SwipablePanel>
       </View>
     </View>
-
   );
 };
 

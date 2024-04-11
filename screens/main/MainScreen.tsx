@@ -1,12 +1,8 @@
 import React, {useEffect, useState} from "react";
 import { View, Button, StyleSheet, ScrollView, Text } from "react-native";
-import Slider from "@react-native-community/slider";
-import { Picker } from "@react-native-picker/picker";
 import AvatarService from "../../service/AvatarService";
 import LottieView from "lottie-react-native";
 import {AnimationType, ElementType} from "../../types/enum";
-import NumberInput from "../../components/ui/NumberInput";
-import ColorPicker from "react-native-wheel-color-picker";
 import { CharacterPicker } from "../../components/characters/CharacterPicker";
 import { useNavigation } from "@react-navigation/native";
 import { Animation } from "@lottiefiles/lottie-js";
