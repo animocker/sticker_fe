@@ -1,11 +1,11 @@
-import AvatarService from "../service/AvatarService";
-import {allElements, AnimationType} from "../types/enum";
+import AvatarService from "../backend/AvatarService";
+import {allElements, AnimationType} from "../backend/db/enum";
 import {Animation} from "@lottiefiles/lottie-js";
 
-const elements = require("../service/elements");
-const animation = require("../service/animations");
+const elements = require("../backend/db/elements");
+const animation = require("../backend/db/animations");
 
-it("Avatar service could create basic avatar", async () =>
+it("Avatar backend could create basic avatar", async () =>
 {
   const result = await AvatarService.getAnimation(AnimationType.IDLE);
   expect(result).not.toBeUndefined();
@@ -17,7 +17,7 @@ it("Avatar service could create basic avatar", async () =>
     });
 });
 
-it("Avatar service could change elements", async () =>
+it("Avatar backend could change elements", async () =>
 {
   const originalResult = await AvatarService.getAnimation(AnimationType.IDLE);
   expect(originalResult).not.toBeUndefined();

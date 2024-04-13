@@ -1,11 +1,11 @@
 import React, { useState, useRef }  from "react";
 import {StyleSheet, Dimensions, View, Text} from "react-native";
-import AvatarService from "../../service/AvatarService";
-import {AnimationType, ElementType} from "../../types/enum";
+import AvatarService from "../../backend/AvatarService";
+import {AnimationType, ElementType} from "../../backend/db/enum";
 import {SwipablePanel} from "../ui/SwipablePanel";
 import {ConstructorAppearanceMenu} from "./ConstructorAppearanceMenu";
 import LottieView from "lottie-react-native";
-import {ChangeElementCommand} from "../../service/command-queue/Command";
+import {ChangeElementCommand} from "../../backend/command-queue/Command";
 import {Animation} from "@lottiefiles/lottie-js";
 
 export const ConstructorAppearanceTab = () => {

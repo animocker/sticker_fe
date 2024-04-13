@@ -1,9 +1,9 @@
-import {StyleSheet,} from "react-native";
+import {StyleSheet, Text,} from "react-native";
 import * as FileSystem from "expo-file-system";
 import {Asset} from "expo-asset";
-import React, {useEffect} from "react";
-import AvatarService from "./service/AvatarService";
-import {AnimationType, ElementType} from "./types/enum";
+import React, {useEffect, useState} from "react";
+import AvatarService from "./backend/AvatarService";
+import {AnimationType, ElementType} from "./backend/db/enum";
 
 import {NavigationContainer} from "@react-navigation/native";
 import {createStackNavigator} from "@react-navigation/stack";
@@ -15,30 +15,18 @@ import OnboardingSelfieScreen from "./screens/onboarding/OnboardingSelfieScreen"
 import OnboardingManualCreateCharacterScreen from "./screens/onboarding/OnboardingManualCreateCharacterScreen";
 import MainScreen from "./screens/main/MainScreen";
 import {ConstructorScreen} from "./screens/constructor/ConstructorScreen";
+import {sync} from "./backend/watermelon-db/watermelon";
+import initialize from "./backend/Initializer";
 
 const Stack = createStackNavigator();
 
-export const loadDatabase = async () => {
-  const dbName = "lottie2.db";
-  const dbAsset = require("./assets/" + dbName);
-  const dbUri = Asset.fromModule(dbAsset).uri;
-  const dbFilePath = `${FileSystem.documentDirectory}SQLite/${dbName}`;
-
-  const fileInfo = await FileSystem.getInfoAsync(dbFilePath);
-  if (!fileInfo.exists) {
-    await FileSystem.makeDirectoryAsync(
-      `${FileSystem.documentDirectory}SQLite`,
-      {intermediates: true}
-    );
-    await FileSystem.downloadAsync(dbUri, dbFilePath);
-  }
-};
 
 export default function App() {
-  useEffect(() => {
-    loadDatabase().then(() => console.log("Database loaded")).catch((e) => console.error(e));
+  const [isInitialized, setInit] = useState(false);
+  useEffect(() => {initialize().then(() => setInit(true));});
+  if (!isInitialized) {
+    return <Text>Loading...</Text>;
   }
-  );
   return (
     <NavigationContainer>
       <Stack.Navigator

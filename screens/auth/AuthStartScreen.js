@@ -1,8 +1,8 @@
 import React from "react";
 import { View, Button, StyleSheet, Text } from "react-native";
-import AvatarService from "../../service/AvatarService";
+import AvatarService from "../../backend/AvatarService";
 import LottieView from "lottie-react-native";
-import {ElementType} from "../../types/enum";
+import {ElementType} from "../../backend/db/enum";
 
 const AuthStartScreen = ({ navigation }) => {
   return (

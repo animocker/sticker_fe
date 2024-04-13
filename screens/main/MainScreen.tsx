@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
 import { View, Button, StyleSheet, ScrollView, Text } from "react-native";
-import AvatarService from "../../service/AvatarService";
+import AvatarService from "../../backend/AvatarService";
 import LottieView from "lottie-react-native";
-import {AnimationType, ElementType} from "../../types/enum";
+import {AnimationType, ElementType} from "../../backend/db/enum";
 import { CharacterPicker } from "../../components/characters/CharacterPicker";
 import { useNavigation } from "@react-navigation/native";
 import { Animation } from "@lottiefiles/lottie-js";

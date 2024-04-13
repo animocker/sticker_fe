@@ -17,6 +17,7 @@ web-build/
 *.mobileprovision
 tsconfig.json
 package-lock.json
+yarn.lock
 
 # Metro
 .metro-health-check*

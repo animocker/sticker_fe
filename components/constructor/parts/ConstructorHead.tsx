@@ -2,7 +2,7 @@ import React from "react";
 import {View, Text, ScrollView, TouchableOpacity, StyleSheet} from "react-native";
 import {RangeSlider} from "../../ui/RangeSlider";
 import PropTypes from "prop-types";
-import {ElementType} from "../../../types/enum";
+import {ElementType} from "../../../backend/db/enum";
 export const ConstructorHead = ({changeSize}) => {
 
   const changeSizeHandle = (size) => {

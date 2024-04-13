@@ -4,7 +4,7 @@ import { SETTINGS_APPEARANCE } from "./types";
 import {SvgUri} from "react-native-svg";
 import { SvgXml } from "react-native-svg";
 import {ICONS_APPERANCE} from "./icons/icons_element_menu";
-import AvatarService from "../../service/AvatarService";
+import AvatarService from "../../backend/AvatarService";
 import {ConstructorHead} from "./parts/ConstructorHead";
 import {ConstructorHair} from "./parts/ConstructorHair";
 import PropTypes from "prop-types";
