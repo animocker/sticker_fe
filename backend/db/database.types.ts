@@ -9,32 +9,44 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      _elements: {
+        Row: {
+          jsonb_build_object: Json | null
+        }
+        Insert: {
+          jsonb_build_object?: Json | null
+        }
+        Update: {
+          jsonb_build_object?: Json | null
+        }
+        Relationships: []
+      }
       animation: {
         Row: {
-          el_uuid: string | null
+          element_id: string
+          id: string
           type: string
-          uuid: string
           value_array: string[]
         }
         Insert: {
-          el_uuid?: string | null
+          element_id?: string
+          id: string
           type: string
-          uuid?: string
           value_array: string[]
         }
         Update: {
-          el_uuid?: string | null
+          element_id?: string
+          id?: string
           type?: string
-          uuid?: string
           value_array?: string[]
         }
         Relationships: [
           {
-            foreignKeyName: "public_animation_el_uuid_fkey"
-            columns: ["el_uuid"]
+            foreignKeyName: "fkewxkilr8ro1ajdpydr5peo9od"
+            columns: ["element_id"]
             isOneToOne: false
             referencedRelation: "element"
-            referencedColumns: ["uuid"]
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -42,23 +54,23 @@ export type Database = {
         Row: {
           gender: string
           icon: string
+          id: string
           idx_nbr: number
           type: string
-          uuid: string
         }
         Insert: {
           gender: string
           icon: string
+          id: string
           idx_nbr: number
           type: string
-          uuid?: string
         }
         Update: {
           gender?: string
           icon?: string
+          id?: string
           idx_nbr?: number
           type?: string
-          uuid?: string
         }
         Relationships: []
       }
@@ -67,7 +79,24 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      epoch_to_timestamp: {
+        Args: {
+          epoch: string
+        }
+        Returns: string
+      }
+      pull: {
+        Args: {
+          last_pulled_at?: number
+        }
+        Returns: Json
+      }
+      timestamp_to_epoch: {
+        Args: {
+          ts: string
+        }
+        Returns: number
+      }
     }
     Enums: {
       [_ in never]: never

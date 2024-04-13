@@ -3,6 +3,7 @@ import {Animation} from "@lottiefiles/lottie-js";
 import {allElements, AnimationType, ElementType} from "./db/enum";
 import {ChangeColorCommand, ChangeSizeCommand} from "./command-queue/Command";
 import {findAnimationByTypeAndElements} from "./db/animations";
+import {findAnimation} from "./db/AvatarDao";
 
 class State {
   readonly elements  = new Map<ElementType, number>();
@@ -146,14 +147,12 @@ class Avatar {
     }
     const stateDifference = this.state.getDifference(this.lastState);
     console.log("Requesting animation: " + animationType);
-    const promises: Promise<string[]>[] = [];
-    for (const [key, value] of stateDifference.elements) {
-      const promise =  findElementByTypeAndIndexNumber(key, value)
-        .then(element => findAnimationByTypeAndElements(animationType, element));
-      promises.push(promise);
-    }
+    const elements = Array.from(stateDifference.elements.entries())
+      .map(it => ({elementType: it[0], elementNumber: it[1]}));
+    const animationPromise = findAnimation(animationType, elements, "MALE");
+
     let start = Date.now();
-    const layers = (await Promise.all(promises)).flat();
+    const layers = await animationPromise;
     let timeTaken = Date.now() - start;
     console.log("Request took: " + timeTaken + "ms");
     const isFirstRequest = this.lastState === undefined;

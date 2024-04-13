@@ -1,5 +1,5 @@
 import { Model, Associations } from "@nozbe/watermelondb";
-import {field, text, relation, children} from "@nozbe/watermelondb/decorators";
+import {field, text, relation, children, json} from "@nozbe/watermelondb/decorators";
 
 export class AnimationWDB extends Model {
   static table = "animations";
@@ -9,7 +9,7 @@ export class AnimationWDB extends Model {
 
   @field("type") type!: string;
   @field("uuid") uuid!: string;
-  @text("value_array") valueArray!: string; // This will be a stringified version of the array
+  @field("value_array") valueArray!: string;
   @relation("elements", "element_id") element;
 }
 

@@ -1,9 +1,13 @@
 import AvatarService from "../backend/AvatarService";
 import {allElements, AnimationType} from "../backend/db/enum";
 import {Animation} from "@lottiefiles/lottie-js";
+import {sync} from "../backend/watermelon-db/watermelon";
 
-const elements = require("../backend/db/elements");
-const animation = require("../backend/db/animations");
+const avatarDao = require("../backend/db/AvatarDao");
+
+beforeAll(async () => {
+  await sync();
+});
 
 it("Avatar backend could create basic avatar", async () =>
 {
@@ -35,7 +39,7 @@ it("New animation layer requested only for changed element", async () =>
   const originalResult = await AvatarService.getAnimation(AnimationType.IDLE);
   expect(originalResult).not.toBeUndefined();
 
-  const spy = jest.spyOn(animation, "findAnimationByTypeAndElements");
+  const spy = jest.spyOn(avatarDao, "findAnimation");
 
   AvatarService.changeElement({elementType: "HEAD", number: 2});
   const result = await AvatarService.getAnimation(AnimationType.IDLE);
@@ -49,7 +53,7 @@ it("New animation layer requested only for changed element", async () =>
     });
   expect(layerNames).toContain("head_2");
   expect(layerNames).not.toContain("head_1");
-  expect(spy).toBeCalledTimes(1);
+  expect(spy).toBeCalledWith(AnimationType.IDLE, [{elementType: "HEAD", elementNumber: 2}], "MALE");
 });
 
 afterEach(() => {

@@ -27,7 +27,7 @@ const adapter = new SQLiteAdapter({
 });
 
 // Then, make a Watermelon database from it!
-const database = new Database({
+export const database = new Database({
   adapter,
   modelClasses: [
     AnimationWDB,
@@ -39,6 +39,7 @@ export async function sync() {
   await synchronize({
     database,
     pullChanges: async ({lastPulledAt, schemaVersion, migration}) => {
+      await database.unsafeResetDatabase();//TODO make pull only for changes and remove this line
       const {data, error} = await supabase.rpc("pull", {
         last_pulled_at: lastPulledAt,
       });
