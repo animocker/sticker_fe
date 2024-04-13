@@ -8,14 +8,14 @@ import AvatarService from "../../service/AvatarService";
 import {ConstructorHead} from "./parts/ConstructorHead";
 import {ConstructorHair} from "./parts/ConstructorHair";
 import PropTypes from "prop-types";
-export const ConstructorAppearanceMenu = ({changeElement}) => {
+export const ConstructorAppearanceMenu = ({changeElement, changeSize}) => {
   const buttonTitles = Object.values(SETTINGS_APPEARANCE);
   const [selectedTab, setSelectedTab] = useState(Object.values(SETTINGS_APPEARANCE)[0]);
 
 
 
   const tabs = {
-    [SETTINGS_APPEARANCE.HEAD]: ConstructorHead,
+    [SETTINGS_APPEARANCE.HEAD]: (props) => <ConstructorHead {...props} changeElement={changeElement} changeSize={changeSize} />,
     [SETTINGS_APPEARANCE.HAIR]: (props) => <ConstructorHair {...props} changeElement={changeElement} />,
   };
 
@@ -38,6 +38,7 @@ export const ConstructorAppearanceMenu = ({changeElement}) => {
 
 ConstructorAppearanceMenu.propTypes = {
   changeElement: PropTypes.func.isRequired,
+  changeSize: PropTypes.func.isRequired,
 };
 
 const styles = StyleSheet.create({
