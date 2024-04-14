@@ -1,9 +1,9 @@
 import {findElementByTypeAndIndexNumber} from "./db/elements";
-import {Animation} from "@lottiefiles/lottie-js";
 import {allElements, AnimationType, ElementType} from "./db/enum";
 import {ChangeColorCommand, ChangeSizeCommand} from "./command-queue/Command";
 import {findAnimationByTypeAndElements} from "./db/animations";
 import {findAnimation} from "./db/AvatarDao";
+import {Animation} from "@lottiefiles/lottie-js";
 
 class State {
   readonly elements  = new Map<ElementType, number>();
@@ -62,6 +62,7 @@ class Avatar {
   private lastState : State;
   private readonly layersIndexes = new Map<ElementType, number[]>();
   private animation: Animation;
+  private layers: Record<string, any>;
 
 
   constructor() {
@@ -140,7 +141,7 @@ class Avatar {
     return result;
   }
 
-  async getAnimation(animationType: string | AnimationType): Promise<Animation> {
+  async getAnimationWatermelon(animationType: string | AnimationType) {
     const globalStart = Date.now();
     if (this.state.equals(this.lastState)) {
       return this.animation;
@@ -149,10 +150,9 @@ class Avatar {
     console.log("Requesting animation: " + animationType);
     const elements = Array.from(stateDifference.elements.entries())
       .map(it => ({elementType: it[0], elementNumber: it[1]}));
-    const animationPromise = findAnimation(animationType, elements, "MALE");
 
     let start = Date.now();
-    const layers = await animationPromise;
+    const layers = await findAnimation(animationType, elements, "MALE");
     let timeTaken = Date.now() - start;
     console.log("Request took: " + timeTaken + "ms");
     const isFirstRequest = this.lastState === undefined;
@@ -165,6 +165,7 @@ class Avatar {
         .map(layer => JSON.stringify(layer));
       layers.push(...layersToKeep);
     }
+    this.layers = layers.flat();
     const lottieJson = this.transformToLottie(layers.flat());
     const animationStart = Date.now();
     this.animation = new Animation().fromJSON(lottieJson);

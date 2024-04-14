@@ -13,7 +13,7 @@ export const ConstructorAppearanceTab = () => {
   const [selectedAnimation, setSelectedAnimation] = useState(AnimationType.IDLE);
   const [lottie, setLottie] = useState<Animation>();
 
-  AvatarService.getAnimation(selectedAnimation).then(animation => {
+  AvatarService.getAnimationWatermelon(selectedAnimation).then(animation => {
     console.log("Animation received" + animation);
     setLottie(animation);}
   );
@@ -21,7 +21,7 @@ export const ConstructorAppearanceTab = () => {
   const changeElement = (elementType, number) => {
     const request = {elementType, number} as ChangeElementCommand;
     AvatarService.changeElement(request);
-    AvatarService.getAnimation(selectedAnimation).then(animation => {
+    AvatarService.getAnimationWatermelon(selectedAnimation).then(animation => {
       animationRef.current?.pause();
       setLottie(animation);
       animationRef.current?.play();
@@ -36,7 +36,7 @@ export const ConstructorAppearanceTab = () => {
     console.log(elementType);
     console.log(changeSizePercent);
     // AvatarService.changeSize({elementType, changeSizePercent});
-    // AvatarService.getAnimation(selectedAnimation).then(animation => {
+    // AvatarService.getAnimationWatermelon(selectedAnimation).then(animation => {
     //   animationRef.current?.pause();
     //   setLottie(animation);
     //   animationRef.current?.play();

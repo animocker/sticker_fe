@@ -27,10 +27,11 @@ export default function App() {
   if (!isInitialized) {
     return <Text>Loading...</Text>;
   }
+
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="MainScreen"
+        initialRouteName="ConstructorScreen"
       >
         <Stack.Screen name="AuthStart" component={AuthStartScreen} options={{ headerShown: false }}  />
         <Stack.Screen name="AuthLegal" component={AuthLegalScreen} />

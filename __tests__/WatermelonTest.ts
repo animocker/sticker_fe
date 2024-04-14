@@ -10,7 +10,7 @@ it("Find animation successful", async () => {
   await sync();
   const result = await findAnimation(
     AnimationType.IDLE,
-    [{elementType: "HEAD", elementNumber: 1}, {elementType: "HAIR", elementNumber:1}],
+    [{elementType: "HEAD", elementNumber: 1}, {elementType: "HAIR", elementNumber:1}, {elementType: "CLOTHES", elementNumber:1}],
     "MALE"
   );
   expect(result).toBeDefined();

@@ -36,10 +36,10 @@ export const database = new Database({
 });
 
 export async function sync() {
+  await database.write(() => database.unsafeResetDatabase());
   await synchronize({
     database,
     pullChanges: async ({lastPulledAt, schemaVersion, migration}) => {
-      await database.unsafeResetDatabase();//TODO make pull only for changes and remove this line
       const {data, error} = await supabase.rpc("pull", {
         last_pulled_at: lastPulledAt,
       });
