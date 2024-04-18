@@ -8,7 +8,7 @@ import {ConstructorClothMenu} from "./ConstructorClothMenu";
 
 export const ConstructorClothTab = () => {
   const [selectedAnimation, setSelectedAnimation] = useState(AnimationType.IDLE);
-  const [lottie, setLottie] = useState(AvatarService.getAnimationWatermelon(selectedAnimation));
+  const [lottie, setLottie] = useState(AvatarService.getAnimation(selectedAnimation));
 
   return (
     <View style={styles.container}>

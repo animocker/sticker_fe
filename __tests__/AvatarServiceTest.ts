@@ -11,7 +11,7 @@ beforeAll(async () => {
 
 it("Avatar backend could create basic avatar", async () =>
 {
-  const result = await AvatarService.getAnimationWatermelon(AnimationType.IDLE);
+  const result = await AvatarService.getAnimation(AnimationType.IDLE);
   expect(result).not.toBeUndefined();
   const layerNames = extractLayerNames(result);
   allElements
@@ -23,26 +23,26 @@ it("Avatar backend could create basic avatar", async () =>
 
 it("Avatar backend could change elements", async () =>
 {
-  const originalResult = await AvatarService.getAnimationWatermelon(AnimationType.IDLE);
+  const originalResult = await AvatarService.getAnimation(AnimationType.IDLE);
   expect(originalResult).not.toBeUndefined();
   const originalLayerNames = extractLayerNames(originalResult);
   expect(originalLayerNames).not.toContain("head_2");
 
   AvatarService.changeElement({elementType: "HEAD", number: 2});
-  const changedResult = await AvatarService.getAnimationWatermelon(AnimationType.IDLE);
+  const changedResult = await AvatarService.getAnimation(AnimationType.IDLE);
   const changedLayerNames = extractLayerNames(changedResult);
   expect(changedLayerNames).toContain("head_2");
 });
 
 it("New animation layer requested only for changed element", async () =>
 {
-  const originalResult = await AvatarService.getAnimationWatermelon(AnimationType.IDLE);
+  const originalResult = await AvatarService.getAnimation(AnimationType.IDLE);
   expect(originalResult).not.toBeUndefined();
 
   const spy = jest.spyOn(avatarDao, "findAnimation");
 
   AvatarService.changeElement({elementType: "HEAD", number: 2});
-  const result = await AvatarService.getAnimationWatermelon(AnimationType.IDLE);
+  const result = await AvatarService.getAnimation(AnimationType.IDLE);
   expect(result).not.toBeUndefined();
   const layerNames = extractLayerNames(result);
   allElements

@@ -1,13 +1,10 @@
-import { Platform } from "react-native";
-import { Database } from "@nozbe/watermelondb";
+import {Database} from "@nozbe/watermelondb";
 import SQLiteAdapter from "@nozbe/watermelondb/adapters/sqlite";
 
 import schema from "./schema";
-import migrations from "./migration";
-import {AnimationWDB, ElementWDB} from "./model";
+import {LayerWDB} from "./model";
 import {supabase} from "../supabase";
-import {SyncDatabaseChangeSet} from "@nozbe/watermelondb/sync";
-import { synchronize } from "@nozbe/watermelondb/sync";
+import {SyncDatabaseChangeSet, synchronize} from "@nozbe/watermelondb/sync";
 // import Post from './model/Post' // ⬅️ You'll import your Models here
 
 // First, create the adapter to the underlying database:
@@ -30,8 +27,7 @@ const adapter = new SQLiteAdapter({
 export const database = new Database({
   adapter,
   modelClasses: [
-    AnimationWDB,
-    ElementWDB
+    LayerWDB
   ],
 });
 

@@ -141,7 +141,7 @@ class Avatar {
     return result;
   }
 
-  async getAnimationWatermelon(animationType: string | AnimationType) {
+  async getAnimation(animationType: string | AnimationType) {
     const globalStart = Date.now();
     if (this.state.equals(this.lastState)) {
       return this.animation;

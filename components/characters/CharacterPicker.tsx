@@ -8,7 +8,7 @@ export const CharacterPicker = () => {
   const [selectedAnimation, setSelectedAnimation] = useState(AnimationType.IDLE);
   const [lottie, setLottie] = useState<Animation>();
 
-  AvatarService.getAnimationWatermelon(selectedAnimation).then(animation => {
+  AvatarService.getAnimation(selectedAnimation).then(animation => {
     console.log("Animation received" + animation);
     setLottie(animation);}
   );
