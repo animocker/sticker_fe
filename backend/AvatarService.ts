@@ -1,13 +1,14 @@
 import {findElementByTypeAndIndexNumber} from "./db/elements";
-import {allElements, AnimationType, ElementType} from "./db/enum";
-import {ChangeColorCommand, ChangeSizeCommand} from "./command-queue/Command";
+import {allElements, AnimationType, ElementType} from "../model/enum";
+import {ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand} from "../model/Command";
 import {findAnimationByTypeAndElements} from "./db/animations";
 import {findAnimation} from "./db/AvatarDao";
-import {Animation} from "@lottiefiles/lottie-js";
+import {Animation, Color} from "@lottiefiles/lottie-js";
 
 class State {
   readonly elements  = new Map<ElementType, number>();
   readonly elementSize  = new Map<ElementType, number>();
+  readonly elementColor = new Map<ElementType, string>();
 
   equals(other: State): boolean {
     if (other === undefined) {
@@ -34,6 +35,9 @@ class State {
     this.elementSize.forEach((value, key) => {
       newState.elementSize.set(key, value);
     });
+    this.elementColor.forEach((value, key) => {
+      newState.elementColor.set(key, value);
+    });
     return newState;
   }
 
@@ -50,6 +54,11 @@ class State {
     this.elementSize.forEach((value, key) => {
       if (value !== other.elementSize.get(key)) {
         newState.elementSize.set(key, value);
+      }
+    });
+    this.elementColor.forEach((value, key) => {
+      if (value !== other.elementColor.get(key)) {
+        newState.elementColor.set(key, value);
       }
     });
     return newState;
@@ -82,7 +91,7 @@ class Avatar {
     return new Animation().fromJSON(JSON.parse(BASIC_LOTTIE_BODY));
   }
 
-  changeElement(request) {
+  changeElement(request: ChangeElementCommand) {
     this.state.elements.set(request.elementType, request.number);
   }
 
@@ -111,9 +120,20 @@ class Avatar {
     });
   }
 
+  private changeElementsColor() {
+    const stateDifference = this.state.getDifference(this.lastState);
+    stateDifference.elementColor.forEach((elementColor, elementType) => {
+      const elementNumber = this.state.elements.get(elementType);
+      const searchedLayerName =`${elementType}_${elementNumber}`;
+      const layer = this.animation.layers.find(layer => layer.name.toUpperCase().startsWith(searchedLayerName));
+      const colors = layer.colors[0];
+      console.log(colors);
+    });
+  }
+
 
   changeColor(changeColorCommand: ChangeColorCommand) {
-    console.log(changeColorCommand);
+    this.state.elementColor.set(changeColorCommand.elementType, changeColorCommand.color);
   }
 
   private transformToLottie(jsonArray: string[]): Record<string, any> {
@@ -172,6 +192,7 @@ class Avatar {
     timeTaken = Date.now() - animationStart;
     console.log("Animation creation took: " + timeTaken + "ms");
     this.changeElementsSize();
+    this.changeElementsColor();
     this.lastState = this.state.copy();
     timeTaken = Date.now() - start;
     console.log("Transform took: " + timeTaken + "ms");

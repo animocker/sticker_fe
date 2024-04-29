@@ -1,7 +1,7 @@
 import React, { useState, useRef }  from "react";
 import {StyleSheet, Dimensions, View, Text} from "react-native";
 import AvatarService from "../../backend/AvatarService";
-import {AnimationType, ElementType} from "../../backend/db/enum";
+import {AnimationType, ElementType} from "../../model/enum";
 import {SwipablePanel} from "../ui/SwipablePanel";
 import {ConstructorAppearanceMenu} from "./ConstructorAppearanceMenu";
 import LottieView from "lottie-react-native";
@@ -9,7 +9,7 @@ import {
   ChangeColorCommand,
   ChangeElementCommand,
   ChangeSizeCommand,
-} from "../../backend/command-queue/Command";
+} from "../../model/Command";
 import {Animation} from "@lottiefiles/lottie-js";
 
 export const ConstructorAppearanceTab = () => {

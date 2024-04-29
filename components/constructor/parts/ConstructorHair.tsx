@@ -12,7 +12,7 @@ import HAIR_8 from "../icons/hair/hair_8.svg";
 import HAIR_9 from "../icons/hair/hair_9.svg";
 import HAIR_10 from "../icons/hair/hair_10.svg";
 import HAIR_11 from "../icons/hair/hair_11.svg";
-import {ElementType} from "../../../backend/db/enum";
+import {ElementType} from "../../../model/enum";
 import PropTypes from "prop-types";
 import {assignColorValue} from "@expo/config-plugins/build/android/Colors";
 import {styleAssets} from "../../../styleAssets";

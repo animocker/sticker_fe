@@ -2,7 +2,7 @@ import React from "react";
 import {View, Text, ScrollView, TouchableOpacity, StyleSheet} from "react-native";
 import {RangeSlider} from "../../ui/RangeSlider";
 import PropTypes from "prop-types";
-import {ElementType} from "../../../backend/db/enum";
+import {ElementType} from "../../../model/enum";
 import {ColorListPicker} from "../../ui/ColorListPicker";
 export const ConstructorHead = ({changeSize, changeColor}) => {
 

@@ -1,5 +1,5 @@
-import {ElementType} from "../db/enum";
-import AvatarService from "../AvatarService";
+import {ElementType} from "./enum";
+import AvatarService from "../backend/AvatarService";
 
 export interface Command {
     type: CommandType

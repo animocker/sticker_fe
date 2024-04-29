@@ -1,5 +1,5 @@
 import AvatarService from "../backend/AvatarService";
-import {allElements, AnimationType} from "../backend/db/enum";
+import {allElements, AnimationType} from "../model/enum";
 import {Animation} from "@lottiefiles/lottie-js";
 import {sync} from "../backend/watermelon-db/watermelon";
 

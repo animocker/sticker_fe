@@ -1,6 +1,6 @@
 import {sync} from "../backend/watermelon-db/watermelon";
 import {findAnimation} from "../backend/db/AvatarDao";
-import {AnimationType} from "../backend/db/enum";
+import {AnimationType} from "../model/enum";
 
 it("should load watermelon db successfully", async () => {
   await sync();

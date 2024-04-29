@@ -1,4 +1,4 @@
-import {AnimationType, ElementType} from "./enum";
+import {AnimationType, ElementType} from "../../model/enum";
 import {database} from "../watermelon-db/watermelon";
 import {Q} from "@nozbe/watermelondb";
 import {LayerWDB} from "../watermelon-db/model";
