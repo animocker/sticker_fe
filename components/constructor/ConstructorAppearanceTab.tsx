@@ -9,7 +9,6 @@ import {
   ChangeColorCommand,
   ChangeElementCommand,
   ChangeSizeCommand,
-  CommandType
 } from "../../backend/command-queue/Command";
 import {Animation} from "@lottiefiles/lottie-js";
 
@@ -82,7 +81,8 @@ const styles = StyleSheet.create({
   lottieContainer: {
     alignSelf: "center",
     height: 300,
-    width: Dimensions.get("window").width * 0.7,
+    transform: [{ scale: 2 }, { translateY: 40 }],
+    width: Dimensions.get("window").width * 0.7
   },
   menuContainer: {
     flexGrow: 1

@@ -26,4 +26,5 @@ export const ConstructorHead = ({changeSize, changeColor}) => {
 
 ConstructorHead.propTypes = {
   changeSize: PropTypes.func.isRequired,
+  changeColor: PropTypes.func.isRequired,
 };

@@ -14,6 +14,8 @@ import HAIR_10 from "../icons/hair/hair_10.svg";
 import HAIR_11 from "../icons/hair/hair_11.svg";
 import {ElementType} from "../../../backend/db/enum";
 import PropTypes from "prop-types";
+import {assignColorValue} from "@expo/config-plugins/build/android/Colors";
+import {styleAssets} from "../../../styleAssets";
 
 const HAIR_SETTINGS = [
   {icon: <HAIR_1 />, name: "hair_1"},
@@ -48,13 +50,13 @@ ConstructorHair.propTypes = {
 const styles = StyleSheet.create({
   button: {
     alignItems: "center",
-    borderColor: "gray",
-    borderWidth: 1,
-    height: 100,
+    backgroundColor:styleAssets.colorsPalette.white,
+    borderRadius: 16,
+    height: 96,
     justifyContent: "center",
     margin: 10,
     padding: 10,
-    width: 100
+    width: 96
   },
   container: {
     flexDirection: "row",

@@ -1,10 +1,8 @@
 import React, {useState} from "react";
 import {View, Text, ScrollView, StyleSheet, Image, TouchableOpacity} from "react-native";
 import { SETTINGS_APPEARANCE } from "./types";
-import {SvgUri} from "react-native-svg";
 import { SvgXml } from "react-native-svg";
 import {ICONS_APPERANCE} from "./icons/icons_element_menu";
-import AvatarService from "../../backend/AvatarService";
 import {ConstructorHead} from "./parts/ConstructorHead";
 import {ConstructorHair} from "./parts/ConstructorHair";
 import PropTypes from "prop-types";
@@ -57,9 +55,9 @@ const styles = StyleSheet.create({
     padding: 10
   },
   container: {
-    backgroundColor: styleAssets.colorsPalette.lowBlue,
+    backgroundColor: styleAssets.colorsPalette.mediumBlue,
     height: "100%",
-    paddingTop: 20,
+    padding: 16,
   },
   selectedButton: {
     borderColor: styleAssets.colorsPalette.primeBlue,
