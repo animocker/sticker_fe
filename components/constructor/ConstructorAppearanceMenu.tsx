@@ -8,30 +8,33 @@ import AvatarService from "../../backend/AvatarService";
 import {ConstructorHead} from "./parts/ConstructorHead";
 import {ConstructorHair} from "./parts/ConstructorHair";
 import PropTypes from "prop-types";
-export const ConstructorAppearanceMenu = ({changeElement, changeSize}) => {
+import {styleAssets} from "../../styleAssets";
+export const ConstructorAppearanceMenu = ({changeElement, changeSize, changeColor}) => {
   const buttonTitles = Object.values(SETTINGS_APPEARANCE);
   const [selectedTab, setSelectedTab] = useState(Object.values(SETTINGS_APPEARANCE)[0]);
 
-
-
   const tabs = {
-    [SETTINGS_APPEARANCE.HEAD]: (props) => <ConstructorHead {...props} changeElement={changeElement} changeSize={changeSize} />,
+    [SETTINGS_APPEARANCE.HEAD]: (props) => <ConstructorHead {...props} changeElement={changeElement} changeSize={changeSize} changeColor={changeColor} />,
     [SETTINGS_APPEARANCE.HAIR]: (props) => <ConstructorHair {...props} changeElement={changeElement} />,
   };
 
   return (
-    <View>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {buttonTitles.map((title, index) => (
-          <View key={index} style={{ flexDirection: "row", alignItems: "center" }}>
-            <TouchableOpacity style={styles.button} onPress={() => setSelectedTab(title)}>
-              <SvgXml xml={ICONS_APPERANCE[title]} />
-              <Text>{title}</Text>
-            </TouchableOpacity>
-          </View>
-        ))}
-      </ScrollView>
-      {tabs[selectedTab] ? React.createElement(tabs[selectedTab]) : null}
+    <View style={styles.container}>
+      <View>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          {buttonTitles.map((title, index) => (
+            <View key={index} style={{ flexDirection: "row", alignItems: "center" }}>
+              <TouchableOpacity style={[styles.button, selectedTab === title && styles.selectedButton]}
+                onPress={() => setSelectedTab(title)}
+              >
+                <SvgXml xml={ICONS_APPERANCE[title]} />
+                <Text>{title}</Text>
+              </TouchableOpacity>
+            </View>
+          ))}
+        </ScrollView>
+        {tabs[selectedTab] ? React.createElement(tabs[selectedTab]) : null}
+      </View>
     </View>
   );
 };
@@ -43,11 +46,22 @@ ConstructorAppearanceMenu.propTypes = {
 
 const styles = StyleSheet.create({
   button: {
-    borderColor: "blue",
-    borderRadius: 5,
-    borderWidth: 1,
+    backgroundColor: styleAssets.colorsPalette.white,
+    borderColor: styleAssets.colorsPalette.white,
+    borderRadius: 12,
+    borderWidth: 2,
     flexDirection: "row",
     margin: 5,
-    padding: 5
+    paddingBottom: 5,
+    paddingTop: 5,
+    padding: 10
+  },
+  container: {
+    backgroundColor: styleAssets.colorsPalette.lowBlue,
+    height: "100%",
+    paddingTop: 20,
+  },
+  selectedButton: {
+    borderColor: styleAssets.colorsPalette.primeBlue,
   },
 });

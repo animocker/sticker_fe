@@ -50,11 +50,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderColor: "gray",
     borderWidth: 1,
-    height: 120,
+    height: 100,
     justifyContent: "center",
-    margin: "1.66%",
+    margin: 10,
     padding: 10,
-    width: 120
+    width: 100
   },
   container: {
     flexDirection: "row",

@@ -5,7 +5,12 @@ import {AnimationType, ElementType} from "../../backend/db/enum";
 import {SwipablePanel} from "../ui/SwipablePanel";
 import {ConstructorAppearanceMenu} from "./ConstructorAppearanceMenu";
 import LottieView from "lottie-react-native";
-import {ChangeElementCommand} from "../../backend/command-queue/Command";
+import {
+  ChangeColorCommand,
+  ChangeElementCommand,
+  ChangeSizeCommand,
+  CommandType
+} from "../../backend/command-queue/Command";
 import {Animation} from "@lottiefiles/lottie-js";
 
 export const ConstructorAppearanceTab = () => {
@@ -18,11 +23,8 @@ export const ConstructorAppearanceTab = () => {
     setLottie(animation);}
   );
 
-  const changeElement = (elementType, number) => {
-    const request = {elementType, number} as ChangeElementCommand;
-    AvatarService.changeElement(request);
+  const reloadAnimation = () => {
     AvatarService.getAnimation(selectedAnimation).then(animation => {
-
       animationRef.current?.pause();
       setLottie(animation);
       animationRef.current?.play();
@@ -33,19 +35,24 @@ export const ConstructorAppearanceTab = () => {
     });
   };
 
-  const changeSize = (elementType, changeSizePercent) => {
-    console.log(elementType);
-    console.log(changeSizePercent);
-    // AvatarService.changeSize({elementType, changeSizePercent});
-    // AvatarService.getAnimationWatermelon(selectedAnimation).then(animation => {
-    //   animationRef.current?.pause();
-    //   setLottie(animation);
-    //   animationRef.current?.play();
-    //
-    //   setTimeout(() => {
-    //     animationRef.current?.play();
-    //   }, 100);
-    // });
+  const changeElement = (elementType, number) => {
+    const request = {elementType, number} as ChangeElementCommand;
+    AvatarService.changeElement(request);
+    reloadAnimation();
+  };
+
+  const changeSize = (elementType: ElementType, sizePercent: number) => {
+    AvatarService.changeSize(
+        {elementType, sizePercent} as ChangeSizeCommand
+    );
+    reloadAnimation();
+  };
+
+  const changeColor = (elementType: ElementType, color: string) => {
+    AvatarService.changeColor(
+        {elementType, color} as ChangeColorCommand
+    );
+    reloadAnimation();
   };
 
   return (
@@ -53,10 +60,10 @@ export const ConstructorAppearanceTab = () => {
       <View style={styles.lottieContainer}>
         {!lottie ? <Text>Loading...</Text> : <LottieView source={lottie} autoPlay style={styles.lottie}   ref={animationRef} />}
       </View>
-      <View>
-        <SwipablePanel>
-          <ConstructorAppearanceMenu changeElement={changeElement} changeSize={changeSize} />
-        </SwipablePanel>
+      <View  style={styles.menuContainer}>
+        {/*<SwipablePanel>*/}
+        <ConstructorAppearanceMenu changeElement={changeElement} changeSize={changeSize} changeColor={changeColor} />
+        {/*</SwipablePanel>*/}
       </View>
     </View>
   );
@@ -66,7 +73,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
-    height: "100%"
+    height: "100%",
   },
   lottie: {
     height: 300,
@@ -77,4 +84,7 @@ const styles = StyleSheet.create({
     height: 300,
     width: Dimensions.get("window").width * 0.7,
   },
+  menuContainer: {
+    flexGrow: 1
+  }
 });

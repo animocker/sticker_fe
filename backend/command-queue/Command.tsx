@@ -25,6 +25,7 @@ export class ChangeSizeCommand implements Command {
 
 export class ChangeColorCommand implements Command {
     type = CommandType.CHANGE_COLOR;
+    elementType: ElementType;
     color: string;
     isExecuted = false;
 

@@ -16,6 +16,9 @@ export const RangeSlider = ({initialSize, changeSize, step = 1}) => {
         step={step}
         value={size}
         onSlidingComplete={changeSize}
+        minimumTrackTintColor="#4D96DA"
+        maximumTrackTintColor={"#FFFFFF"}
+        thumbTintColor={"#4D96DA"}
       />
     </View>
   );
@@ -30,8 +33,6 @@ RangeSlider.propTypes = {
 
 const styles = StyleSheet.create({
   slider: {
-    height: 100,
-    marginTop: 10,
-    width: 200,
+    margin: 24,
   }
 });
