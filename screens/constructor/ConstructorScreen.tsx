@@ -27,7 +27,7 @@ export const ConstructorScreen = () => {
       style={{...styles.tabs}}
       labelStyle={styles.label}
       activeColor={styleAssets.colorsPalette.white}
-      pressColor='transparent'
+      pressColor={styleAssets.colorsPalette.white}
       contentContainerStyle={styles.tabsContainer}
     />
   );
