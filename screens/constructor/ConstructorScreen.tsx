@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Button, StyleSheet, ScrollView, Text } from "react-native";
+import { View, Button, StyleSheet, ScrollView, Text, ImageBackground } from "react-native";
 import { TabView, SceneMap, TabBar, TabBarItem } from "react-native-tab-view";
 import {ConstructorAppearanceTab} from "../../components/constructor/ConstructorAppearanceTab";
 import {ConstructorClothTab} from "../../components/constructor/ConstructorClothTab";
@@ -17,6 +17,9 @@ export const ConstructorScreen = () => {
     cloth: ConstructorClothTab,
   });
 
+  const image = require("../../assets/background.png");
+
+
   const renderTabBar = props => (
     <TabBar
       {...props}
@@ -25,35 +28,40 @@ export const ConstructorScreen = () => {
       labelStyle={styles.label}
       activeColor={styleAssets.colorsPalette.white}
       pressColor={styleAssets.colorsPalette.primeBlue}
-      contentContainerStyle={styles.container}
+      contentContainerStyle={styles.tabsContainer}
     />
   );
 
   return (
-    <TabView
-      navigationState={{ index, routes }}
-      renderScene={renderScene}
-      renderTabBar={renderTabBar}
-      onIndexChange={setIndex}
-      swipeEnabled={false}
-    />
+    <ImageBackground source={image} style={styles.container} >
+      <TabView
+        navigationState={{ index, routes }}
+        renderScene={renderScene}
+        renderTabBar={renderTabBar}
+        onIndexChange={setIndex}
+        swipeEnabled={false}
+      />
+    </ImageBackground>
+
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 8,
+
+    flex: 1,
+    paddingTop: 16
   },
   indicator: {
-    alignSelf: "center",
     backgroundColor: styleAssets.colorsPalette.primeBlue,
     borderBottomColor: styleAssets.colorsPalette.primeBlue,
     borderRadius: 8,
-    height: 46,
+    height: 48,
   },
   label: {
     borderRadius: 8,
     color: styleAssets.colorsPalette.primeBlue,
+    fontWeight: "bold",
   },
   tabs: {
     alignSelf: "center",
@@ -65,5 +73,8 @@ const styles = StyleSheet.create({
     color: styleAssets.colorsPalette.primeBlue,
     marginTop: 10,
     width: "90%",
+  },
+  tabsContainer: {
+    borderRadius: 8,
   }
 });

@@ -40,7 +40,7 @@ export default function App() {
         <Stack.Screen name="OnboardingSelfie" component={OnboardingSelfieScreen} />
         <Stack.Screen name="OnboardingManualCreateCharacter" component={OnboardingManualCreateCharacterScreen} />
         <Stack.Screen name="MainScreen" component={MainScreen} />
-        <Stack.Screen name="ConstructorScreen" component={ConstructorScreen} />
+        <Stack.Screen name="ConstructorScreen" component={ConstructorScreen} options={{ headerShown: false }}  />
       </Stack.Navigator>
     </NavigationContainer>
   );
