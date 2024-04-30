@@ -1,9 +1,10 @@
-import AvatarService from "../backend/AvatarService";
-import {allElements, AnimationType} from "../model/enum";
-import {Animation} from "@lottiefiles/lottie-js";
+import AvatarService, {convertColor} from "../backend/AvatarService";
+import {allElements, AnimationType, ElementType} from "../model/enum";
+import {Animation, LayerType} from "@lottiefiles/lottie-js";
 import {sync} from "../backend/watermelon-db/watermelon";
+import {ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand} from "../model/Command";
 
-const avatarDao = require("../backend/db/AvatarDao");
+const avatarDao = require("../backend/db/AvatarWatermelonDao");
 
 beforeAll(async () => {
   await sync();
@@ -28,7 +29,7 @@ it("Avatar backend could change elements", async () =>
   const originalLayerNames = extractLayerNames(originalResult);
   expect(originalLayerNames).not.toContain("head_2");
 
-  AvatarService.changeElement({elementType: "HEAD", number: 2});
+  AvatarService.changeElement(new ChangeElementCommand(ElementType.HEAD, 2));
   const changedResult = await AvatarService.getAnimation(AnimationType.IDLE);
   const changedLayerNames = extractLayerNames(changedResult);
   expect(changedLayerNames).toContain("head_2");
@@ -41,7 +42,7 @@ it("New animation layer requested only for changed element", async () =>
 
   const spy = jest.spyOn(avatarDao, "findAnimation");
 
-  AvatarService.changeElement({elementType: "HEAD", number: 2});
+  AvatarService.changeElement(new ChangeElementCommand(ElementType.HEAD, 2));
   const result = await AvatarService.getAnimation(AnimationType.IDLE);
   expect(result).not.toBeUndefined();
   const layerNames = extractLayerNames(result);
@@ -64,8 +65,36 @@ afterEach(() => {
 });
 
 
+it("Avatar backend could change elements color", async () =>
+{
+  const lottieColor = convertColor("FDE3C7");
+/*  const originalResult = await AvatarService.getAnimation(AnimationType.IDLE);
+  expect(originalResult).not.toBeUndefined();
+
+  AvatarService.changeColor(new ChangeColorCommand(ElementType.HEAD, "#DD9283"));
+  const result = await AvatarService.getAnimation(AnimationType.IDLE);
+
+  expect(result).not.toBeUndefined();
+  expect( result.colors).not.toEqual(originalResult.colors);*/
+});
+
+//TODO in progress
+it("Avatar backend could change elements size", async () =>
+{
+  const originalResult = await AvatarService.getAnimation(AnimationType.IDLE);
+  expect(originalResult).not.toBeUndefined();
+  AvatarService.changeSize(new ChangeSizeCommand(ElementType.HEAD, 10));
+  const result = await AvatarService.getAnimation(AnimationType.IDLE);
+  expect(result).not.toBeUndefined();
+});
+
+
 function extractLayerNames(result: Animation) {
   return result.layers
     .map(layer => layer.name.split(";")[0])//remove comment
     .map(name => name.replace("_m", "").replace("_f", ""));  //remove gender
+}
+
+function getLayer(animation: Animation, elementType: ElementType){
+  return animation.layers.find(layer => layer.name.includes(elementType.toLowerCase()));
 }

@@ -30,3 +30,10 @@ export async function  findAnimation(
     Q.unsafeSqlQuery(sqlQuery, parameters)
   ).unsafeFetchRaw().then(result => result.map((it) => it.value));
 }
+
+export async function  findColors(
+  elementType: string | ElementType,
+  elementNumber: number
+): Promise<LayerWDB[]> {
+//TODO impl
+}

@@ -11,3 +11,14 @@ export class LayerWDB extends Model {
   @field("gender") gender!: string;
   @field("value") value!: string;
 }
+
+export class ColorWDB extends Model {
+  static table = "colors";
+
+  @field("additional_colors") additionalColors: string;
+  @field("element_nbr") elementNbr: number;
+  @field("element_type") elementType!: string;
+  @field("is_basic") isBasic!: boolean;
+  @field("main_color") mainColor!: string;
+  @field("stroke_color") strokeColor!: string;
+}

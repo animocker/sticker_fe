@@ -2,13 +2,14 @@ import {findElementByTypeAndIndexNumber} from "./db/elements";
 import {allElements, AnimationType, ElementType} from "../model/enum";
 import {ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand} from "../model/Command";
 import {findAnimationByTypeAndElements} from "./db/animations";
-import {findAnimation} from "./db/AvatarDao";
-import {Animation, Color} from "@lottiefiles/lottie-js";
+import {findAnimation} from "./db/AvatarWatermelonDao";
+import {Animation, Color, ColorRgba} from "@lottiefiles/lottie-js";
 
 class State {
   readonly elements  = new Map<ElementType, number>();
   readonly elementSize  = new Map<ElementType, number>();
-  readonly elementColor = new Map<ElementType, string>();
+  readonly currentElementColor = new Map<ElementType, string>();
+  readonly newElementColor = new Map<ElementType, string>();
 
   equals(other: State): boolean {
     if (other === undefined) {
@@ -19,8 +20,13 @@ class State {
         return false;
       }
     }
-    for (const key of other.elementSize.keys()) {
+    for (const key of this.elementSize.keys()) {
       if (this.elementSize.get(key) !== other.elementSize.get(key)) {
+        return false;
+      }
+    }
+    for (const key of this.currentElementColor.keys()) {
+      if (this.currentElementColor.get(key) !== other.currentElementColor.get(key)) {
         return false;
       }
     }
@@ -35,8 +41,8 @@ class State {
     this.elementSize.forEach((value, key) => {
       newState.elementSize.set(key, value);
     });
-    this.elementColor.forEach((value, key) => {
-      newState.elementColor.set(key, value);
+    this.currentElementColor.forEach((value, key) => {
+      newState.currentElementColor.set(key, value);
     });
     return newState;
   }
@@ -56,9 +62,9 @@ class State {
         newState.elementSize.set(key, value);
       }
     });
-    this.elementColor.forEach((value, key) => {
-      if (value !== other.elementColor.get(key)) {
-        newState.elementColor.set(key, value);
+    this.currentElementColor.forEach((value, key) => {
+      if (value !== other.currentElementColor.get(key)) {
+        newState.currentElementColor.set(key, value);
       }
     });
     return newState;
@@ -122,7 +128,7 @@ class Avatar {
 
   private changeElementsColor() {
     const stateDifference = this.state.getDifference(this.lastState);
-    stateDifference.elementColor.forEach((elementColor, elementType) => {
+    stateDifference.currentElementColor.forEach((elementColor, elementType) => {
       const elementNumber = this.state.elements.get(elementType);
       const searchedLayerName =`${elementType}_${elementNumber}`;
       const layer = this.animation.layers.find(layer => layer.name.toUpperCase().startsWith(searchedLayerName));
@@ -133,7 +139,7 @@ class Avatar {
 
 
   changeColor(changeColorCommand: ChangeColorCommand) {
-    this.state.elementColor.set(changeColorCommand.elementType, changeColorCommand.color);
+    this.state.currentElementColor.set(changeColorCommand.elementType, changeColorCommand.color);
   }
 
   private transformToLottie(jsonArray: string[]): Record<string, any> {
@@ -161,25 +167,19 @@ class Avatar {
     return result;
   }
 
-  async getAnimation(animationType: string | AnimationType) {
-    const globalStart = Date.now();
-    if (this.state.equals(this.lastState)) {
-      return this.animation;
-    }
+  private async changeElements(animationType: string | AnimationType) {
     const stateDifference = this.state.getDifference(this.lastState);
-    console.log("Requesting animation: " + animationType);
+    if (stateDifference.elements.size === 0) {
+      return;
+    }
+
     const elements = Array.from(stateDifference.elements.entries())
       .map(it => ({elementType: it[0], elementNumber: it[1]}));
-
-    let start = Date.now();
     const layers = await findAnimation(animationType, elements, "MALE");
-    let timeTaken = Date.now() - start;
-    console.log("Request took: " + timeTaken + "ms");
     const isFirstRequest = this.lastState === undefined;
-    start = Date.now();
     if (!isFirstRequest) { //if it's not first request, update required layers, otherwise keep all
       const changedTypes = Array.from(stateDifference.elements.keys()).map(it => it.toLowerCase());
-      const layersToKeep= this.animation.layers
+      const layersToKeep = this.animation.layers
         .filter(layer => !changedTypes.includes(layer.name.split("_")[0].toLowerCase()))
         .map(layer => layer.toJSON())
         .map(layer => JSON.stringify(layer));
@@ -187,20 +187,36 @@ class Avatar {
     }
     this.layers = layers.flat();
     const lottieJson = this.transformToLottie(layers.flat());
-    const animationStart = Date.now();
     this.animation = new Animation().fromJSON(lottieJson);
-    timeTaken = Date.now() - animationStart;
-    console.log("Animation creation took: " + timeTaken + "ms");
+  }
+
+  async getAnimation(animationType: string | AnimationType) {
+    console.log("Requesting animation: " + animationType);
+    if (this.state.equals(this.lastState)) {
+      return this.animation;
+    }
+    await this.changeElements(animationType);
     this.changeElementsSize();
     this.changeElementsColor();
     this.lastState = this.state.copy();
-    timeTaken = Date.now() - start;
-    console.log("Transform took: " + timeTaken + "ms");
-    console.log("Global took: " + (Date.now() - globalStart) + "ms");
     return this.animation;
+  }
+
+  private convertColor(hexColor: string): ColorRgba {
+    const hex = hexColor.replace("#", "");
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    return new ColorRgba(r/255, g/255, b/255);
   }
 }
 
-
+export function convertColor(hexColor: string): ColorRgba {
+  const hex = hexColor.replace("#", "");
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+  return new ColorRgba(r/255, g/255, b/255);
+}
 
 export default new Avatar();

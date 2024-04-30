@@ -13,7 +13,7 @@ export class ChangeSizeCommand implements Command {
     sizePercent: number;
     isExecuted = false;
 
-    constructor(sizePercent: number) {
+    constructor(elementType: ElementType, sizePercent: number) {
       this.sizePercent = sizePercent;
     }
 
@@ -29,7 +29,8 @@ export class ChangeColorCommand implements Command {
     color: string;
     isExecuted = false;
 
-    constructor(color: string) {
+    constructor(elementType: ElementType, color: string) {
+      this.elementType = elementType;
       this.color = color;
     }
 
