@@ -24,10 +24,10 @@ export const ConstructorScreen = () => {
     <TabBar
       {...props}
       indicatorStyle={styles.indicator}
-      style={styles.tabs}
+      style={{...styles.tabs}}
       labelStyle={styles.label}
       activeColor={styleAssets.colorsPalette.white}
-      pressColor={styleAssets.colorsPalette.primeBlue}
+      pressColor='transparent'
       contentContainerStyle={styles.tabsContainer}
     />
   );
@@ -48,15 +48,15 @@ export const ConstructorScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-
     flex: 1,
     paddingTop: 16
   },
   indicator: {
     backgroundColor: styleAssets.colorsPalette.primeBlue,
-    borderBottomColor: styleAssets.colorsPalette.primeBlue,
+    borderColor: styleAssets.colorsPalette.white,
     borderRadius: 8,
-    height: 48,
+    borderWidth: 6,
+    height: 48
   },
   label: {
     borderRadius: 8,
