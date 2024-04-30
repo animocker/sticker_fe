@@ -44,11 +44,13 @@ ConstructorAppearanceMenu.propTypes = {
 
 const styles = StyleSheet.create({
   button: {
+    alignItems: "center",
     backgroundColor: styleAssets.colorsPalette.white,
     borderColor: styleAssets.colorsPalette.white,
     borderRadius: 12,
     borderWidth: 2,
     flexDirection: "row",
+    gap: 8,
     margin: 5,
     paddingBottom: 5,
     paddingTop: 5,

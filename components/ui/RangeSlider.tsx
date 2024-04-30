@@ -1,7 +1,8 @@
 import {View, StyleSheet} from "react-native";
 import React, {useState} from "react";
-import Slider from "@react-native-community/slider";
+import Slider from "react-native-slider";
 import PropTypes from "prop-types";
+import {styleAssets} from "../../styleAssets";
 
 
 export const RangeSlider = ({initialSize, changeSize, step = 1}) => {
@@ -16,9 +17,9 @@ export const RangeSlider = ({initialSize, changeSize, step = 1}) => {
         step={step}
         value={size}
         onSlidingComplete={changeSize}
-        minimumTrackTintColor="#4D96DA"
-        maximumTrackTintColor={"#FFFFFF"}
-        thumbTintColor={"#4D96DA"}
+        thumbStyle={styles.thumb}
+        trackStyle={styles.track}
+        minimumTrackTintColor={styleAssets.colorsPalette.primeBlue}
       />
     </View>
   );
@@ -33,6 +34,26 @@ RangeSlider.propTypes = {
 
 const styles = StyleSheet.create({
   slider: {
-    margin: 24,
+    marginBottom: 20,
+    marginTop: 20
+  },
+  thumb: {
+    backgroundColor: styleAssets.colorsPalette.primeBlue,
+    borderRadius: 20,
+    elevation: 5,
+    height: 40,
+    shadowColor: styleAssets.colorsPalette.black,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    width: 40,
+  },
+  track:{
+    backgroundColor: styleAssets.colorsPalette.white,
+    borderRadius: 20,
+    height: 24,
   }
 });
