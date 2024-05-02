@@ -1,13 +1,12 @@
 import {sync} from "../backend/watermelon-db/watermelon";
-import {findAnimation} from "../backend/db/AvatarWatermelonDao";
-import {AnimationType} from "../model/enum";
+import {findAnimation, findColors} from "../backend/db/AvatarWatermelonDao";
+import {AnimationType, ElementType} from "../model/enum";
 
-it("should load watermelon db successfully", async () => {
+beforeAll(async () => {
   await sync();
 });
 
 it("Find animation successful", async () => {
-  await sync();
   const result = await findAnimation(
     AnimationType.IDLE,
     [{elementType: "HEAD", elementNumber: 1}, {elementType: "HAIR", elementNumber:1}, {elementType: "CLOTHES", elementNumber:1}],
@@ -21,3 +20,8 @@ it("Find animation successful", async () => {
   });
 });
 
+it("Find colors successful", async () => {
+  const result = await findColors(ElementType.HEAD);
+  expect(result).toBeDefined();
+  expect(result.length).toBeGreaterThan(0);
+});

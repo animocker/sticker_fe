@@ -1,7 +1,7 @@
 import {Model} from "@nozbe/watermelondb";
 import {field} from "@nozbe/watermelondb/decorators";
 
-
+//TODO add indexes
 export class LayerWDB extends Model {
   static table = "layers";
 

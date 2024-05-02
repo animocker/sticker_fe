@@ -1,7 +1,9 @@
 import {ElementType} from "./enum";
 import AvatarService from "../backend/AvatarService";
 
-export interface Command {
+//TODO WIP
+
+export type Command = {
     type: CommandType
     isExecuted: boolean;
     execute(): void;
@@ -26,12 +28,14 @@ export class ChangeSizeCommand implements Command {
 export class ChangeColorCommand implements Command {
     type = CommandType.CHANGE_COLOR;
     elementType: ElementType;
-    color: string;
+    elementNumber?: number;
+    colorId: string;
     isExecuted = false;
 
-    constructor(elementType: ElementType, color: string) {
+    constructor(elementType: ElementType, elementNumber = null, colorId: string) {
       this.elementType = elementType;
-      this.color = color;
+      this.elementNumber = elementNumber;
+      this.colorId = colorId;
     }
 
     execute(): void {

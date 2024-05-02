@@ -15,7 +15,6 @@ const layersSchema = tableSchema({
 const colorsSchema = tableSchema({
   name: "colors",
   columns: [
-    { name: "id", type: "string", isIndexed: true },
     { name: "additional_colors", type: "string", isOptional: true },
     { name: "element_nbr", type: "number", isOptional: true},
     { name: "element_type", type: "string" },

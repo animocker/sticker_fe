@@ -1,14 +1,25 @@
 import {ElementType} from "./enum";
 
-export type Config= {
-isSizeChangeable: boolean;
-isColorChangeable: boolean;
-colorConfigs: ColorConfig[];
+export type ElementTypeConfig= {
+    elementType: ElementType;
+    isSizeChangeable: boolean;
+    isColorChangeable: boolean;
+    //if single color config is provided, it means that the colors is for all elements of the given type, otherwise it is for a specific element
+    colorConfigs: ColorConfig[];
 }
-//TODO Wip
+
+/**
+ * If elementNumber is not provided, it means that the colors is for all elements of the given type
+ */
 export type ColorConfig = {
     elementType: ElementType,
-    colors: string[],
-    mainColor: string,
-    colorEntityId: string
+    elementNumber?: number,
+    colors: Color[],
+}
+
+export type Color = {
+    id: string;
+    mainColor: string;
+    strokeColor: string;
+    additionalColors: string[];
 }

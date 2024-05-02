@@ -1,7 +1,7 @@
 import {AnimationType, ElementType} from "../../model/enum";
 import {database} from "../watermelon-db/watermelon";
 import {Q} from "@nozbe/watermelondb";
-import {LayerWDB} from "../watermelon-db/model";
+import {ColorWDB, LayerWDB} from "../watermelon-db/model";
 
 export async function  findAnimation(
   animationType: string | AnimationType,
@@ -33,7 +33,14 @@ export async function  findAnimation(
 
 export async function  findColors(
   elementType: string | ElementType,
-  elementNumber: number
-): Promise<LayerWDB[]> {
-//TODO impl
+  elementNumber: number = null
+): Promise<ColorWDB[]> {
+  return database.get<ColorWDB>(ColorWDB.table).query(
+    Q.where("element_type", Q.eq(elementType)),
+    Q.where("element_nbr", Q.eq(elementNumber))
+  ).fetch();
+}
+
+export async function  getAllColors(): Promise<ColorWDB[]> {
+  return database.get<ColorWDB>(ColorWDB.table).query().fetch();
 }
