@@ -1,17 +1,15 @@
-import {findElementByTypeAndIndexNumber} from "./db/elements";
 import {allElements, AnimationType, ElementType} from "../model/enum";
 import {ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand} from "../model/Command";
-import {findAnimationByTypeAndElements} from "./db/animations";
 import {findAnimation} from "./db/AvatarWatermelonDao";
-import {Animation,  ColorRgba} from "@lottiefiles/lottie-js";
+import {Animation, ColorRgba} from "@lottiefiles/lottie-js";
 import {Color} from "../model/Config";
 import ConfigService from "./ConfigService";
 
 class ElementTypeAndNumber {
-  readonly elementType: ElementType;
+  readonly elementType: ElementType | string;
   readonly elementNumber?: number;
 
-  constructor(elementType: ElementType, elementNumber: number = null) {
+  constructor(elementType: ElementType| string, elementNumber: number = null) {
     this.elementType = elementType;
     this.elementNumber = elementNumber;
   }
@@ -32,9 +30,15 @@ class State {
     if (other === undefined) {
       return false;
     }
-    return this.propertyEqual(this.elements, other.elements) &&
-        this.propertyEqual(this.elementSize, other.elementSize) &&
-        this.propertyEqual(this.currentElementColor, other.currentElementColor);
+    let result = true;
+    for (const field in this) {
+      const thisField = this[field];
+      if (!(thisField instanceof Map)) {
+        continue;
+      }
+      result &&= this.propertyEqual(thisField, other[field]);
+    }
+    return result;
   }
 
   private propertyEqual(field1: Map<any, any>, field2: Map<any, any>): boolean {
@@ -48,10 +52,13 @@ class State {
 
   copy(): State {
     const newState = new State();
-    this.copyProperty(this.elements, newState.elements);
-    this.copyProperty(this.elementSize, newState.elementSize);
-    this.copyProperty(this.currentElementColor, newState.currentElementColor);
-    this.copyProperty(this.newElementColor, newState.newElementColor);
+    for (const field in this) {
+      const thisField = this[field];
+      if (!(thisField instanceof Map)) {
+        continue;
+      }
+      this.copyProperty(thisField, newState[field]);
+    }
     return newState;
   }
 
@@ -66,10 +73,13 @@ class State {
       return this;
     }
     const newState = new State();
-    this.getPropertyDifference(this.elements, other.elements, newState.elements);
-    this.getPropertyDifference(this.elementSize, other.elementSize, newState.elementSize);
-    this.getPropertyDifference(this.currentElementColor, other.currentElementColor, newState.currentElementColor);
-    this.getPropertyDifference(this.newElementColor, other.newElementColor, newState.newElementColor);
+    for (const field in this) {
+      const thisField = this[field];
+      if (!(thisField instanceof Map)) {
+        continue;
+      }
+      this.getPropertyDifference(thisField, other[field], newState[field]);
+    }
     return newState;
   }
 
@@ -82,19 +92,31 @@ class State {
   }
 }
 const LOTTIE_BODY = "{\"v\":\"5.9.0\",\"fr\":30,\"ip\":0,\"op\":90,\"w\":430,\"h\":430,\"nm\":\"avatar\",\"ddd\":0,\"assets\":[],{layersSpot}}";
+const COLOR_DELTA = 0.0000001;
 
 class Avatar {
   private readonly state : State = new State();
   private lastState : State;
   private readonly layersIndexes = new Map<ElementType, number[]>();
   private animation: Animation;
-  private layers: Record<string, any>;
+  private isInitialized = false;
 
-
-  constructor() {
-    allElements.map(elementType => {
+  async init() {
+    for (const  elementType of allElements) {
       this.state.elementSize[elementType] = 0;
-      return this.changeElement(new ChangeElementCommand(elementType, 1));
+      this.changeElement(new ChangeElementCommand(elementType, 1));
+      await this.updateCurrentColors(elementType);
+    }
+    this.isInitialized = true;
+  }
+
+  private async updateCurrentColors(elementType: ElementType | string) {
+    const elementTypeConfig = await ConfigService.getElementTypeConfig(elementType);
+    const colorConfigs = elementTypeConfig.colorConfigs;
+
+    colorConfigs.forEach(config =>{
+      const key = new ElementTypeAndNumber(elementType, config.elementNumber).toString();
+      this.state.currentElementColor.set(key, config.colors.find(it => it.isBasic));
     });
   }
 
@@ -114,7 +136,7 @@ class Avatar {
   changeColor(changeColorCommand: ChangeColorCommand) {
     const key = new ElementTypeAndNumber(changeColorCommand.elementType, changeColorCommand.elementNumber).toString();
     const value = ConfigService.getColorById(changeColorCommand.colorId);
-    this.state.newElementColor.set(key, value);
+    this.state.newElementColor.set(key.toString(), value);
   }
 
   private changeElementsSize() {
@@ -139,11 +161,41 @@ class Avatar {
 
   private changeElementsColor() {
     const stateDifference = this.state.getDifference(this.lastState);
-    //TODO impl
+    for (const [elementTypeAndNumber, newValue] of stateDifference.newElementColor) {
+      const currentColor = this.state.currentElementColor.get(elementTypeAndNumber.toString());
+      if (currentColor === undefined) {
+        return;
+      }
+      const currentColorsRgbaArray = this.convertColor(currentColor);
+      const newColorsRgbaArray = this.convertColor(newValue);
+      if (currentColorsRgbaArray.length !== newColorsRgbaArray.length) {
+        console.warn("Color arrays have different lengths");
+        return;
+      }
+      for (let i = 0; i < currentColorsRgbaArray.length; i++) {
+        const currentColorRgba = currentColorsRgbaArray[i];
+        const newColorRgba = newColorsRgbaArray[i];
+
+        //TODO doesn't work, need to change properties in layers
+        const animationColorRgba = this.animation.colors
+          .map(animationColor => animationColor as ColorRgba)
+          .find(animationColor =>
+            Math.abs(animationColor.r - currentColorRgba.r) < COLOR_DELTA &&
+            Math.abs(animationColor.g - currentColorRgba.g) < COLOR_DELTA &&
+            Math.abs(animationColor.b - currentColorRgba.b) < COLOR_DELTA
+          );
+        if (animationColorRgba !== undefined) {
+          animationColorRgba.r = newColorRgba.r;
+          animationColorRgba.g = newColorRgba.g;
+          animationColorRgba.b = newColorRgba.b;
+          this.state.currentElementColor.set(elementTypeAndNumber, newValue);
+          console.log("asd");
+        } else {
+          console.warn("Color not found in animation: " + currentColorRgba.toJSON());
+        }
+      }
+    }
   }
-
-
-
 
   private transformToLottie(jsonArray: string[]): Record<string, any> {
     const start = Date.now();
@@ -188,13 +240,15 @@ class Avatar {
         .map(layer => JSON.stringify(layer));
       layers.push(...layersToKeep);
     }
-    this.layers = layers.flat();
     const lottieJson = this.transformToLottie(layers.flat());
     this.animation = new Animation().fromJSON(lottieJson);
   }
 
   async getAnimation(animationType: string | AnimationType) {
     console.log("Requesting animation: " + animationType);
+    if (!this.isInitialized) {
+      await this.init();
+    }
     if (this.state.equals(this.lastState)) {
       return this.animation;
     }
@@ -205,12 +259,18 @@ class Avatar {
     return this.animation;
   }
 
-  private convertColor(hexColor: string): ColorRgba {
-    const hex = hexColor.replace("#", "");
-    const r = parseInt(hex.substring(0, 2), 16);
-    const g = parseInt(hex.substring(2, 4), 16);
-    const b = parseInt(hex.substring(4, 6), 16);
-    return new ColorRgba(r/255, g/255, b/255);
+  private convertColor(source: Color): ColorRgba[] {
+    const hexColors = [source.mainColor, source.strokeColor, ...source.additionalColors];
+    return hexColors.map(hex => {
+      const r = parseInt(hex.substring(0, 2), 16);
+      const g = parseInt(hex.substring(2, 4), 16);
+      const b = parseInt(hex.substring(4, 6), 16);
+      return new ColorRgba(r/255, g/255, b/255);
+    });
+  }
+
+  private convertColorToHexArray(source: Color): string[] {
+    return [source.mainColor, source.strokeColor, ...source.additionalColors];
   }
 }
 

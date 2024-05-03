@@ -32,7 +32,7 @@ export class ChangeColorCommand implements Command {
     colorId: string;
     isExecuted = false;
 
-    constructor(elementType: ElementType, elementNumber = null, colorId: string) {
+    constructor(elementType: ElementType,  colorId: string, elementNumber = null) {
       this.elementType = elementType;
       this.elementNumber = elementNumber;
       this.colorId = colorId;

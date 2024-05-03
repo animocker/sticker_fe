@@ -7,17 +7,22 @@ import {ColorWDB} from "./watermelon-db/model";
 
 class ConfigService {
   private elementTypeConfigs : ElementTypeConfig[] = null;
-  private readonly colorByKey: Map<string, Color> = new Map<string, Color>();
+  private readonly colorById: Map<string, Color> = new Map<string, Color>();
 
-  public async getElementTypeConfig():Promise<ElementTypeConfig[]> {
+  public async getElementTypeConfigs():Promise<ElementTypeConfig[]> {
     if (this.elementTypeConfigs === null) {
       this.elementTypeConfigs = await this.buildElementTypeConfig();
     }
     return this.elementTypeConfigs;
   }
 
+  public async getElementTypeConfig(elementType: ElementType | string): Promise<ElementTypeConfig> {
+    const configs = await this.getElementTypeConfigs();
+    return configs.find(it => it.elementType === elementType);
+  }
+
   public getColorById(id: string): Color {
-    return this.colorByKey.get(id);
+    return this.colorById.get(id);
   }
 
   private async buildElementTypeConfig(): Promise<ElementTypeConfig[]> {
@@ -53,16 +58,17 @@ class ConfigService {
   }
 
   private mapColor(source: ColorWDB): Color {
-    if (this.colorByKey.has(source.id)) {
-      return this.colorByKey.get(source.id);
+    if (this.colorById.has(source.id)) {
+      return this.colorById.get(source.id);
     }
     const result = {
       id: source.id,
+      isBasic: source.isBasic,
       mainColor: source.mainColor,
       strokeColor: source.strokeColor,
       additionalColors: source.additionalColors.split(",")
     };
-    this.colorByKey.set(source.id, this.mapColor(source));
+    this.colorById.set(source.id, result);
     return result;
   }
 }

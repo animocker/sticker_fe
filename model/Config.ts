@@ -19,6 +19,7 @@ export type ColorConfig = {
 
 export type Color = {
     id: string;
+    isBasic: boolean;
     mainColor: string;
     strokeColor: string;
     additionalColors: string[];

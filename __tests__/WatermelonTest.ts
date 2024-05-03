@@ -1,5 +1,5 @@
 import {sync} from "../backend/watermelon-db/watermelon";
-import {findAnimation, findColors} from "../backend/db/AvatarWatermelonDao";
+import {findAnimation, findColors, getAllColors} from "../backend/db/AvatarWatermelonDao";
 import {AnimationType, ElementType} from "../model/enum";
 
 beforeAll(async () => {
@@ -22,6 +22,12 @@ it("Find animation successful", async () => {
 
 it("Find colors successful", async () => {
   const result = await findColors(ElementType.HEAD);
+  expect(result).toBeDefined();
+  expect(result.length).toBeGreaterThan(0);
+});
+
+it("Find all colors successful", async () => {
+  const result = await getAllColors();
   expect(result).toBeDefined();
   expect(result.length).toBeGreaterThan(0);
 });

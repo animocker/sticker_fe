@@ -25,7 +25,7 @@ const colorsSchema = tableSchema({
 });
 
 export default appSchema({
-  version: 3,
+  version: 4,
   tables: [
     layersSchema,
     colorsSchema

@@ -1,13 +1,16 @@
-import AvatarService, {convertColor} from "../backend/AvatarService";
+import AvatarService from "../backend/AvatarService";
 import {allElements, AnimationType, ElementType} from "../model/enum";
 import {Animation, LayerType} from "@lottiefiles/lottie-js";
 import {sync} from "../backend/watermelon-db/watermelon";
 import {ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand} from "../model/Command";
+import ConfigService from "../backend/ConfigService";
+import {getAllColors} from "../backend/db/AvatarWatermelonDao";
+import initialize from "../backend/Initializer";
 
 const avatarDao = require("../backend/db/AvatarWatermelonDao");
 
 beforeAll(async () => {
-  await sync();
+  await initialize();
 });
 
 it("Avatar backend could create basic avatar", async () =>
@@ -67,15 +70,20 @@ afterEach(() => {
 
 it("Avatar backend could change elements color", async () =>
 {
-  const lottieColor = convertColor("FDE3C7");
-/*  const originalResult = await AvatarService.getAnimation(AnimationType.IDLE);
+  const allColors = await getAllColors();
+  const originalResult = await AvatarService.getAnimation(AnimationType.IDLE);
   expect(originalResult).not.toBeUndefined();
 
-  AvatarService.changeColor(new ChangeColorCommand(ElementType.HEAD, "#DD9283"));
-  const result = await AvatarService.getAnimation(AnimationType.IDLE);
+  const headConfig = await ConfigService.getElementTypeConfig(ElementType.HEAD);
+  expect(headConfig).not.toBeUndefined();
+  expect(headConfig.colorConfigs.length).toEqual(1);
+  const colorConfig = headConfig.colorConfigs[0];
+  const notBasicColor = colorConfig.colors.find(it => !it.isBasic);
+  AvatarService.changeColor(new ChangeColorCommand(ElementType.HEAD, notBasicColor.id));
 
+  const result = await AvatarService.getAnimation(AnimationType.IDLE);
   expect(result).not.toBeUndefined();
-  expect( result.colors).not.toEqual(originalResult.colors);*/
+  expect(result.colors).not.toEqual(originalResult.colors);
 });
 
 //TODO in progress

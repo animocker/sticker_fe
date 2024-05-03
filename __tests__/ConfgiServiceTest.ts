@@ -11,7 +11,7 @@ beforeAll(async () => {
 
 it("Retrieve config for element type", async () =>
 {
-  const elementTypeConfig = await ConfigService.getElementTypeConfig();
+  const elementTypeConfig = await ConfigService.getElementTypeConfigs();
   expect(elementTypeConfig).not.toBeUndefined();
   allElements.forEach(elementType => {
     const configForElementType = _.find(elementTypeConfig, ["elementType", elementType]);

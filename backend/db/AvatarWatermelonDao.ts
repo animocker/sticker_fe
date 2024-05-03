@@ -35,6 +35,7 @@ export async function  findColors(
   elementType: string | ElementType,
   elementNumber: number = null
 ): Promise<ColorWDB[]> {
+  console.log("findColors requested");
   return database.get<ColorWDB>(ColorWDB.table).query(
     Q.where("element_type", Q.eq(elementType)),
     Q.where("element_nbr", Q.eq(elementNumber))
@@ -42,5 +43,18 @@ export async function  findColors(
 }
 
 export async function  getAllColors(): Promise<ColorWDB[]> {
+  console.log("getAllColors requested");
   return database.get<ColorWDB>(ColorWDB.table).query().fetch();
+}
+
+export async function  findBasicColors(
+  elementType: string | ElementType,
+  elementNumber: number = null
+): Promise<ColorWDB[]> {
+  console.log("findBasicColors requested");
+  return database.get<ColorWDB>(ColorWDB.table).query(
+    Q.where("element_type", Q.eq(elementType)),
+    Q.where("element_nbr", Q.eq(elementNumber)),
+    Q.where("is_basic", Q.eq(true))
+  ).fetch();
 }
