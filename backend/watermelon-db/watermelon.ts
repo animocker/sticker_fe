@@ -2,7 +2,7 @@ import {Database} from "@nozbe/watermelondb";
 import SQLiteAdapter from "@nozbe/watermelondb/adapters/sqlite";
 
 import schema from "./schema";
-import {LayerWDB, ColorWDB} from "./model";
+import {LayerWDB, ColorWDB, ColorSetWDB, ColorSetColorWDB} from "./model";
 import {supabase} from "../supabase";
 import {SyncDatabaseChangeSet, synchronize} from "@nozbe/watermelondb/sync";
 // import Post from './model/Post' // ⬅️ You'll import your Models here
@@ -28,7 +28,9 @@ export const database = new Database({
   adapter,
   modelClasses: [
     LayerWDB,
-    ColorWDB
+    ColorWDB,
+    ColorSetWDB,
+    ColorSetColorWDB
   ],
 });
 

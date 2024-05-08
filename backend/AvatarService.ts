@@ -46,7 +46,7 @@ class State {
       if (field1.get(key) !== field2.get(key)) {
         return false;
       }
-    }
+    }[].find(it => it == "qwe".startsWith(""));
     return true;
   }
 

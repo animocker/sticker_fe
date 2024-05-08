@@ -12,22 +12,36 @@ const layersSchema = tableSchema({
   ],
 });
 
+const colorSetsSchema = tableSchema({
+  name: "color_sets",
+  columns: [
+    { name: "element_nbr", type: "number", isOptional: true },
+    { name: "element_type", type: "string" },
+  ],
+});
+
 const colorsSchema = tableSchema({
   name: "colors",
   columns: [
-    { name: "additional_colors", type: "string", isOptional: true },
-    { name: "element_nbr", type: "number", isOptional: true},
-    { name: "element_type", type: "string" },
-    { name: "is_basic", type: "boolean" },
-    { name: "main_color", type: "string" },
-    { name: "stroke_color", type: "string" },
+    { name: "hex", type: "string" },
+    { name: "name", type: "string" },
+  ],
+});
+
+const colorSetsColorsSchema = tableSchema({
+  name: "color_sets_colors",
+  columns: [
+    { name: "color_id", type: "number" },
+    { name: "color_set_id", type: "number" },
   ],
 });
 
 export default appSchema({
-  version: 4,
+  version: 5,
   tables: [
     layersSchema,
-    colorsSchema
+    colorsSchema,
+    colorSetsSchema,
+    colorSetsColorsSchema,
   ]
 });
