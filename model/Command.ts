@@ -16,6 +16,7 @@ export class ChangeSizeCommand implements Command {
     isExecuted = false;
 
     constructor(elementType: ElementType, sizePercent: number) {
+      this.elementType = elementType;
       this.sizePercent = sizePercent;
     }
 
@@ -29,13 +30,13 @@ export class ChangeColorCommand implements Command {
     type = CommandType.CHANGE_COLOR;
     elementType: ElementType;
     elementNumber?: number;
-    colorId: string;
+    colorSetId: string;
     isExecuted = false;
 
     constructor(elementType: ElementType,  colorId: string, elementNumber = null) {
       this.elementType = elementType;
       this.elementNumber = elementNumber;
-      this.colorId = colorId;
+      this.colorSetId = colorId;
     }
 
     execute(): void {

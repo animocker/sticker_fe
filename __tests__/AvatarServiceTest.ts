@@ -70,30 +70,34 @@ afterEach(() => {
 
 it("Avatar backend could change elements color", async () =>
 {
-  const allColors = await getAllColors();
   const originalResult = await AvatarService.getAnimation(AnimationType.IDLE);
   expect(originalResult).not.toBeUndefined();
+  const originalColors = originalResult.colors;
 
   const headConfig = await ConfigService.getElementTypeConfig(ElementType.HEAD);
-  expect(headConfig).not.toBeUndefined();
-  expect(headConfig.colorConfigs.length).toEqual(1);
-  const colorConfig = headConfig.colorConfigs[0];
-  const notBasicColor = colorConfig.colors.find(it => !it.isBasic);
-  AvatarService.changeColor(new ChangeColorCommand(ElementType.HEAD, notBasicColor.id));
+  const newSet = headConfig.colorSets[2];
+  AvatarService.changeColor(new ChangeColorCommand(ElementType.HEAD, newSet.id));
 
   const result = await AvatarService.getAnimation(AnimationType.IDLE);
   expect(result).not.toBeUndefined();
-  expect(result.colors).not.toEqual(originalResult.colors);
+  expect(result.colors).not.toEqual(originalColors);
 });
 
-//TODO in progress
+
 it("Avatar backend could change elements size", async () =>
 {
   const originalResult = await AvatarService.getAnimation(AnimationType.IDLE);
   expect(originalResult).not.toBeUndefined();
+  const originalHeadLayer = getLayer(originalResult, ElementType.HEAD);
+  const originalScale = JSON.stringify(originalHeadLayer.transform.scale);
+
   AvatarService.changeSize(new ChangeSizeCommand(ElementType.HEAD, 10));
+
   const result = await AvatarService.getAnimation(AnimationType.IDLE);
   expect(result).not.toBeUndefined();
+  const resultHeadLayer = getLayer(result, ElementType.HEAD);
+  const resultScale = JSON.stringify(resultHeadLayer.transform.scale);
+  expect(resultScale).not.toEqual(originalScale);
 });
 
 

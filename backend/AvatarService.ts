@@ -1,7 +1,7 @@
 import {allElements, AnimationType, ElementType} from "../model/enum";
 import {ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand} from "../model/Command";
 import {findAnimation} from "./db/AvatarWatermelonDao";
-import {Animation, ColorRgba} from "@lottiefiles/lottie-js";
+import {Animation, ColorRgba, Shape} from "@lottiefiles/lottie-js";
 import {Color, ColorSet} from "../model/Config";
 import ConfigService from "./ConfigService";
 import _ from "lodash";
@@ -115,11 +115,11 @@ class Avatar {
     const elementTypeConfig = await ConfigService.getElementTypeConfig(elementType);
     const colorSets = elementTypeConfig.colorSets;
 
-    const groupedSet = _.groupBy(colorSets, (it) => new ElementTypeAndNumber(it.elementType, it.elementNumber));
-    colorSets.forEach(config =>{
-      const key = new ElementTypeAndNumber(elementType, config.elementNumber).toString();
-      this.state.currentElementColorSet.set(key, config.colors[0]);
-    });
+    const groupedColorSets = _.groupBy(colorSets, (it) => new ElementTypeAndNumber(it.elementType, it.elementNumber));
+    for (const key in groupedColorSets) {
+      const colorSets = groupedColorSets[key];
+      this.state.currentElementColorSet.set(key, colorSets[0]);
+    }
   }
 
 
@@ -137,66 +137,60 @@ class Avatar {
   }
   changeColor(changeColorCommand: ChangeColorCommand) {
     const key = new ElementTypeAndNumber(changeColorCommand.elementType, changeColorCommand.elementNumber).toString();
-    const value = ConfigService.getColorById(changeColorCommand.colorId);
+    const value = ConfigService.getColorSetById(changeColorCommand.colorSetId);
     this.state.newElementColorSet.set(key.toString(), value);
   }
 
+  //TODO in progress
   private changeElementsSize() {
     const stateDifference = this.state.getDifference(this.lastState);
-    stateDifference.elementSize.forEach((elementSize, elementType) => {
-      if (elementSize === 0) {
-        return;
+    for (const [elementType, newSizeDiff ] of stateDifference.elementSize) {
+      if (newSizeDiff === 0 || elementType === undefined) {
+        continue;
       }
       const elementNumber = this.state.elements.get(elementType);
       const searchedLayerName =`${elementType}_${elementNumber}`;
-      const layer = this.animation.layers.find(layer => layer.name.toUpperCase().startsWith(searchedLayerName));
-      const scale = layer.transform.scale.toJSON();
-      const sizeValues = scale.k;
-      const newWidth = sizeValues[0] + (sizeValues[0] * this.state.elementSize.get(elementType) / 100);
-      const newHeight = sizeValues[1] + (sizeValues[1] * this.state.elementSize.get(elementType) / 100);
-      sizeValues[0] = newWidth;
-      sizeValues[1] = newHeight;
-      scale.k = sizeValues;
-      layer.transform.scale = layer.transform.scale.fromJSON(scale);
-    });
+      const layers = this.animation.layers.filter(layer => layer.name.toUpperCase().startsWith(searchedLayerName));
+      for (const layer of layers) {
+        const scale = layer.transform.scale;
+        const framesSizes = scale.values;
+        for (const frameSize of framesSizes) {
+          const sizeValues = frameSize.value;
+          const newWidth = sizeValues[0] + (sizeValues[0] * newSizeDiff / 100);
+          const newHeight = sizeValues[1] + (sizeValues[1] * newSizeDiff / 100);
+          sizeValues[0] = newWidth;
+          sizeValues[1] = newHeight;
+        }
+      }
+    }
   }
 
   private changeElementsColor() {
     const stateDifference = this.state.getDifference(this.lastState);
-    for (const [elementTypeAndNumber, newValue] of stateDifference.newElementColor) {
-      const currentColor = this.state.currentElementColor.get(elementTypeAndNumber.toString());
-      if (currentColor === undefined) {
-        return;
-      }
-      const currentColorsRgbaArray = this.convertColor(currentColor);
-      const newColorsRgbaArray = this.convertColor(newValue);
-      if (currentColorsRgbaArray.length !== newColorsRgbaArray.length) {
-        console.warn("Color arrays have different lengths");
-        return;
-      }
-      for (let i = 0; i < currentColorsRgbaArray.length; i++) {
-        const currentColorRgba = currentColorsRgbaArray[i];
-        const newColorRgba = newColorsRgbaArray[i];
 
-        //TODO doesn't work, need to change properties in layers
-        const animationColorRgba = this.animation.colors
-          .map(animationColor => animationColor as ColorRgba)
-          .find(animationColor =>
-            Math.abs(animationColor.r - currentColorRgba.r) < COLOR_DELTA &&
-            Math.abs(animationColor.g - currentColorRgba.g) < COLOR_DELTA &&
-            Math.abs(animationColor.b - currentColorRgba.b) < COLOR_DELTA
-          );
-        if (animationColorRgba !== undefined) {
-          animationColorRgba.r = newColorRgba.r;
-          animationColorRgba.g = newColorRgba.g;
-          animationColorRgba.b = newColorRgba.b;
-          this.state.currentElementColor.set(elementTypeAndNumber, newValue);
-          console.log("asd");
-        } else {
-          console.warn("Color not found in animation: " + currentColorRgba.toJSON());
-        }
-      }
+    for (const [, newValue] of stateDifference.newElementColorSet) {
+      newValue.colors.forEach(color => this.updateColor(color));
     }
+  }
+
+  private updateColor(newColor: Color) {
+    const shapesToChange = this.animation.layers.flatMap(layer => layer.shapes.flatMap(shape => this.recursiveFindShapesByName(newColor.name, shape)));
+    shapesToChange.forEach(shape => shape.color.values[0].value = this.convertColor(newColor));
+  }
+
+  private recursiveFindShapesByName(name: string, shape: Shape){
+    if (shape === undefined) {
+      return [];
+    }
+    const result:Shape[] = [];
+    if (shape.name === name) {
+      return [shape];
+    }
+    if (shape.shapes === undefined) {
+      return [];
+    }
+    shape.shapes.forEach(it => result.push(...this.recursiveFindShapesByName(name, it)));
+    return result;
   }
 
   private transformToLottie(jsonArray: string[]): Record<string, any> {
@@ -261,19 +255,15 @@ class Avatar {
     return this.animation;
   }
 
-  private convertColor(source: Color): ColorRgba[] {
-    const hexColors = [source.mainColor, source.strokeColor, ...source.additionalColors];
-    return hexColors.map(hex => {
-      const r = parseInt(hex.substring(0, 2), 16);
-      const g = parseInt(hex.substring(2, 4), 16);
-      const b = parseInt(hex.substring(4, 6), 16);
-      return new ColorRgba(r/255, g/255, b/255);
-    });
+  private convertColor(source: Color): ColorRgba {
+    const hex = source.hex;
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    return new ColorRgba(r/255, g/255, b/255);
   }
 
-  private convertColorToHexArray(source: Color): string[] {
-    return [source.mainColor, source.strokeColor, ...source.additionalColors];
-  }
 }
+
 
 export default new Avatar();
