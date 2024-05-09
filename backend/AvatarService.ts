@@ -2,8 +2,9 @@ import {allElements, AnimationType, ElementType} from "../model/enum";
 import {ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand} from "../model/Command";
 import {findAnimation} from "./db/AvatarWatermelonDao";
 import {Animation, ColorRgba} from "@lottiefiles/lottie-js";
-import {Color} from "../model/Config";
+import {Color, ColorSet} from "../model/Config";
 import ConfigService from "./ConfigService";
+import _ from "lodash";
 
 class ElementTypeAndNumber {
   readonly elementType: ElementType | string;
@@ -23,8 +24,8 @@ class ElementTypeAndNumber {
 class State {
   readonly elements  = new Map<ElementType, number>();
   readonly elementSize  = new Map<ElementType, number>();
-  readonly currentElementColor = new Map<string, Color>();//ElementTypeAndNumber.toString as key
-  readonly newElementColor = new Map<string, Color>();//ElementTypeAndNumber.toString as key
+  readonly currentElementColorSet = new Map<string, ColorSet>();//ElementTypeAndNumber.toString as key
+  readonly newElementColorSet = new Map<string, ColorSet>();//ElementTypeAndNumber.toString as key
 
   equals(other: State): boolean {
     if (other === undefined) {
@@ -112,11 +113,12 @@ class Avatar {
 
   private async updateCurrentColors(elementType: ElementType | string) {
     const elementTypeConfig = await ConfigService.getElementTypeConfig(elementType);
-    const colorConfigs = elementTypeConfig.colorConfigs;
+    const colorSets = elementTypeConfig.colorSets;
 
-    colorConfigs.forEach(config =>{
+    const groupedSet = _.groupBy(colorSets, (it) => new ElementTypeAndNumber(it.elementType, it.elementNumber));
+    colorSets.forEach(config =>{
       const key = new ElementTypeAndNumber(elementType, config.elementNumber).toString();
-      this.state.currentElementColor.set(key, config.colors.find(it => it.isBasic));
+      this.state.currentElementColorSet.set(key, config.colors[0]);
     });
   }
 
@@ -136,7 +138,7 @@ class Avatar {
   changeColor(changeColorCommand: ChangeColorCommand) {
     const key = new ElementTypeAndNumber(changeColorCommand.elementType, changeColorCommand.elementNumber).toString();
     const value = ConfigService.getColorById(changeColorCommand.colorId);
-    this.state.newElementColor.set(key.toString(), value);
+    this.state.newElementColorSet.set(key.toString(), value);
   }
 
   private changeElementsSize() {

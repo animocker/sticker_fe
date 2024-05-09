@@ -23,7 +23,7 @@ export class ColorSetWDB extends Model {
   }
   @lazy
   colors = this.collections.get<ColorWDB>(ColorWDB.table)
-    .query(Q.on("color_sets_colors", "color_set_id", this.id));
+    .query(Q.on(ColorSetColorWDB.table, "color_set_id", this.id));
 }
 
 export class ColorWDB extends Model {
@@ -33,11 +33,11 @@ export class ColorWDB extends Model {
   @field("name") name!: string;
 
   static associations = {
-    color_sets_colors: { type: "has_many", foreignKey: "color_set_id" },
+    color_sets_colors: { type: "has_many", foreignKey: "color_id" },
   }
   @lazy
   color_sets = this.collections.get<ColorSetWDB>(ColorSetWDB.table)
-    .query(Q.on("color_sets_colors", "color_id", this.id));
+    .query(Q.on(ColorSetColorWDB.table, "color_id", this.id));
 }
 
 export class ColorSetColorWDB extends Model {

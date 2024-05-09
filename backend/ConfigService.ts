@@ -1,9 +1,8 @@
-
-import {findColors, getAllColors} from "./db/AvatarWatermelonDao";
+import {getAllColorSets} from "./db/AvatarWatermelonDao";
 import _ from "lodash";
-import {Color, ColorConfig, ElementTypeConfig} from "../model/Config";
+import {Color, ColorSet, ElementTypeConfig} from "../model/Config";
 import {allElements, ElementType} from "../model/enum";
-import {ColorWDB} from "./watermelon-db/model";
+import {ColorSetWDB, ColorWDB} from "./watermelon-db/model";
 
 class ConfigService {
   private elementTypeConfigs : ElementTypeConfig[] = null;
@@ -26,35 +25,36 @@ class ConfigService {
   }
 
   private async buildElementTypeConfig(): Promise<ElementTypeConfig[]> {
-    const allColors = await getAllColors();
-    const elementTypeToColors =  _.groupBy(allColors, "elementType");
-    return  allElements.map((elementType) => {
-      const colors = elementTypeToColors[elementType] || [];
-      const colorsConfig = this.buildColorConfig(elementType, colors);
+    const allColorSets = await getAllColorSets();
+    const elementTypeToColors =  _.groupBy(allColorSets, "elementType");
+    const resultPromises =  allElements.map(async (elementType) => {
+      const colorSetsWdb = elementTypeToColors[elementType] || [];
+      const colorSets = await this.buildColorSet(colorSetsWdb);
       return {
         elementType: elementType,
         isSizeChangeable: true,
-        isColorChangeable: colorsConfig.length > 0,
-        colorConfigs: colorsConfig
+        colorSets: colorSets
       };
     });
+    return await Promise.all(resultPromises);
   }
 
-  private buildColorConfig(elementType: ElementType, colors: ColorWDB[]): ColorConfig[] {
-    if (colors.length === 0) {
+  private async buildColorSet(colorSets: ColorSetWDB[]): Promise<ColorSet[]> {
+    if (colorSets.length === 0) {
       return [];
     }
-    const colorsWithElementNumber =  _.filter(colors, (it: ColorWDB) => it.elementNbr !== null);
-    if (colorsWithElementNumber.length === 0) {
-      return [{
-        elementType: elementType,
-        colors: colors.map(it => this.mapColor(it))
-      }];
-    }
-    //TODO in progress
-    const groupedByElementNumber = _(colorsWithElementNumber)
-      .groupBy((it: ColorWDB) => it.elementNbr);
-    return [];
+    return  await Promise.all(colorSets
+      .map(async (it) => await this.mapColorSet(it))
+    );
+  }
+
+  private async mapColorSet(source: ColorSetWDB): Promise<ColorSet> {
+    return {
+      id: source.id,
+      elementType: source.elementType,
+      elementNumber: source.elementNbr,
+      colors:  (await source.colors.fetch()).map(it => this.mapColor(it))
+    };
   }
 
   private mapColor(source: ColorWDB): Color {
@@ -63,14 +63,13 @@ class ConfigService {
     }
     const result = {
       id: source.id,
-      isBasic: source.isBasic,
-      mainColor: source.mainColor,
-      strokeColor: source.strokeColor,
-      additionalColors: source.additionalColors.split(",")
+      name: source.name,
+      hex: source.hex
     };
     this.colorById.set(source.id, result);
     return result;
   }
 }
+
 
 export default new ConfigService();

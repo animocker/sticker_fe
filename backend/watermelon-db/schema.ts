@@ -31,13 +31,13 @@ const colorsSchema = tableSchema({
 const colorSetsColorsSchema = tableSchema({
   name: "color_sets_colors",
   columns: [
-    { name: "color_id", type: "number" },
-    { name: "color_set_id", type: "number" },
+    { name: "color_id", type: "string" },
+    { name: "color_set_id", type: "string" },
   ],
 });
 
 export default appSchema({
-  version: 5,
+  version: 7,
   tables: [
     layersSchema,
     colorsSchema,

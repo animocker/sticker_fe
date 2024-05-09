@@ -16,13 +16,25 @@ it("Retrieve config for element type", async () =>
   allElements.forEach(elementType => {
     const configForElementType = _.find(elementTypeConfig, ["elementType", elementType]);
     expect(configForElementType).not.toBeUndefined();
-    if (configForElementType.colorConfigs.length === 0) {
-      expect(configForElementType.isColorChangeable).toBeFalsy();
+    expect(configForElementType.elementType).toBe(elementType);
+    configForElementType.colorSets.forEach(colorSet => {
+      expect(colorSet.elementType).toBe(elementType);
+    });
+    if (expectedElementTypesWithColors.includes(elementType)) {
+      expect(configForElementType.colorSets.length).toBeGreaterThan(0);
+      configForElementType.colorSets.forEach(colorSet => {
+        expect(colorSet.colors.length).toBeGreaterThan(0);
+      });
     } else {
-      expect(configForElementType.isColorChangeable).toBeTruthy();
+      expect(configForElementType.colorSets.length).toBe(0);
     }
   });
-  const headConfig = _.find(elementTypeConfig, ["elementType", ElementType.HEAD]);
-  expect(headConfig.colorConfigs).not.toBeUndefined();
-  expect(headConfig.colorConfigs.length).toBeGreaterThan(0);
 });
+
+const expectedElementTypesWithColors: ElementType[] = [
+  ElementType.HEAD,
+  ElementType.HAIR,
+  ElementType.EYES,
+  ElementType.CLOTHES,
+  ElementType.HAT
+];

@@ -1,7 +1,7 @@
 import {AnimationType, ElementType} from "../../model/enum";
 import {database} from "../watermelon-db/watermelon";
 import {Q} from "@nozbe/watermelondb";
-import {ColorWDB, LayerWDB} from "../watermelon-db/model";
+import {ColorSetColorWDB, ColorSetWDB, ColorWDB, LayerWDB} from "../watermelon-db/model";
 
 export async function  findAnimation(
   animationType: string | AnimationType,
@@ -31,30 +31,11 @@ export async function  findAnimation(
   ).unsafeFetchRaw().then(result => result.map((it) => it.value));
 }
 
-export async function  findColors(
-  elementType: string | ElementType,
-  elementNumber: number = null
-): Promise<ColorWDB[]> {
-  console.log("findColors requested");
-  return database.get<ColorWDB>(ColorWDB.table).query(
-    Q.where("element_type", Q.eq(elementType)),
-    Q.where("element_nbr", Q.eq(elementNumber))
-  ).fetch();
+
+export async function getAllColorSets(): Promise<ColorSetWDB[]> {
+  return database.get<ColorSetWDB>(ColorSetWDB.table).query().fetch();
 }
 
-export async function  getAllColors(): Promise<ColorWDB[]> {
-  console.log("getAllColors requested");
+export async function getAllColors(): Promise<ColorWDB[]> {
   return database.get<ColorWDB>(ColorWDB.table).query().fetch();
-}
-
-export async function  findBasicColors(
-  elementType: string | ElementType,
-  elementNumber: number = null
-): Promise<ColorWDB[]> {
-  console.log("findBasicColors requested");
-  return database.get<ColorWDB>(ColorWDB.table).query(
-    Q.where("element_type", Q.eq(elementType)),
-    Q.where("element_nbr", Q.eq(elementNumber)),
-    Q.where("is_basic", Q.eq(true))
-  ).fetch();
 }
