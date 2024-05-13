@@ -23,7 +23,11 @@ const Stack = createStackNavigator();
 
 export default function App() {
   const [isInitialized, setInit] = useState(false);
-  useEffect(() => {initialize().then(() => setInit(true));});
+  useEffect(() => {
+    if (!isInitialized) {
+      initialize().then(() => setInit(true));
+    }
+  });
   if (!isInitialized) {
     return <Text>Loading...</Text>;
   }
