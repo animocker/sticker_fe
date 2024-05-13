@@ -22,6 +22,7 @@ export enum AnimationType {
     DISLIKE = "DISLIKE",
     HELLO = "HELLO",
     IDLE = "IDLE",
+    STATIC = "STATIC",
 }
 
 export const allAnimations = Object.values(AnimationType);
