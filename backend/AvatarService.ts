@@ -93,7 +93,6 @@ class State {
   }
 }
 const LOTTIE_BODY = "{\"v\":\"5.9.0\",\"fr\":30,\"ip\":0,\"op\":90,\"w\":430,\"h\":430,\"nm\":\"avatar\",\"ddd\":0,\"assets\":[],{layersSpot}}";
-const COLOR_DELTA = 0.0000001;
 
 class Avatar {
   private readonly state : State = new State();

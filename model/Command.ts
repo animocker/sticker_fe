@@ -1,5 +1,4 @@
 import {ElementType} from "./enum";
-import AvatarService from "../backend/AvatarService";
 
 //TODO WIP
 
@@ -21,7 +20,6 @@ export class ChangeSizeCommand implements Command {
     }
 
     execute(): void {
-      AvatarService.changeSize(this);
       this.isExecuted = true;
     }
 }
@@ -40,7 +38,6 @@ export class ChangeColorCommand implements Command {
     }
 
     execute(): void {
-      AvatarService.changeColor(this);
       this.isExecuted = true;
     }
 }
@@ -57,7 +54,6 @@ export class ChangeElementCommand implements Command {
     }
 
     execute(): void {
-      AvatarService.changeElement(this);
       this.isExecuted = true;
     }
 }
