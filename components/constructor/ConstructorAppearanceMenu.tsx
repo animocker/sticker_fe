@@ -5,6 +5,10 @@ import { SvgXml } from "react-native-svg";
 import {ICONS_APPERANCE} from "./icons/icons_element_menu";
 import {ConstructorHead} from "./parts/ConstructorHead";
 import {ConstructorHair} from "./parts/ConstructorHair";
+import {ConstructorEyebrow} from "./parts/ConstructorEyebrow";
+import {ConstructorEye} from "./parts/ConstructorEye";
+import {ConstructorNose} from "./parts/ConstructorNose";
+import {ConstructorLips} from "./parts/ConstructorLips";
 import PropTypes from "prop-types";
 import {styleAssets} from "../../styleAssets";
 export const ConstructorAppearanceMenu = ({changeElement, changeSize, changeColor}) => {
@@ -14,6 +18,10 @@ export const ConstructorAppearanceMenu = ({changeElement, changeSize, changeColo
   const tabs = {
     [SETTINGS_APPEARANCE.HEAD]: (props) => <ConstructorHead {...props} changeElement={changeElement} changeSize={changeSize} changeColor={changeColor} />,
     [SETTINGS_APPEARANCE.HAIR]: (props) => <ConstructorHair {...props} changeElement={changeElement} />,
+    [SETTINGS_APPEARANCE.EYEBROW]: (props) => <ConstructorEyebrow {...props} changeElement={changeElement} />,
+    [SETTINGS_APPEARANCE.EYE]: (props) => <ConstructorEye {...props} changeElement={changeElement} />,
+    [SETTINGS_APPEARANCE.NOSE]: (props) => <ConstructorNose {...props} changeElement={changeElement} />,
+    [SETTINGS_APPEARANCE.LIPS]: (props) => <ConstructorLips {...props} changeElement={changeElement} />,
   };
 
   return (
@@ -40,6 +48,7 @@ export const ConstructorAppearanceMenu = ({changeElement, changeSize, changeColo
 ConstructorAppearanceMenu.propTypes = {
   changeElement: PropTypes.func.isRequired,
   changeSize: PropTypes.func.isRequired,
+  changeColor: PropTypes.func.isRequired,
 };
 
 const styles = StyleSheet.create({

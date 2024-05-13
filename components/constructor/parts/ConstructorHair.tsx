@@ -1,41 +1,45 @@
 import React from "react";
-import {ScrollView, TouchableOpacity, StyleSheet} from "react-native";
-
-import HAIR_1 from "../icons/hair/hair_1.svg";
-import HAIR_2 from "../icons/hair/hair_2.svg";
-import HAIR_3 from "../icons/hair/hair_3.svg";
-import HAIR_4 from "../icons/hair/hair_4.svg";
-import HAIR_5 from "../icons/hair/hair_5.svg";
-import HAIR_6 from "../icons/hair/hair_6.svg";
-import HAIR_7 from "../icons/hair/hair_7.svg";
-import HAIR_8 from "../icons/hair/hair_8.svg";
-import HAIR_9 from "../icons/hair/hair_9.svg";
-import HAIR_10 from "../icons/hair/hair_10.svg";
-import HAIR_11 from "../icons/hair/hair_11.svg";
-import {ElementType} from "../../../backend/db/enum";
+import {ScrollView, TouchableOpacity, StyleSheet, Image} from "react-native";
+import {elementsMenuStyles} from "../styles";
 import PropTypes from "prop-types";
-import {assignColorValue} from "@expo/config-plugins/build/android/Colors";
 import {styleAssets} from "../../../styleAssets";
+import {ElementType} from "../../../backend/db/enum";
+
+const HAIR_1 = require("../icons/hair/hair_1.png");
+const HAIR_2 = require("../icons/hair/hair_2.png");
+const HAIR_3 = require("../icons/hair/hair_3.png");
+const HAIR_4_0 = require("../icons/hair/hair_4.png");
+const HAIR_4_1 = require("../icons/hair/hair_4_fringe_1.png");
+const HAIR_4_2 = require("../icons/hair/hair_4_fringe_2.png");
+const HAIR_5 = require("../icons/hair/hair_5.png");
+const HAIR_6 = require("../icons/hair/hair_6.png");
+const HAIR_7 = require("../icons/hair/hair_7.png");
+const HAIR_8 = require("../icons/hair/hair_8.png");
+const HAIR_9 = require("../icons/hair/hair_9.png");
+const HAIR_10 = require("../icons/hair/hair_10.png");
+const HAIR_11 = require("../icons/hair/hair_11.png");
 
 const HAIR_SETTINGS = [
-  {icon: <HAIR_1 />, name: "hair_1"},
-  {icon: <HAIR_2 />, name: "hair_2"},
-  {icon: <HAIR_3 />, name: "hair_3"},
-  {icon: <HAIR_4 />, name: "hair_4"},
-  {icon: <HAIR_5 />, name: "hair_5"},
-  {icon: <HAIR_6 />, name: "hair_6"},
-  {icon: <HAIR_7 />, name: "hair_7"},
-  {icon: <HAIR_8 />, name: "hair_8"},
-  {icon: <HAIR_9 />, name: "hair_9"},
-  {icon: <HAIR_10 />, name: "hair_10"},
-  {icon: <HAIR_11 />, name: "hair_11"},
+  {icon: <Image source={HAIR_1} />, name: "hair_1"},
+  {icon: <Image source={HAIR_2} />, name: "hair_2"},
+  {icon: <Image source={HAIR_3} />, name: "hair_3"},
+  {icon: <Image source={HAIR_4_0} />, name: "hair_4_0"},
+  {icon: <Image source={HAIR_4_1} />, name: "hair_4_1"},
+  {icon: <Image source={HAIR_4_2} />, name: "hair_4_2"},
+  {icon: <Image source={HAIR_5} />, name: "hair_5"},
+  {icon: <Image source={HAIR_6} />, name: "hair_6"},
+  {icon: <Image source={HAIR_7} />, name: "hair_7"},
+  {icon: <Image source={HAIR_8} />, name: "hair_8"},
+  {icon: <Image source={HAIR_9} />, name: "hair_9"},
+  {icon: <Image source={HAIR_10} />, name: "hair_10"},
+  {icon: <Image source={HAIR_11} />, name: "hair_11"},
 ];
 
 export const ConstructorHair = ({ changeElement }) => {
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView contentContainerStyle={elementsMenuStyles.container}>
       {HAIR_SETTINGS.map((item, index) => (
-        <TouchableOpacity key={index} style={styles.button} onPress={() => changeElement(ElementType.HAIR, index + 1)}>
+        <TouchableOpacity key={index} style={elementsMenuStyles.button} onPress={() => changeElement(ElementType.HAIR, index + 1)}>
           {item.icon}
         </TouchableOpacity>
       ))}
@@ -46,22 +50,3 @@ export const ConstructorHair = ({ changeElement }) => {
 ConstructorHair.propTypes = {
   changeElement: PropTypes.func.isRequired,
 };
-
-const styles = StyleSheet.create({
-  button: {
-    alignItems: "center",
-    backgroundColor:styleAssets.colorsPalette.white,
-    borderRadius: 16,
-    height: 96,
-    justifyContent: "center",
-    margin: 10,
-    padding: 10,
-    width: 96
-  },
-  container: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-    paddingBottom: 50
-  },
-});
