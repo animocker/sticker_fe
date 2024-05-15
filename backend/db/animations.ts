@@ -1,5 +1,5 @@
 import {ElementEntity} from "./table.types";
-import {AnimationType} from "./enum";
+import {AnimationType} from "../../model/enum";
 import {supabase} from "../supabase";
 
 export const findAnimationByTypeAndElements = async (animationType: string | AnimationType, value: ElementEntity[]): Promise<string[]> => {

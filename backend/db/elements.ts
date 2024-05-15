@@ -1,4 +1,4 @@
-import {ElementType} from "./enum";
+import {ElementType} from "../../model/enum";
 import {ElementEntity} from "./table.types";
 import {supabase} from "../supabase";
 

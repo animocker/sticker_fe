@@ -37,13 +37,13 @@ const HAIR_SETTINGS = [
 
 export const ConstructorHair = ({ changeElement }) => {
   return (
-    <ScrollView contentContainerStyle={elementsMenuStyles.container}>
-      {HAIR_SETTINGS.map((item, index) => (
-        <TouchableOpacity key={index} style={elementsMenuStyles.button} onPress={() => changeElement(ElementType.HAIR, index + 1)}>
-          {item.icon}
-        </TouchableOpacity>
-      ))}
-    </ScrollView>
+      <ScrollView contentContainerStyle={elementsMenuStyles.container}>
+        {HAIR_SETTINGS.map((item, index) => (
+            <TouchableOpacity key={index} style={elementsMenuStyles.button} onPress={() => changeElement(ElementType.HAIR, index + 1)}>
+              {item.icon}
+            </TouchableOpacity>
+        ))}
+      </ScrollView>
   );
 };
 

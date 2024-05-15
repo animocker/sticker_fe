@@ -1,7 +1,8 @@
-import {ElementType} from "../db/enum";
-import AvatarService from "../AvatarService";
+import {ElementType} from "./enum";
 
-export interface Command {
+//TODO WIP
+
+export type Command = {
     type: CommandType
     isExecuted: boolean;
     execute(): void;
@@ -13,12 +14,12 @@ export class ChangeSizeCommand implements Command {
     sizePercent: number;
     isExecuted = false;
 
-    constructor(sizePercent: number) {
+    constructor(elementType: ElementType, sizePercent: number) {
+      this.elementType = elementType;
       this.sizePercent = sizePercent;
     }
 
     execute(): void {
-      AvatarService.changeSize(this);
       this.isExecuted = true;
     }
 }
@@ -26,15 +27,17 @@ export class ChangeSizeCommand implements Command {
 export class ChangeColorCommand implements Command {
     type = CommandType.CHANGE_COLOR;
     elementType: ElementType;
-    color: string;
+    elementNumber?: number;
+    colorSetId: string;
     isExecuted = false;
 
-    constructor(color: string) {
-      this.color = color;
+    constructor(elementType: ElementType,  colorId: string, elementNumber = null) {
+      this.elementType = elementType;
+      this.elementNumber = elementNumber;
+      this.colorSetId = colorId;
     }
 
     execute(): void {
-      AvatarService.changeColor(this);
       this.isExecuted = true;
     }
 }
@@ -51,7 +54,6 @@ export class ChangeElementCommand implements Command {
     }
 
     execute(): void {
-      AvatarService.changeElement(this);
       this.isExecuted = true;
     }
 }

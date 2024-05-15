@@ -3,7 +3,7 @@ import * as FileSystem from "expo-file-system";
 import {Asset} from "expo-asset";
 import React, {useEffect, useState} from "react";
 import AvatarService from "./backend/AvatarService";
-import {AnimationType, ElementType} from "./backend/db/enum";
+import {AnimationType, ElementType} from "./model/enum";
 
 import {NavigationContainer} from "@react-navigation/native";
 import {createStackNavigator} from "@react-navigation/stack";
@@ -23,7 +23,11 @@ const Stack = createStackNavigator();
 
 export default function App() {
   const [isInitialized, setInit] = useState(false);
-  useEffect(() => {initialize().then(() => setInit(true));});
+  useEffect(() => {
+    if (!isInitialized) {
+      initialize().then(() => setInit(true));
+    }
+  });
   if (!isInitialized) {
     return <Text>Loading...</Text>;
   }

@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {StyleSheet, Dimensions, View, Text, Button} from "react-native";
 import LottieView from "lottie-react-native";
 import AvatarService from "../../backend/AvatarService";
-import {AnimationType} from "../../backend/db/enum";
+import {AnimationType} from "../../model/enum";
 import {Animation} from "@lottiefiles/lottie-js";
 export const CharacterPicker = () => {
   const [selectedAnimation, setSelectedAnimation] = useState(AnimationType.IDLE);

@@ -2,7 +2,7 @@ import React from "react";
 import {View, Text, ScrollView, TouchableOpacity, StyleSheet, Image} from "react-native";
 import {RangeSlider} from "../../ui/RangeSlider";
 import PropTypes from "prop-types";
-import {ElementType} from "../../../backend/db/enum";
+import {ElementType} from "../../../model/enum";
 import {ColorListPicker} from "../../ui/ColorListPicker";
 import {elementsMenuStyles} from "../styles";
 import {styleAssets} from "../../../styleAssets";

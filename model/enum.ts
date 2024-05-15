@@ -13,6 +13,8 @@ export enum ElementType {
     CLOTHES = "CLOTHES",
 }
 
+export const hairElements = [ElementType.HAIR, ElementType.FRINGE, ElementType.BEARD, ElementType.EYEBROWS];
+
 export const allElements = Object.values(ElementType);
 
 export enum AnimationType {
@@ -20,6 +22,7 @@ export enum AnimationType {
     DISLIKE = "DISLIKE",
     HELLO = "HELLO",
     IDLE = "IDLE",
+    STATIC = "STATIC",
 }
 
 export const allAnimations = Object.values(AnimationType);

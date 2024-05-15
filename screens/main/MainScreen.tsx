@@ -2,10 +2,11 @@ import React, {useEffect, useState} from "react";
 import { View, Button, StyleSheet, ScrollView, Text } from "react-native";
 import AvatarService from "../../backend/AvatarService";
 import LottieView from "lottie-react-native";
-import {AnimationType, ElementType} from "../../backend/db/enum";
+import {AnimationType, ElementType} from "../../model/enum";
 import { CharacterPicker } from "../../components/characters/CharacterPicker";
 import { useNavigation } from "@react-navigation/native";
 import { Animation } from "@lottiefiles/lottie-js";
+import {ChangeElementCommand} from "../../model/Command";
 const MainScreen = () => {
   const navigation = useNavigation();
 
