@@ -250,7 +250,7 @@ class Avatar {
     if (!this.isInitialized) {
       await this.init();
     }
-    const result = animationType === AnimationType.STATIC ?
+    const result = animationType === AnimationType.IDLE ?
       await this.changeStaticElements(animationType) :
       await this.getAnimationForAllElements(animationType);
     this.changeElementsSize(result);
@@ -265,7 +265,7 @@ class Avatar {
     if (this.state.equals(this.lastState)) {
       return this.staticAnimation;
     }
-    this.staticAnimation = await this.getAnimation(AnimationType.STATIC);
+    this.staticAnimation = await this.getAnimation(AnimationType.IDLE);
     this.lastState = this.state.copy();
     return this.staticAnimation;
   }

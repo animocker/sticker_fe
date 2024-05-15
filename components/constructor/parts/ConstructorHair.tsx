@@ -3,7 +3,7 @@ import {ScrollView, TouchableOpacity, StyleSheet, Image} from "react-native";
 import {elementsMenuStyles} from "../styles";
 import PropTypes from "prop-types";
 import {styleAssets} from "../../../styleAssets";
-import {ElementType} from "../../../backend/db/enum";
+import {ElementType} from "../../../model/enum";
 
 const HAIR_1 = require("../icons/hair/hair_1.png");
 const HAIR_2 = require("../icons/hair/hair_2.png");
@@ -37,13 +37,13 @@ const HAIR_SETTINGS = [
 
 export const ConstructorHair = ({ changeElement }) => {
   return (
-      <ScrollView contentContainerStyle={elementsMenuStyles.container}>
-        {HAIR_SETTINGS.map((item, index) => (
-            <TouchableOpacity key={index} style={elementsMenuStyles.button} onPress={() => changeElement(ElementType.HAIR, index + 1)}>
-              {item.icon}
-            </TouchableOpacity>
-        ))}
-      </ScrollView>
+    <ScrollView contentContainerStyle={elementsMenuStyles.container}>
+      {HAIR_SETTINGS.map((item, index) => (
+        <TouchableOpacity key={index} style={elementsMenuStyles.button} onPress={() => changeElement(ElementType.HAIR, index + 1)}>
+          {item.icon}
+        </TouchableOpacity>
+      ))}
+    </ScrollView>
   );
 };
 

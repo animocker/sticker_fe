@@ -12,7 +12,7 @@ export const ConstructorClothTab = () => {
   const [selectedAnimation, setSelectedAnimation] = useState(AnimationType.IDLE);
   const [lottie, setLottie] = useState<Animation>();
 
-  AvatarService.getAnimation(selectedAnimation).then(animation => {
+  AvatarService.getAvatar().then(animation => {
     console.log("Animation received" + animation);
     setLottie(animation);
   });

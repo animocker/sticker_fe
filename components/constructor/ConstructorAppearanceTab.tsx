@@ -17,13 +17,13 @@ export const ConstructorAppearanceTab = () => {
   const [selectedAnimation, setSelectedAnimation] = useState(AnimationType.IDLE);
   const [lottie, setLottie] = useState<Animation>();
 
-  AvatarService.getAnimation(selectedAnimation).then(animation => {
+  AvatarService.getAvatar().then(animation => {
     console.log("Animation received" + animation);
     setLottie(animation);}
   );
 
   const reloadAnimation = () => {
-    AvatarService.getAnimation(selectedAnimation).then(animation => {
+    AvatarService.getAvatar().then(animation => {
       animationRef.current?.pause();
       setLottie(animation);
       animationRef.current?.play();
@@ -36,6 +36,7 @@ export const ConstructorAppearanceTab = () => {
 
   const changeElement = (elementType, number) => {
     const request = {elementType, number} as ChangeElementCommand;
+    console.log(request);
     AvatarService.changeElement(request);
     reloadAnimation();
   };

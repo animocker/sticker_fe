@@ -23,8 +23,8 @@ const MainScreen = () => {
   };
 
   const changeAnimation = (value) => {
-    setSelectedAnimation(value);
-    setLottie(AvatarService.getAnimation(selectedAnimation));
+    // setSelectedAnimation(value);
+    // setLottie(AvatarService.getAvatar());
   };
 
   const changeSize = (value) => {
@@ -34,9 +34,9 @@ const MainScreen = () => {
   };
 
   const changeColor = (value) => {
-    setColor(value);
-    AvatarService.changeColor({elementType: selectedType, color});
-    setLottie(AvatarService.getAnimation(selectedAnimation));
+    // setColor(value);
+    // AvatarService.changeColor({elementType: selectedType, color});
+    // setLottie(AvatarService.getAnimation(selectedAnimation));
   };
 
   return (
