@@ -8,7 +8,8 @@
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
         "plugin:react/recommended",
-        "plugin:react-native/all"
+        "plugin:react-native/all",
+        "prettier"
     ],
     "parserOptions": {
         "ecmaVersion": 2018,
@@ -22,7 +23,8 @@
         "react",
         "react-native",
         "react-hooks",
-        "@typescript-eslint"
+        "@typescript-eslint",
+        "prettier"
     ],
     "rules": {
         "react-hooks/rules-of-hooks": "error",
@@ -37,7 +39,9 @@
         "indent": ["error", 2],
         "linebreak-style": ["error", "unix"],
         "quotes": ["error", "double"],
-        "semi": ["error", "always"]
+        "semi": ["error", "always"],
+        "prettier/prettier": ["error", { "printWidth": 80 }],
+        "max-len": ["error", { "code": 80 }]
     },
     "settings": {
         "react": {
