@@ -4,11 +4,17 @@ import {
   ChangeElementCommand,
   ChangeSizeCommand,
 } from "../model/Command";
-import { findAnimation } from "./db/AvatarWatermelonDao";
+import { getAnimationLayers } from "./db/AvatarWatermelonDao";
 import { Animation, ColorRgba, Shape } from "@lottiefiles/lottie-js";
 import { Color, ColorSet } from "../model/Config";
 import ConfigService from "./ConfigService";
 import _ from "lodash";
+import { uuid } from "@supabase/supabase-js/dist/main/lib/helpers";
+
+import AsyncLock from "async-lock";
+
+const lock = new AsyncLock();
+const getAvatarLockKey = "getAvatarLockKey";
 
 class ElementTypeAndNumber {
   readonly elementType: ElementType | string;
@@ -53,7 +59,6 @@ class State {
         return false;
       }
     }
-    [].find((it) => it == "qwe".startsWith(""));
     return true;
   }
 
@@ -103,13 +108,13 @@ class State {
   }
 }
 const LOTTIE_BODY =
-  "{\"v\":\"5.9.0\",\"fr\":30,\"ip\":0,\"op\":90,\"w\":430,\"h\":430,\"nm\":\"avatar\",\"ddd\":0,\"assets\":[],{layersSpot}}";
+  "{\"v\":\"5.9.0\",\"fr\":30,\"ip\":0,\"op\":90,\"w\":430,\"h\":430,\"nm\":\"{nameSpot}\",\"ddd\":0,\"assets\":[],{layersSpot}}";
 
 class Avatar {
   private readonly state: State = new State();
   private lastState: State;
   private readonly layersIndexes = new Map<ElementType, number[]>();
-  private staticAnimation: Animation;
+  private avatarAnimation: Animation;
   private isInitialized = false;
 
   async init() {
@@ -137,7 +142,10 @@ class Avatar {
   }
 
   private addLottieBody(layersString: string) {
-    return LOTTIE_BODY.replace("{layersSpot}", `"layers": [${layersString}]`);
+    return LOTTIE_BODY.replace(
+      "{layersSpot}",
+      `"layers": [${layersString}]`,
+    ).replace("{nameSpot}", uuid());
   }
 
   changeElement(request: ChangeElementCommand) {
@@ -145,7 +153,6 @@ class Avatar {
   }
   //$[layer.ind].ks.s.k=[width,height, ???]
   changeSize(request: ChangeSizeCommand) {
-    console.log(request);
     this.state.elementSize.set(request.elementType, request.sizePercent);
   }
   changeColor(changeColorCommand: ChangeColorCommand) {
@@ -157,10 +164,8 @@ class Avatar {
     this.state.newElementColorSet.set(key.toString(), value);
   }
 
-  //TODO in progress
   private changeElementsSize(lottieAnimation: Animation) {
-    const stateDifference = this.state.getDifference(this.lastState);
-    for (const [elementType, newSizeDiff] of stateDifference.elementSize) {
+    for (const [elementType, newSizeDiff] of this.state.elementSize) {
       if (newSizeDiff === 0 || elementType === undefined) {
         continue;
       }
@@ -222,8 +227,6 @@ class Avatar {
   }
 
   private transformToLottie(jsonArray: string[]): Record<string, any> {
-    const start = Date.now();
-
     // Extract the 'ind' value from the JSON strings using a regular expression
     const parsedArray = jsonArray.map((str) => {
       const match = str.match(/"ind":(\d+)/);
@@ -238,28 +241,23 @@ class Avatar {
     const layers = parsedArray.map((item) => item.str).join(",");
 
     const lottieJson = this.addLottieBody(layers);
-    const result = JSON.parse(lottieJson);
-
-    const timeTaken = Date.now() - start;
-    console.log("Transform to lottie took: " + timeTaken + "ms");
-
-    return result;
+    return JSON.parse(lottieJson);
   }
 
   private async changeStaticElements(animationType: string | AnimationType) {
     const stateDifference = this.state.getDifference(this.lastState);
     if (stateDifference.elements.size === 0) {
-      return this.staticAnimation;
+      return this.avatarAnimation;
     }
     const elements = Array.from(stateDifference.elements.entries()).map(
       (it) => ({ elementType: it[0], elementNumber: it[1] }),
     );
-    const layers = await findAnimation(animationType, elements, "MALE");
-    if (this.staticAnimation !== undefined) {
+    const layers = await getAnimationLayers(animationType, elements, "MALE");
+    if (this.avatarAnimation !== undefined) {
       const changedTypes = Array.from(stateDifference.elements.keys()).map(
         (it) => it.toLowerCase(),
       );
-      const layersToKeep = this.staticAnimation.layers
+      const layersToKeep = this.avatarAnimation.layers
         .filter(
           (layer) =>
             !changedTypes.includes(layer.name.split("_")[0].toLowerCase()),
@@ -279,35 +277,45 @@ class Avatar {
       elementType: it[0],
       elementNumber: it[1],
     }));
-    const layers = await findAnimation(animationType, elements, "MALE");
+    const layers = await getAnimationLayers(animationType, elements, "MALE");
     const lottieJson = this.transformToLottie(layers.flat());
     return new Animation().fromJSON(lottieJson);
   }
 
   async getAnimation(animationType: string | AnimationType) {
-    console.log("Requesting Animation: " + animationType);
     if (!this.isInitialized) {
       await this.init();
     }
     const result =
-      animationType === AnimationType.IDLE
+      /* animationType === AnimationType.IDLE
         ? await this.changeStaticElements(animationType)
-        : await this.getAnimationForAllElements(animationType);
+        :*/ await this.getAnimationForAllElements(animationType);
     this.changeElementsSize(result);
     this.changeElementsColor(result);
     return result;
   }
 
   async getAvatar(): Promise<Animation> {
+    if (lock.isBusy(getAvatarLockKey)) {
+      return Promise.reject();
+    }
+    return lock
+      .acquire(getAvatarLockKey, async () => {
+        return await this.getAvatarInternal();
+      })
+      .then();
+  }
+
+  private async getAvatarInternal(): Promise<Animation> {
     if (!this.isInitialized) {
       await this.init();
     }
     if (this.state.equals(this.lastState)) {
-      return this.staticAnimation;
+      return this.avatarAnimation;
     }
-    this.staticAnimation = await this.getAnimation(AnimationType.IDLE);
+    this.avatarAnimation = await this.getAnimation(AnimationType.IDLE);
     this.lastState = this.state.copy();
-    return this.staticAnimation;
+    return this.avatarAnimation;
   }
 
   private convertColor(source: Color): ColorRgba {

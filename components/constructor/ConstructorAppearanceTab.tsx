@@ -28,9 +28,6 @@ export const ConstructorAppearanceTab = () => {
       animationRef.current?.pause();
       setLottie(animation);
       animationRef.current?.play();
-      setTimeout(() => {
-        animationRef.current?.play();
-      }, 0);
     });
   };
 

@@ -3,7 +3,7 @@ import {database} from "../watermelon-db/watermelon";
 import {Q} from "@nozbe/watermelondb";
 import {ColorSetColorWDB, ColorSetWDB, ColorWDB, LayerWDB} from "../watermelon-db/model";
 
-export async function  findAnimation(
+export async function  getAnimationLayers(
   animationType: string | AnimationType,
   elements: {elementType: string | ElementType, elementNumber: number}[],
   gender: string

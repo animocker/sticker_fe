@@ -43,7 +43,7 @@ it("New animation layer requested only for changed element", async () =>
   const originalResult = await AvatarService.getAvatar();
   expect(originalResult).not.toBeUndefined();
 
-  const spy = jest.spyOn(avatarDao, "findAnimation");
+  const spy = jest.spyOn(avatarDao, "getAnimationLayers");
 
   AvatarService.changeElement(new ChangeElementCommand(ElementType.HEAD, 2));
   const result = await AvatarService.getAvatar();

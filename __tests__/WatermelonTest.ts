@@ -1,6 +1,6 @@
 import {sync} from "../backend/watermelon-db/watermelon";
 import {
-  findAnimation,
+  getAnimationLayers,
   getAllColors,
   getAllColorSets,
 } from "../backend/db/AvatarWatermelonDao";
@@ -11,7 +11,7 @@ beforeAll(async () => {
 });
 
 it("Find animation successful", async () => {
-  const result = await findAnimation(
+  const result = await getAnimationLayers(
     AnimationType.IDLE,
     [{elementType: "HEAD", elementNumber: 1}, {elementType: "HAIR", elementNumber:1}, {elementType: "CLOTHES", elementNumber:1}],
     "MALE"
