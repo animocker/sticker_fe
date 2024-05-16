@@ -1,11 +1,10 @@
-import {View, StyleSheet} from "react-native";
-import React, {useState} from "react";
+import { View, StyleSheet } from "react-native";
+import React, { useState } from "react";
 import Slider from "react-native-slider";
 import PropTypes from "prop-types";
-import {styleAssets} from "../../styleAssets";
+import { styleAssets } from "../../styleAssets";
 
-
-export const RangeSlider = ({initialSize, changeSize, step = 1}) => {
+export const RangeSlider = ({ initialSize, changeSize, step = 1 }) => {
   const [size, setSize] = useState(initialSize);
 
   return (
@@ -31,11 +30,10 @@ RangeSlider.propTypes = {
   step: PropTypes.number,
 };
 
-
 const styles = StyleSheet.create({
   slider: {
     marginBottom: 20,
-    marginTop: 20
+    marginTop: 20,
   },
   thumb: {
     backgroundColor: styleAssets.colorsPalette.primeBlue,
@@ -51,9 +49,9 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     width: 40,
   },
-  track:{
+  track: {
     backgroundColor: styleAssets.colorsPalette.white,
     borderRadius: 20,
     height: 24,
-  }
+  },
 });
