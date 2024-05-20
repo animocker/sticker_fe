@@ -1,24 +1,44 @@
-import {getAllColorSets} from "./db/AvatarWatermelonDao";
+import { getAllColorSets } from "./db/AvatarWatermelonDao";
 import _ from "lodash";
-import {Color, ColorSet, ElementTypeConfig} from "../model/Config";
-import {allElements, ElementType} from "../model/enum";
-import {ColorSetWDB, ColorWDB} from "./watermelon-db/model";
+import { Color, ColorSet, ElementTypeConfig } from "../model/Config";
+import { allElements, ElementType } from "../model/enum";
+import { ColorSetWDB, ColorWDB } from "./watermelon-db/model";
 
 class ConfigService {
-  private elementTypeConfigs : ElementTypeConfig[] = null;
+  private elementTypeConfigs: ElementTypeConfig[] = null;
   private readonly colorById: Map<string, Color> = new Map<string, Color>();
-  private readonly colorSetById: Map<string, ColorSet> = new Map<string, ColorSet>();
+  private readonly colorSetById: Map<string, ColorSet> = new Map<
+    string,
+    ColorSet
+  >();
 
-  public async getElementTypeConfigs():Promise<ElementTypeConfig[]> {
+  customize() {
+    this.elementTypeConfigs
+      .find((it) => {
+        it.elementType === ElementType.HEAD;
+      })
+      .colorSets.forEach((item) => {
+        item.colors
+          .filter((it) => it.name.includes("stroke"))
+          .forEach((it) => {
+            it.hex = "000000";
+          });
+      });
+  }
+
+  public async getElementTypeConfigs(): Promise<ElementTypeConfig[]> {
     if (this.elementTypeConfigs === null) {
       this.elementTypeConfigs = await this.buildElementTypeConfig();
     }
+    this.customize();
     return this.elementTypeConfigs;
   }
 
-  public async getElementTypeConfig(elementType: ElementType | string): Promise<ElementTypeConfig> {
+  public async getElementTypeConfig(
+    elementType: ElementType | string,
+  ): Promise<ElementTypeConfig> {
     const configs = await this.getElementTypeConfigs();
-    return configs.find(it => it.elementType === elementType);
+    return configs.find((it) => it.elementType === elementType);
   }
 
   public getColorSetById(id: string): ColorSet {
@@ -31,14 +51,14 @@ class ConfigService {
 
   private async buildElementTypeConfig(): Promise<ElementTypeConfig[]> {
     const allColorSets = await getAllColorSets();
-    const elementTypeToColors =  _.groupBy(allColorSets, "elementType");
-    const resultPromises =  allElements.map(async (elementType) => {
+    const elementTypeToColors = _.groupBy(allColorSets, "elementType");
+    const resultPromises = allElements.map(async (elementType) => {
       const colorSetsWdb = elementTypeToColors[elementType] || [];
       const colorSets = await this.buildColorSet(colorSetsWdb);
       return {
         elementType: elementType,
         isSizeChangeable: true,
-        colorSets: colorSets
+        colorSets: colorSets,
       };
     });
     return await Promise.all(resultPromises);
@@ -48,8 +68,8 @@ class ConfigService {
     if (colorSets.length === 0) {
       return [];
     }
-    return  await Promise.all(colorSets
-      .map(async (it) => await this.mapColorSet(it))
+    return await Promise.all(
+      colorSets.map(async (it) => await this.mapColorSet(it)),
     );
   }
 
@@ -61,7 +81,7 @@ class ConfigService {
       id: source.id,
       elementType: source.elementType as ElementType,
       elementNumber: source.elementNbr,
-      colors:  (await source.colors.fetch()).map(it => this.mapColor(it))
+      colors: (await source.colors.fetch()).map((it) => this.mapColor(it)),
     };
     this.colorSetById.set(source.id, result);
     return result;
@@ -74,12 +94,11 @@ class ConfigService {
     const result = {
       id: source.id,
       name: source.name,
-      hex: source.hex
+      hex: source.hex,
     };
     this.colorById.set(source.id, result);
     return result;
   }
 }
-
 
 export default new ConfigService();

@@ -12,6 +12,7 @@ import _ from "lodash";
 import { uuid } from "@supabase/supabase-js/dist/main/lib/helpers";
 
 import AsyncLock from "async-lock";
+import { log } from "expo/build/devtools/logger";
 
 const lock = new AsyncLock();
 const getAvatarLockKey = "getAvatarLockKey";
@@ -156,6 +157,7 @@ class Avatar {
     this.state.elementSize.set(request.elementType, request.sizePercent);
   }
   changeColor(changeColorCommand: ChangeColorCommand) {
+    console.log(changeColorCommand);
     const key = new ElementTypeAndNumber(
       changeColorCommand.elementType,
       changeColorCommand.elementNumber,
