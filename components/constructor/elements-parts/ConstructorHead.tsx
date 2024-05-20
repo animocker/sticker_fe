@@ -10,10 +10,9 @@ import {
 import { RangeSlider } from "../../ui/RangeSlider";
 import PropTypes from "prop-types";
 import { ElementType } from "../../../model/enum";
-import { ColorListPicker } from "../../ui/ColorListPicker";
 import { elementsMenuStyles } from "../styles";
-import { styleAssets } from "../../../styleAssets";
-import { SETTINGS_APPEARANCE } from "../types";
+import { CommonConstructorParts } from "../common-parts/CommonConstructorParts";
+import { filterSettings } from "../helpers";
 
 const HEAD_1 = require("../icons/head/head_1.png");
 const HEAD_2 = require("../icons/head/head_2.png");
@@ -50,17 +49,17 @@ export const ConstructorHead = ({
     changeColor(ElementType.HEAD, color);
   };
 
-  const colorsList = ["black", "red", "#ffffff"];
-
   return (
     <View>
       {settings && Object.keys(settings).length > 0 && (
         <View>
-          {settings.isSizeChangeable && (
-            <View>
-              <RangeSlider initialSize={0} changeSize={changeSizeHandle} />
-            </View>
-          )}
+          <View>
+            <CommonConstructorParts
+              settings={filterSettings(settings, selectedValue)}
+              changeSizeHandle={changeSizeHandle}
+              changeColorHandle={changeColorHandle}
+            />
+          </View>
         </View>
       )}
       <ScrollView contentContainerStyle={elementsMenuStyles.container}>
@@ -77,8 +76,6 @@ export const ConstructorHead = ({
           </TouchableOpacity>
         ))}
       </ScrollView>
-
-      {/*<ColorListPicker colors={colorsList} changeColor={changeColorHandle} />*/}
     </View>
   );
 };

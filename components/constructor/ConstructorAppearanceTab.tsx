@@ -9,12 +9,15 @@ import {
   ChangeColorCommand,
   ChangeElementCommand,
   ChangeSizeCommand,
+  CommandType,
 } from "../../model/Command";
 import { Animation } from "@lottiefiles/lottie-js";
+import { Color } from "../../model/Config";
 
 export const ConstructorAppearanceTab = () => {
   const animationRef = useRef<LottieView>(null);
   const [lottie, setLottie] = useState<Animation>();
+  // TODO default 0. get saved value from backend
   const [selectedValues, setSelectedValues] = useState({
     [ElementType.HEAD]: 0,
   });
@@ -43,8 +46,12 @@ export const ConstructorAppearanceTab = () => {
     reloadAnimation();
   };
 
-  const changeColor = (elementType: ElementType, color: string) => {
-    AvatarService.changeColor({ elementType, color } as ChangeColorCommand);
+  const changeColor = (elementType: ElementType, color: Color) => {
+    AvatarService.changeColor({
+      elementType,
+      elementNumber: selectedValues[elementType],
+      colorSetId: color.id,
+    } as ChangeColorCommand);
     reloadAnimation();
   };
 

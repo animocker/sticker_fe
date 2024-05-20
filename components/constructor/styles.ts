@@ -17,6 +17,23 @@ export const elementsMenuStyles = StyleSheet.create({
   buttonSelected: {
     borderColor: styleAssets.colorsPalette.primeBlue,
   },
+  colorButton: {
+    borderColor: "transparent",
+    borderRadius: 24,
+    borderWidth: 2,
+    height: 48,
+    width: 48,
+  },
+  colorContainer: {
+    display: "flex",
+    gap: 10,
+  },
+  colorContainerWrapper: {
+    backgroundColor: styleAssets.colorsPalette.lowBlue,
+    borderRadius: 16,
+    marginBottom: 16,
+    padding: 16,
+  },
   container: {
     flexDirection: "row",
     flexWrap: "wrap",
