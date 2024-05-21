@@ -1,10 +1,10 @@
-import {Database} from "@nozbe/watermelondb";
+import { Database } from "@nozbe/watermelondb";
 import SQLiteAdapter from "@nozbe/watermelondb/adapters/sqlite";
 
 import schema from "./schema";
-import {LayerWDB, ColorWDB, ColorSetWDB, ColorSetColorWDB} from "./model";
-import {supabase} from "../supabase";
-import {SyncDatabaseChangeSet, synchronize} from "@nozbe/watermelondb/sync";
+import { LayerWDB, ColorWDB, ColorSetWDB, ColorSetColorWDB } from "./model";
+import { supabase } from "../supabase";
+import { SyncDatabaseChangeSet, synchronize } from "@nozbe/watermelondb/sync";
 // import Post from './model/Post' // ⬅️ You'll import your Models here
 
 // First, create the adapter to the underlying database:
@@ -18,39 +18,33 @@ const adapter = new SQLiteAdapter({
   // additional installation steps have to be taken - disable if you run into issues...)
   //jsi: true, /* Platform.OS === 'ios' */
   // (optional, but you should implement this method)
-  onSetUpError: error => {
+  onSetUpError: (error) => {
     // Database failed to load -- offer the user to reload the app or log out
-  }
+  },
 });
 
 // Then, make a Watermelon database from it!
 export const database = new Database({
   adapter,
-  modelClasses: [
-    LayerWDB,
-    ColorWDB,
-    ColorSetWDB,
-    ColorSetColorWDB
-  ],
+  modelClasses: [LayerWDB, ColorWDB, ColorSetWDB, ColorSetColorWDB],
 });
 
 export async function sync() {
-  await database.write(async () => await database.unsafeResetDatabase());
+  //await database.write(async () => await database.unsafeResetDatabase());
   await synchronize({
     database,
-    pullChanges: async ({lastPulledAt, schemaVersion, migration}) => {
-      const {data, error} = await supabase.rpc("pull", {
+    pullChanges: async ({ lastPulledAt, schemaVersion, migration }) => {
+      const { data, error } = await supabase.rpc("pull", {
         last_pulled_at: lastPulledAt,
       });
 
-      const {changes, timestamp} = data as {
-        changes: SyncDatabaseChangeSet
-        timestamp: number
+      const { changes, timestamp } = data as {
+        changes: SyncDatabaseChangeSet;
+        timestamp: number;
       };
 
-      return {changes, timestamp};
+      return { changes, timestamp };
     },
-    pushChanges: async ({changes, lastPulledAt}) => {
-    }
+    pushChanges: async ({ changes, lastPulledAt }) => {},
   });
 }
