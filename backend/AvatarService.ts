@@ -191,9 +191,7 @@ class Avatar {
   }
 
   private changeElementsColor(lottieAnimation: Animation) {
-    const stateDifference = this.state.getDifference(this.lastState);
-
-    for (const [, newValue] of stateDifference.newElementColorSet) {
+    for (const [, newValue] of this.state.newElementColorSet) {
       newValue.colors.forEach((color) =>
         this.updateColor(lottieAnimation, color),
       );
@@ -244,32 +242,6 @@ class Avatar {
 
     const lottieJson = this.addLottieBody(layers);
     return JSON.parse(lottieJson);
-  }
-
-  private async changeStaticElements(animationType: string | AnimationType) {
-    const stateDifference = this.state.getDifference(this.lastState);
-    if (stateDifference.elements.size === 0) {
-      return this.avatarAnimation;
-    }
-    const elements = Array.from(stateDifference.elements.entries()).map(
-      (it) => ({ elementType: it[0], elementNumber: it[1] }),
-    );
-    const layers = await getAnimationLayers(animationType, elements, "MALE");
-    if (this.avatarAnimation !== undefined) {
-      const changedTypes = Array.from(stateDifference.elements.keys()).map(
-        (it) => it.toLowerCase(),
-      );
-      const layersToKeep = this.avatarAnimation.layers
-        .filter(
-          (layer) =>
-            !changedTypes.includes(layer.name.split("_")[0].toLowerCase()),
-        )
-        .map((layer) => layer.toJSON())
-        .map((layer) => JSON.stringify(layer));
-      layers.push(...layersToKeep);
-    }
-    const lottieJson = this.transformToLottie(layers.flat());
-    return new Animation().fromJSON(lottieJson);
   }
 
   private async getAnimationForAllElements(

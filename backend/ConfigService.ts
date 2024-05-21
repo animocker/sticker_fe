@@ -14,9 +14,7 @@ class ConfigService {
 
   customize() {
     this.elementTypeConfigs
-      .find((it) => {
-        it.elementType === ElementType.HEAD;
-      })
+      .find((it) => it.elementType === ElementType.HEAD)
       .colorSets.forEach((item) => {
         item.colors
           .filter((it) => it.name.includes("stroke"))
