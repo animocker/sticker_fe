@@ -40,8 +40,8 @@
         "linebreak-style": ["error", "unix"],
         "quotes": ["error", "double"],
         "semi": ["error", "always"],
-        "prettier/prettier": ["error", { "printWidth": 80 }],
-        "max-len": ["error", { "code": 80 }]
+        "prettier/prettier": ["error", { "printWidth": 150 }],
+        "max-len": ["error", { "code": 150 }]
     },
     "settings": {
         "react": {

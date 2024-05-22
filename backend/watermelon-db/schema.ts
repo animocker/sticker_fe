@@ -1,6 +1,5 @@
 import { appSchema, tableSchema } from "@nozbe/watermelondb";
 
-
 const layersSchema = tableSchema({
   name: "layers",
   columns: [
@@ -37,11 +36,6 @@ const colorSetsColorsSchema = tableSchema({
 });
 
 export default appSchema({
-  version: 7,
-  tables: [
-    layersSchema,
-    colorsSchema,
-    colorSetsSchema,
-    colorSetsColorsSchema,
-  ]
+  version: 9,
+  tables: [layersSchema, colorsSchema, colorSetsSchema, colorSetsColorsSchema],
 });

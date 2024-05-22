@@ -1,54 +1,32 @@
 import React, { useEffect, useState } from "react";
 import { View, Button, StyleSheet, ScrollView, Text } from "react-native";
-import AvatarService from "../../backend/AvatarService";
+import AvatarService from "../../backend/avatar/AvatarService";
 import LottieView from "lottie-react-native";
 import { AnimationType, ElementType } from "../../model/enum";
 import { CharacterPicker } from "../../components/characters/CharacterPicker";
 import { useNavigation } from "@react-navigation/native";
 import { Animation } from "@lottiefiles/lottie-js";
-import { ChangeElementCommand } from "../../model/Command";
+import { ChangeElementCommand } from "../../model/ChangeStateCommand";
 const MainScreen = () => {
   const navigation = useNavigation();
 
   const [selectedType, setSelectedType] = useState(ElementType.HAT);
-  const [selectedAnimation, setSelectedAnimation] = useState(
-    AnimationType.IDLE,
-  );
+  const [selectedAnimation, setSelectedAnimation] = useState(AnimationType.IDLE);
   const [inputValue, setInputValue] = useState(1);
   const [lottie, setLottie] = useState<Animation>();
   const [size, setSize] = useState(0);
   const [color, setColor] = useState("");
-
-  const changeElement = (value) => {
-    setInputValue(value);
-    AvatarService.changeElement({
-      elementType: selectedType,
-      number: inputValue,
-    });
-  };
 
   const changeAnimation = (value) => {
     // setSelectedAnimation(value);
     // setLottie(AvatarService.getAvatar());
   };
 
-  const changeSize = (value) => {
-    setSize(value);
-    const lottie = AvatarService.changeSize({
-      elementType: selectedType,
-      changeSizePercent: size,
-    });
-    setLottie(lottie);
-  };
-
   return (
     <ScrollView>
       <CharacterPicker />
 
-      <Button
-        title="Edit character"
-        onPress={() => navigation.navigate("ConstructorScreen")}
-      />
+      <Button title="Edit character" onPress={() => navigation.navigate("ConstructorScreen")} />
 
       {/*<View style={styles.lottieContainer}>*/}
       {/*  <LottieView source={lottie} autoPlay loop  style={styles.lottie} />*/}

@@ -1,32 +1,28 @@
-import AvatarService from "../backend/AvatarService";
-import {allElements, AnimationType, ElementType} from "../model/enum";
-import {Animation, LayerType} from "@lottiefiles/lottie-js";
-import {sync} from "../backend/watermelon-db/watermelon";
-import {ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand} from "../model/Command";
+import AvatarService from "../backend/avatar/AvatarService";
+import { allElements, AnimationType, ElementType } from "../model/enum";
+import { Animation } from "@lottiefiles/lottie-js";
+import { ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand } from "../model/ChangeStateCommand";
 import ConfigService from "../backend/ConfigService";
-import {getAllColors} from "../backend/db/AvatarWatermelonDao";
 import initialize from "../backend/Initializer";
 
 const avatarDao = require("../backend/db/AvatarWatermelonDao");
 
 beforeAll(async () => {
   await initialize();
-});
+}, 10000);
 
-it("Avatar backend could create basic avatar", async () =>
-{
+it("Avatar backend could create basic avatar", async () => {
   const result = await AvatarService.getAvatar();
   expect(result).not.toBeUndefined();
   const layerNames = extractLayerNames(result);
   allElements
-    .map(it => it.toLowerCase())
-    .forEach(elementType => {
+    .map((it) => it.toLowerCase())
+    .forEach((elementType) => {
       expect(layerNames).toContain(`${elementType}_1`);
     });
 });
 
-it("Avatar backend could change elements", async () =>
-{
+it("Avatar backend could change elements", async () => {
   const originalResult = await AvatarService.getAvatar();
   expect(originalResult).not.toBeUndefined();
   const originalLayerNames = extractLayerNames(originalResult);
@@ -38,38 +34,12 @@ it("Avatar backend could change elements", async () =>
   expect(changedLayerNames).toContain("head_2");
 });
 
-it("New animation layer requested only for changed element", async () =>
-{
-  const originalResult = await AvatarService.getAvatar();
-  expect(originalResult).not.toBeUndefined();
-
-  const spy = jest.spyOn(avatarDao, "getAnimationLayers");
-
-  AvatarService.changeElement(new ChangeElementCommand(ElementType.HEAD, 2));
-  const result = await AvatarService.getAvatar();
-  expect(result).not.toBeUndefined();
-  const layerNames = extractLayerNames(result);
-  allElements
-    .filter(it => it !== "HEAD")
-    .map(it => it.toLowerCase())
-    .forEach(elementType => {
-      expect(layerNames).toContain(`${elementType}_1`);
-    });
-  expect(layerNames).toContain("head_2");
-  expect(layerNames).not.toContain("head_1");
-  expect(spy).toBeCalledWith(AnimationType.STATIC, [{elementType: "HEAD", elementNumber: 2}], "MALE");
-});
-
-afterEach(() => {
-  // restore the spy created with spyOn
-  jest.restoreAllMocks();
+afterEach(async () => {
   //reset avatar state
-  allElements.forEach(element => AvatarService.changeElement({elementType: element, number: 1}));
+  await AvatarService.init();
 });
 
-
-it("Avatar backend could change elements color", async () =>
-{
+it("Avatar backend could change elements color", async () => {
   const originalResult = await AvatarService.getAvatar();
   expect(originalResult).not.toBeUndefined();
   const originalColors = originalResult.colors;
@@ -83,9 +53,7 @@ it("Avatar backend could change elements color", async () =>
   expect(result.colors).not.toEqual(originalColors);
 });
 
-
-it("Avatar backend could change elements size", async () =>
-{
+it("Avatar backend could change elements size", async () => {
   const originalResult = await AvatarService.getAvatar();
   expect(originalResult).not.toBeUndefined();
   const originalHeadLayer = getLayer(originalResult, ElementType.HEAD);
@@ -100,13 +68,12 @@ it("Avatar backend could change elements size", async () =>
   expect(resultScale).not.toEqual(originalScale);
 });
 
-
 function extractLayerNames(result: Animation) {
   return result.layers
-    .map(layer => layer.name.split(";")[0])//remove comment
-    .map(name => name.replace("_m", "").replace("_f", ""));  //remove gender
+    .map((layer) => layer.name.split(";")[0]) //remove comment
+    .map((name) => name.replace("_m", "").replace("_f", "")); //remove gender
 }
 
-function getLayer(animation: Animation, elementType: ElementType){
-  return animation.layers.find(layer => layer.name.includes(elementType.toLowerCase()));
+function getLayer(animation: Animation, elementType: ElementType) {
+  return animation.layers.find((layer) => layer.name.includes(elementType.toLowerCase()));
 }

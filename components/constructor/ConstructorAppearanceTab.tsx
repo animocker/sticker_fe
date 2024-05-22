@@ -1,16 +1,11 @@
 import React, { useState, useRef } from "react";
 import { StyleSheet, Dimensions, View, Text } from "react-native";
-import AvatarService from "../../backend/AvatarService";
+import AvatarService from "../../backend/avatar/AvatarService";
 import { AnimationType, ElementType } from "../../model/enum";
 import { SwipablePanel } from "../ui/SwipablePanel";
 import { ConstructorAppearanceMenu } from "./ConstructorAppearanceMenu";
 import LottieView from "lottie-react-native";
-import {
-  ChangeColorCommand,
-  ChangeElementCommand,
-  ChangeSizeCommand,
-  CommandType,
-} from "../../model/Command";
+import { ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand, CommandType } from "../../model/ChangeStateCommand";
 import { Animation } from "@lottiefiles/lottie-js";
 import { Color } from "../../model/Config";
 
@@ -36,47 +31,29 @@ export const ConstructorAppearanceTab = () => {
 
   const changeElement = (elementType, number) => {
     setSelectedValues({ ...selectedValues, [elementType]: number });
-    const request = { elementType, number: number + 1 } as ChangeElementCommand;
+    const request = new ChangeElementCommand(elementType, number + 1);
     AvatarService.changeElement(request);
     reloadAnimation();
   };
 
   const changeSize = (elementType: ElementType, sizePercent: number) => {
-    AvatarService.changeSize({ elementType, sizePercent } as ChangeSizeCommand);
+    AvatarService.changeSize(new ChangeSizeCommand(elementType, sizePercent));
     reloadAnimation();
   };
 
   const changeColor = (elementType: ElementType, color: Color) => {
-    AvatarService.changeColor({
-      elementType,
-      elementNumber: selectedValues[elementType],
-      colorSetId: color.id,
-    } as ChangeColorCommand);
+    AvatarService.changeColor(new ChangeColorCommand(elementType, color.id, selectedValues[elementType]));
     reloadAnimation();
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.lottieContainer}>
-        {!lottie ? (
-          <Text>Loading...</Text>
-        ) : (
-          <LottieView
-            source={lottie}
-            autoPlay
-            style={styles.lottie}
-            ref={animationRef}
-          />
-        )}
+        {!lottie ? <Text>Loading...</Text> : <LottieView source={lottie} autoPlay style={styles.lottie} ref={animationRef} />}
       </View>
       <View style={styles.menuContainer}>
         {/*<SwipablePanel>*/}
-        <ConstructorAppearanceMenu
-          selectedValues={selectedValues}
-          changeElement={changeElement}
-          changeSize={changeSize}
-          changeColor={changeColor}
-        />
+        <ConstructorAppearanceMenu selectedValues={selectedValues} changeElement={changeElement} changeSize={changeSize} changeColor={changeColor} />
         {/*</SwipablePanel>*/}
       </View>
     </View>

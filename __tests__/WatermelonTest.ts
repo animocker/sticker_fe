@@ -1,10 +1,6 @@
-import {sync} from "../backend/watermelon-db/watermelon";
-import {
-  getAnimationLayers,
-  getAllColors,
-  getAllColorSets,
-} from "../backend/db/AvatarWatermelonDao";
-import {AnimationType, ElementType} from "../model/enum";
+import { sync } from "../backend/watermelon-db/watermelon";
+import { getAnimationLayers, getAllColors, getAllColorSets } from "../backend/db/AvatarWatermelonDao";
+import { AnimationType } from "../model/enum";
 
 beforeAll(async () => {
   await sync();
@@ -13,18 +9,20 @@ beforeAll(async () => {
 it("Find animation successful", async () => {
   const result = await getAnimationLayers(
     AnimationType.IDLE,
-    [{elementType: "HEAD", elementNumber: 1}, {elementType: "HAIR", elementNumber:1}, {elementType: "CLOTHES", elementNumber:1}],
-    "MALE"
+    [
+      { elementType: "HEAD", elementNumber: 1 },
+      { elementType: "HAIR", elementNumber: 1 },
+      { elementType: "CLOTHES", elementNumber: 1 },
+    ],
+    "MALE",
   );
   expect(result).toBeDefined();
   expect(result.length).toBeGreaterThan(0);
-  result.forEach(it => {
-    expect(typeof(it)).toBe("string");
+  result.forEach((it) => {
+    expect(typeof it).toBe("string");
     expect(it).not.toBe("");
   });
 });
-
-
 
 it("All color sets has at least one color", async () => {
   const result = await getAllColorSets();

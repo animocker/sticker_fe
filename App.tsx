@@ -2,7 +2,7 @@ import {StyleSheet, Text,} from "react-native";
 import * as FileSystem from "expo-file-system";
 import {Asset} from "expo-asset";
 import React, {useEffect, useState} from "react";
-import AvatarService from "./backend/AvatarService";
+import AvatarService from "./backend/avatar/AvatarService";
 import {AnimationType, ElementType} from "./model/enum";
 
 import {NavigationContainer} from "@react-navigation/native";
