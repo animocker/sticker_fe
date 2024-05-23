@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { SETTINGS_APPEARANCE } from "./types";
 import { SvgXml } from "react-native-svg";
 import { ICONS_APPERANCE } from "./icons/icons_element_menu";
@@ -21,19 +15,10 @@ import ConfigService from "../../backend/ConfigService";
 import { ElementTypeConfig } from "../../model/Config";
 import { ElementType } from "../../model/enum";
 
-export const ConstructorAppearanceMenu = ({
-  selectedValues,
-  changeElement,
-  changeSize,
-  changeColor,
-}) => {
+export const ConstructorAppearanceMenu = ({ selectedValues, changeElement, changeSize, changeColor }) => {
   const buttonTitles = Object.values(SETTINGS_APPEARANCE);
-  const [selectedTab, setSelectedTab] = useState(
-    Object.values(SETTINGS_APPEARANCE)[0],
-  );
-  const [settings, setSettings] = useState(
-    {} as Record<ElementType, ElementTypeConfig>,
-  );
+  const [selectedTab, setSelectedTab] = useState(Object.values(SETTINGS_APPEARANCE)[0]);
+  const [settings, setSettings] = useState({} as Record<ElementType, ElementTypeConfig>);
 
   useEffect(() => {
     ConfigService.getElementTypeConfigs().then((config) => {
@@ -50,31 +35,21 @@ export const ConstructorAppearanceMenu = ({
   }, []);
 
   const tabs = {
-    [SETTINGS_APPEARANCE.HEAD]: (props) => (
+    [ElementType.HEAD]: (props) => (
       <ConstructorHead
         {...props}
         changeElement={changeElement}
         changeSize={changeSize}
         changeColor={changeColor}
-        settings={settings[SETTINGS_APPEARANCE.HEAD]}
-        selectedValue={selectedValues[SETTINGS_APPEARANCE.HEAD]}
+        settings={settings[ElementType.HEAD]}
+        selectedValue={selectedValues[ElementType.HEAD]}
       />
     ),
-    [SETTINGS_APPEARANCE.HAIR]: (props) => (
-      <ConstructorHair {...props} changeElement={changeElement} />
-    ),
-    [SETTINGS_APPEARANCE.EYEBROW]: (props) => (
-      <ConstructorEyebrow {...props} changeElement={changeElement} />
-    ),
-    [SETTINGS_APPEARANCE.EYE]: (props) => (
-      <ConstructorEye {...props} changeElement={changeElement} />
-    ),
-    [SETTINGS_APPEARANCE.NOSE]: (props) => (
-      <ConstructorNose {...props} changeElement={changeElement} />
-    ),
-    [SETTINGS_APPEARANCE.LIPS]: (props) => (
-      <ConstructorLips {...props} changeElement={changeElement} />
-    ),
+    [ElementType.HAIR]: (props) => <ConstructorHair {...props} changeElement={changeElement} />,
+    [ElementType.EYEBROWS]: (props) => <ConstructorEyebrow {...props} changeElement={changeElement} />,
+    [ElementType.EYES]: (props) => <ConstructorEye {...props} changeElement={changeElement} />,
+    [ElementType.NOSE]: (props) => <ConstructorNose {...props} changeElement={changeElement} />,
+    [ElementType.MOUTH]: (props) => <ConstructorLips {...props} changeElement={changeElement} />,
   };
 
   return (
@@ -82,17 +57,8 @@ export const ConstructorAppearanceMenu = ({
       <View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {buttonTitles.map((title, index) => (
-            <View
-              key={index}
-              style={{ flexDirection: "row", alignItems: "center" }}
-            >
-              <TouchableOpacity
-                style={[
-                  styles.button,
-                  selectedTab === title && styles.selectedButton,
-                ]}
-                onPress={() => setSelectedTab(title)}
-              >
+            <View key={index} style={{ flexDirection: "row", alignItems: "center" }}>
+              <TouchableOpacity style={[styles.button, selectedTab === title && styles.selectedButton]} onPress={() => setSelectedTab(title)}>
                 <SvgXml xml={ICONS_APPERANCE[title]} />
                 <Text>{title}</Text>
               </TouchableOpacity>

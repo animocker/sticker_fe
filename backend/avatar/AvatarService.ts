@@ -35,6 +35,12 @@ class Avatar {
     this.isInitialized = true;
   }
 
+  async getState() {
+    if (!this.isInitialized) {
+      await this.init();
+    }
+    return this.state;
+  }
   undo() {
     const command = undoStack.pop();
     if (command) {

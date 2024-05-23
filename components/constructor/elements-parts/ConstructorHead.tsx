@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-} from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { RangeSlider } from "../../ui/RangeSlider";
 import PropTypes from "prop-types";
 import { ElementType } from "../../../model/enum";
@@ -30,13 +23,7 @@ const HEAD_SETTINGS = [
   { icon: <Image source={HEAD_6} />, name: "head_6" },
 ];
 
-export const ConstructorHead = ({
-  changeElement,
-  changeSize,
-  changeColor,
-  settings,
-  selectedValue,
-}) => {
+export const ConstructorHead = ({ changeElement, changeSize, changeColor, settings, selectedValue }) => {
   const changeElementHandle = (index: number) => {
     changeElement(ElementType.HEAD, index);
   };
@@ -66,10 +53,7 @@ export const ConstructorHead = ({
         {HEAD_SETTINGS.map((item, index) => (
           <TouchableOpacity
             key={index}
-            style={[
-              elementsMenuStyles.button,
-              selectedValue === index && elementsMenuStyles.buttonSelected,
-            ]}
+            style={[elementsMenuStyles.button, selectedValue.selectedIndex === index && elementsMenuStyles.buttonSelected]}
             onPress={() => changeElementHandle(index)}
           >
             {item.icon}

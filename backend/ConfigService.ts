@@ -7,10 +7,7 @@ import { ColorSetWDB, ColorWDB } from "./watermelon-db/model";
 class ConfigService {
   private elementTypeConfigs: ElementTypeConfig[] = null;
   private readonly colorById: Map<string, Color> = new Map<string, Color>();
-  private readonly colorSetById: Map<string, ColorSet> = new Map<
-    string,
-    ColorSet
-  >();
+  private readonly colorSetById: Map<string, ColorSet> = new Map<string, ColorSet>();
 
   customize() {
     this.elementTypeConfigs
@@ -29,12 +26,11 @@ class ConfigService {
       this.elementTypeConfigs = await this.buildElementTypeConfig();
     }
     this.customize();
+    console.log(this.elementTypeConfigs);
     return this.elementTypeConfigs;
   }
 
-  public async getElementTypeConfig(
-    elementType: ElementType | string,
-  ): Promise<ElementTypeConfig> {
+  public async getElementTypeConfig(elementType: ElementType | string): Promise<ElementTypeConfig> {
     const configs = await this.getElementTypeConfigs();
     return configs.find((it) => it.elementType === elementType);
   }
@@ -66,9 +62,7 @@ class ConfigService {
     if (colorSets.length === 0) {
       return [];
     }
-    return await Promise.all(
-      colorSets.map(async (it) => await this.mapColorSet(it)),
-    );
+    return await Promise.all(colorSets.map(async (it) => await this.mapColorSet(it)));
   }
 
   private async mapColorSet(source: ColorSetWDB): Promise<ColorSet> {

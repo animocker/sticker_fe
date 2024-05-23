@@ -1,21 +1,37 @@
-import React, { useState, useRef } from "react";
-import { StyleSheet, Dimensions, View, Text } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { Dimensions, StyleSheet, Text, View } from "react-native";
 import AvatarService from "../../backend/avatar/AvatarService";
-import { AnimationType, ElementType } from "../../model/enum";
-import { SwipablePanel } from "../ui/SwipablePanel";
+import { ElementType } from "../../model/enum";
 import { ConstructorAppearanceMenu } from "./ConstructorAppearanceMenu";
 import LottieView from "lottie-react-native";
-import { ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand, CommandType } from "../../model/ChangeStateCommand";
+import { ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand } from "../../model/ChangeStateCommand";
 import { Animation } from "@lottiefiles/lottie-js";
 import { Color } from "../../model/Config";
+import { SETTINGS_APPEARANCE } from "./types";
+import { ElementTypeAndNumber } from "../../model/ElementTypeAndNumber";
 
 export const ConstructorAppearanceTab = () => {
   const animationRef = useRef<LottieView>(null);
   const [lottie, setLottie] = useState<Animation>();
-  // TODO default 0. get saved value from backend
-  const [selectedValues, setSelectedValues] = useState({
-    [ElementType.HEAD]: 0,
-  });
+  const [selectedValues, setSelectedValues] = useState({});
+
+  useEffect(() => {
+    AvatarService.getState().then((state) => {
+      const newSelectedValues = {};
+      for (const key of SETTINGS_APPEARANCE) {
+        const selectedIndex = state.elements.get(key);
+        const colorSet = state.elementColorSet.get(key)
+          ? state.elementColorSet.get(key)
+          : state.elementColorSet.get(new ElementTypeAndNumber(key, selectedIndex).toString());
+        newSelectedValues[key] = {
+          selectedIndex: selectedIndex - 1,
+          size: state.elementSize.get(key),
+          colorSet,
+        };
+      }
+      setSelectedValues(newSelectedValues);
+    });
+  }, []);
 
   AvatarService.getAvatar().then((animation) => {
     setLottie(animation);
@@ -30,19 +46,30 @@ export const ConstructorAppearanceTab = () => {
   };
 
   const changeElement = (elementType, number) => {
-    setSelectedValues({ ...selectedValues, [elementType]: number });
+    setSelectedValues({
+      ...selectedValues,
+      [elementType]: { ...selectedValues[elementType], selectedIndex: number },
+    });
     const request = new ChangeElementCommand(elementType, number + 1);
     AvatarService.changeElement(request);
     reloadAnimation();
   };
 
   const changeSize = (elementType: ElementType, sizePercent: number) => {
+    setSelectedValues({
+      ...selectedValues,
+      [elementType]: { ...selectedValues[elementType], size: sizePercent },
+    });
     AvatarService.changeSize(new ChangeSizeCommand(elementType, sizePercent));
     reloadAnimation();
   };
 
   const changeColor = (elementType: ElementType, color: Color) => {
-    AvatarService.changeColor(new ChangeColorCommand(elementType, color.id, selectedValues[elementType]));
+    setSelectedValues({
+      ...selectedValues,
+      [elementType]: { ...selectedValues[elementType], colorSet: color.id },
+    });
+    AvatarService.changeColor(new ChangeColorCommand(elementType, color.id, selectedValues[elementType].selectedIndex));
     reloadAnimation();
   };
 
