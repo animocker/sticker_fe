@@ -47,15 +47,13 @@ export class ChangeColorCommand implements ChangeStateCommand {
 
   execute(state: State): void {
     const key = new ElementTypeAndNumber(this.elementType, this.elementNumber).toString();
-    const value = ConfigService.getColorSetById(this.colorSetId);
-    this.prevColorSetId = state.elementColorSet.get(key).id;
-    state.elementColorSet.set(key.toString(), value);
+    this.prevColorSetId = state.elementColorSet.get(key);
+    state.elementColorSet.set(key.toString(), this.colorSetId);
   }
 
   rollback(state: State): void {
     const key = new ElementTypeAndNumber(this.elementType, this.elementNumber).toString();
-    const value = ConfigService.getColorSetById(this.prevColorSetId);
-    state.elementColorSet.set(key.toString(), value);
+    state.elementColorSet.set(key.toString(), this.prevColorSetId);
   }
 }
 

@@ -1,11 +1,12 @@
 import { ElementType } from "../../model/enum";
 import { ColorSet } from "../../model/Config";
+import * as serialijse from "serialijse";
 import { ChangeStateCommand } from "../../model/ChangeStateCommand";
 
 export class State {
   readonly elements = new Map<ElementType, number>();
-  readonly elementSize = new Map<ElementType, number>();
-  readonly elementColorSet = new Map<string, ColorSet>(); //ElementTypeAndNumber.toString as key
+  readonly elementSize = new Map<ElementType, number>(); // change percent size as value
+  readonly elementColorSet = new Map<string, string>(); //ElementTypeAndNumber.toString as key, colorSet.id as value
 
   equals(other: State): boolean {
     if (other === undefined) {
@@ -20,6 +21,14 @@ export class State {
       result &&= this.propertyEqual(thisField, other[field]);
     }
     return result;
+  }
+
+  serialize(): string {
+    return serialijse.serialize(this);
+  }
+
+  static deserialize(serialized: string): State {
+    return serialijse.deserialize(serialized);
   }
 
   private propertyEqual(field1: Map<any, any>, field2: Map<any, any>): boolean {

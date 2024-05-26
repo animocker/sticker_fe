@@ -2,7 +2,7 @@ import { allElements, AnimationType, ElementType } from "../../model/enum";
 import { ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand, ChangeStateCommand } from "../../model/ChangeStateCommand";
 import { getAnimationLayers } from "../db/AvatarWatermelonDao";
 import { Animation, ColorRgba, Shape } from "@lottiefiles/lottie-js";
-import { Color } from "../../model/Config";
+import { Color, ColorSet } from "../../model/Config";
 import ConfigService from "../ConfigService";
 import _ from "lodash";
 import { uuid } from "@supabase/supabase-js/dist/main/lib/helpers";
@@ -63,8 +63,8 @@ class Avatar {
 
     const groupedColorSets = _.groupBy(colorSets, (it) => new ElementTypeAndNumber(it.elementType, it.elementNumber));
     for (const key in groupedColorSets) {
-      const colorSets = groupedColorSets[key];
-      this.state.elementColorSet.set(key, colorSets[0]);
+      const colorSets = groupedColorSets[key] as ColorSet[];
+      this.state.elementColorSet.set(key, colorSets[0].id);
     }
   }
 
@@ -109,7 +109,8 @@ class Avatar {
   }
 
   private changeElementsColor(lottieAnimation: Animation) {
-    for (const [, newValue] of this.state.elementColorSet) {
+    for (const [, newValueId] of this.state.elementColorSet) {
+      const newValue = ConfigService.getColorSetById(newValueId);
       newValue.colors.forEach((color) => this.updateColor(lottieAnimation, color));
     }
   }

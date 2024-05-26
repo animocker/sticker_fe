@@ -1,9 +1,11 @@
-import {database, sync} from "./watermelon-db/watermelon";
+import { database, sync } from "./watermelon-db/watermelon";
 import AvatarService from "./avatar/AvatarService";
 import ConfigService from "./ConfigService";
+import * as serialijse from "serialijse";
+import { State } from "./avatar/State";
 
 export default async function initialize() {
-  //await database.write(async () => await database.unsafeResetDatabase());
+  serialijse.declarePersistable(State);
   await sync();
   await ConfigService.getElementTypeConfigs();
   await AvatarService.init();

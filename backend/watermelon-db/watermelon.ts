@@ -1,10 +1,10 @@
 import { Database } from "@nozbe/watermelondb";
 import SQLiteAdapter from "@nozbe/watermelondb/adapters/sqlite";
 
-import schema from "./schema";
-import { LayerWDB, ColorWDB, ColorSetWDB, ColorSetColorWDB } from "./model";
+import { LayerWDB, ColorWDB, ColorSetWDB, ColorSetColorWDB } from "./read-only/model";
 import { supabase } from "../supabase";
 import { SyncDatabaseChangeSet, synchronize } from "@nozbe/watermelondb/sync";
+import schema from "./schema";
 // import Post from './model/Post' // ⬅️ You'll import your Models here
 
 // First, create the adapter to the underlying database:

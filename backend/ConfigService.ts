@@ -2,7 +2,7 @@ import { getAllColorSets } from "./db/AvatarWatermelonDao";
 import _ from "lodash";
 import { Color, ColorSet, ElementTypeConfig } from "../model/Config";
 import { allElements, ElementType } from "../model/enum";
-import { ColorSetWDB, ColorWDB } from "./watermelon-db/model";
+import { ColorSetWDB, ColorWDB } from "./watermelon-db/read-only/model";
 
 class ConfigService {
   private elementTypeConfigs: ElementTypeConfig[] = null;
@@ -72,7 +72,7 @@ class ConfigService {
     const result = {
       id: source.id,
       elementType: source.elementType as ElementType,
-      elementNumber: source.elementNbr,
+      elementNumber: source.elementNumber,
       colors: (await source.colors.fetch()).map((it) => this.mapColor(it)),
     };
     this.colorSetById.set(source.id, result);
