@@ -1,12 +1,15 @@
 import { ElementType } from "../../model/enum";
-import { ColorSet } from "../../model/Config";
 import * as serialijse from "serialijse";
-import { ChangeStateCommand } from "../../model/ChangeStateCommand";
 
 export class State {
+  readonly id: string;
   readonly elements = new Map<ElementType, number>();
   readonly elementSize = new Map<ElementType, number>(); // change percent size as value
   readonly elementColorSet = new Map<string, string>(); //ElementTypeAndNumber.toString as key, colorSet.id as value
+
+  constructor(id: string) {
+    this.id = id;
+  }
 
   equals(other: State): boolean {
     if (other === undefined) {

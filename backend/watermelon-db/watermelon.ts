@@ -5,6 +5,7 @@ import { LayerWDB, ColorWDB, ColorSetWDB, ColorSetColorWDB } from "./read-only/m
 import { supabase } from "../supabase";
 import { SyncDatabaseChangeSet, synchronize } from "@nozbe/watermelondb/sync";
 import schema from "./schema";
+import { AvatarStateWDB } from "./read-write/model";
 // import Post from './model/Post' // ⬅️ You'll import your Models here
 
 // First, create the adapter to the underlying database:
@@ -26,7 +27,7 @@ const adapter = new SQLiteAdapter({
 // Then, make a Watermelon database from it!
 export const database = new Database({
   adapter,
-  modelClasses: [LayerWDB, ColorWDB, ColorSetWDB, ColorSetColorWDB],
+  modelClasses: [LayerWDB, ColorWDB, ColorSetWDB, ColorSetColorWDB, AvatarStateWDB],
 });
 
 export async function sync() {

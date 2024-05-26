@@ -20,7 +20,7 @@ const redoStack: ChangeStateCommand[] = [];
 const undoStack: ChangeStateCommand[] = [];
 
 class Avatar {
-  private readonly state: State = new State();
+  private state: State = new State(null);
   private lastState: State;
   private readonly layersIndexes = new Map<ElementType, number[]>();
   private avatarAnimation: Animation;
@@ -32,6 +32,11 @@ class Avatar {
       this.state.elements.set(elementType, 1);
       await this.updateCurrentColors(elementType);
     }
+    this.isInitialized = true;
+  }
+
+  loadState(state: State) {
+    this.state = state;
     this.isInitialized = true;
   }
 
