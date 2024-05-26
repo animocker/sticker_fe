@@ -4,8 +4,10 @@ import { ElementType } from "../model/enum";
 import ConfigService from "../backend/ConfigService";
 import { Animation } from "@lottiefiles/lottie-js";
 import initialize from "../backend/Initializer";
+import { supabase } from "../backend/supabase";
 
 beforeAll(async () => {
+  await supabase.auth.signInWithPassword({ email: process.env.TEST_LOGIN, password: process.env.TEST_PASSWORD });
   await initialize();
 }, 10000);
 

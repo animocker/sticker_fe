@@ -4,10 +4,11 @@ import { Animation } from "@lottiefiles/lottie-js";
 import { ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand } from "../model/ChangeStateCommand";
 import ConfigService from "../backend/ConfigService";
 import initialize from "../backend/Initializer";
-
-const avatarDao = require("../backend/db/AvatarWatermelonDao");
+import { supabase } from "../backend/supabase";
+import "dotenv/config";
 
 beforeAll(async () => {
+  await supabase.auth.signInWithPassword({ email: process.env.TEST_LOGIN, password: process.env.TEST_PASSWORD });
   await initialize();
 }, 10000);
 

@@ -1,10 +1,13 @@
 import { sync } from "../backend/watermelon-db/watermelon";
 import { getAnimationLayers, getAllColors, getAllColorSets } from "../backend/db/AvatarWatermelonDao";
 import { AnimationType } from "../model/enum";
+import { supabase } from "../backend/supabase";
+import initialize from "../backend/Initializer";
 
 beforeAll(async () => {
-  await sync();
-});
+  await supabase.auth.signInWithPassword({ email: process.env.TEST_LOGIN, password: process.env.TEST_PASSWORD });
+  await initialize();
+}, 10000);
 
 it("Find animation successful", async () => {
   const result = await getAnimationLayers(

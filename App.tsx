@@ -1,12 +1,12 @@
-import {StyleSheet, Text,} from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import * as FileSystem from "expo-file-system";
-import {Asset} from "expo-asset";
-import React, {useEffect, useState} from "react";
+import { Asset } from "expo-asset";
+import React, { useEffect, useState } from "react";
 import AvatarService from "./backend/avatar/AvatarService";
-import {AnimationType, ElementType} from "./model/enum";
+import { AnimationType, ElementType } from "./model/enum";
 
-import {NavigationContainer} from "@react-navigation/native";
-import {createStackNavigator} from "@react-navigation/stack";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
 import AuthStartScreen from "./screens/auth/AuthStartScreen";
 import AuthLegalScreen from "./screens/auth/AuthLegalScreen";
 import AuthLoginScreen from "./screens/auth/AuthLoginScreen";
@@ -14,12 +14,14 @@ import OnboardingStartScreen from "./screens/onboarding/OnboardingStartScreen";
 import OnboardingSelfieScreen from "./screens/onboarding/OnboardingSelfieScreen";
 import OnboardingManualCreateCharacterScreen from "./screens/onboarding/OnboardingManualCreateCharacterScreen";
 import MainScreen from "./screens/main/MainScreen";
-import {ConstructorScreen} from "./screens/constructor/ConstructorScreen";
-import {sync} from "./backend/watermelon-db/watermelon";
+import { ConstructorScreen } from "./screens/constructor/ConstructorScreen";
+import { sync } from "./backend/watermelon-db/watermelon";
 import initialize from "./backend/Initializer";
+import { supabase } from "./backend/supabase";
+import { Session } from "@supabase/supabase-js";
+import Auth from "./components/Auth";
 
 const Stack = createStackNavigator();
-
 
 export default function App() {
   const [isInitialized, setInit] = useState(false);
@@ -28,28 +30,46 @@ export default function App() {
       initialize().then(() => setInit(true));
     }
   });
+  const [session, setSession] = useState<Session | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+  }, []);
+
   if (!isInitialized) {
     return <Text>Loading...</Text>;
   }
 
+  if (!session) {
+    return (
+      <View>
+        <Auth />
+        {session && session.user && <Text>{session.user.id}</Text>}
+      </View>
+    );
+  }
+
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName="ConstructorScreen"
-      >
-        <Stack.Screen name="AuthStart" component={AuthStartScreen} options={{ headerShown: false }}  />
+      <Stack.Navigator initialRouteName="ConstructorScreen">
+        <Stack.Screen name="AuthStart" component={AuthStartScreen} options={{ headerShown: false }} />
         <Stack.Screen name="AuthLegal" component={AuthLegalScreen} />
         <Stack.Screen name="AuthLogin" component={AuthLoginScreen} />
         <Stack.Screen name="OnboardingStart" component={OnboardingStartScreen} />
         <Stack.Screen name="OnboardingSelfie" component={OnboardingSelfieScreen} />
         <Stack.Screen name="OnboardingManualCreateCharacter" component={OnboardingManualCreateCharacterScreen} />
         <Stack.Screen name="MainScreen" component={MainScreen} />
-        <Stack.Screen name="ConstructorScreen" component={ConstructorScreen} options={{ headerShown: false }}  />
+        <Stack.Screen name="ConstructorScreen" component={ConstructorScreen} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
