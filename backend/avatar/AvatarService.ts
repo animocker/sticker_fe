@@ -20,7 +20,7 @@ const redoStack: ChangeStateCommand[] = [];
 const undoStack: ChangeStateCommand[] = [];
 
 class Avatar {
-  private state: State = new State(null);
+  private state: State = new State();
   private lastState: State;
   private readonly layersIndexes = new Map<ElementType, number[]>();
   private avatarAnimation: Animation;

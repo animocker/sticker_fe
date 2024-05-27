@@ -1,13 +1,11 @@
 import AvatarService from "./AvatarService";
-import { supabase } from "../supabase";
-import { AvatarStateWDB } from "../watermelon-db/read-write/model";
 import { loadAvatarStates, saveAvatarState } from "../db/AvatarCollectionWatermelonDao";
 import { State } from "./State";
 
 //TODO make tests
 class AvatarCollectionService {
-  save() {
-    return saveAvatarState(AvatarService.getState());
+  saveCurrentState() {
+    return AvatarService.getState().then((state) => saveAvatarState(state));
   }
 
   async load(): Promise<State[]> {
@@ -15,3 +13,5 @@ class AvatarCollectionService {
     return states.map((it) => State.deserialize(it.value));
   }
 }
+
+export default new AvatarCollectionService();

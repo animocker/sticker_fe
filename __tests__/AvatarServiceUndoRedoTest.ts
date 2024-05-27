@@ -5,6 +5,7 @@ import ConfigService from "../backend/ConfigService";
 import { Animation } from "@lottiefiles/lottie-js";
 import initialize from "../backend/Initializer";
 import { supabase } from "../backend/supabase";
+import { isAnimationsEquals } from "./test-helper-methods";
 
 beforeAll(async () => {
   await supabase.auth.signInWithPassword({ email: process.env.TEST_LOGIN, password: process.env.TEST_PASSWORD });
@@ -88,12 +89,6 @@ it("Avatar backend could undo and redo all commands", async () => {
   const redo3Result = await AvatarService.getAvatar();
   expect(isAnimationsEquals(step3Result, redo3Result)).toBeTruthy();
 });
-
-function isAnimationsEquals(a: Animation, b: Animation) {
-  a.name = "";
-  b.name = "";
-  return JSON.stringify(a) === JSON.stringify(b);
-}
 
 afterEach(async () => {
   //reset avatar state

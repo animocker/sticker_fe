@@ -7,7 +7,7 @@ export class State {
   readonly elementSize = new Map<ElementType, number>(); // change percent size as value
   readonly elementColorSet = new Map<string, string>(); //ElementTypeAndNumber.toString as key, colorSet.id as value
 
-  constructor(id: string) {
+  constructor(id: string = null) {
     this.id = id;
   }
 

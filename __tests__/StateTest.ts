@@ -4,6 +4,7 @@ import { State } from "../backend/avatar/State";
 import { supabase } from "../backend/supabase";
 import initialize from "../backend/Initializer";
 import configService from "../backend/ConfigService";
+import { createRandomState } from "./test-helper-methods";
 
 beforeAll(async () => {
   await supabase.auth.signInWithPassword({ email: process.env.TEST_LOGIN, password: process.env.TEST_PASSWORD });
@@ -34,22 +35,3 @@ it("Test state serialization deserialization", async () => {
   const deserialized = State.deserialize(serialized);
   expect(state.equals(deserialized)).toBeTruthy();
 });
-
-async function createRandomState(): Promise<State> {
-  const state = new State();
-
-  for (const elementType of allElements) {
-    state.elementSize.set(elementType, random(-50, 50));
-    state.elements.set(elementType, random(1, 5));
-    const elementTypeConfig = await configService.getElementTypeConfig(elementType);
-    if (elementTypeConfig.colorSets.length > 0) {
-      const randomColorSet = elementTypeConfig.colorSets[random(0, elementTypeConfig.colorSets.length)];
-      state.elementColorSet.set(elementType.toString(), randomColorSet.id);
-    }
-  }
-  return state;
-}
-
-function random(from, to) {
-  return Math.floor(Math.random() * (to - from) + from);
-}
