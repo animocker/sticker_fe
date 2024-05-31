@@ -24,6 +24,9 @@ export const elementsMenuStyles = StyleSheet.create({
     height: 48,
     width: 48,
   },
+  colorButtonSelected: {
+    borderColor: styleAssets.colorsPalette.primeBlue,
+  },
   colorContainer: {
     display: "flex",
     gap: 10,

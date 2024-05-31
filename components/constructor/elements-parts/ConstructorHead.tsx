@@ -38,10 +38,11 @@ export const ConstructorHead = ({ changeElement, changeSize, changeColor, settin
 
   return (
     <View>
-      {settings && Object.keys(settings).length > 0 && (
+      {settings && Object.keys(settings)?.length > 0 && (
         <View>
           <View>
             <CommonConstructorParts
+              selectedValue={selectedValue}
               settings={filterSettings(settings, selectedValue)}
               changeSizeHandle={changeSizeHandle}
               changeColorHandle={changeColorHandle}
@@ -53,7 +54,7 @@ export const ConstructorHead = ({ changeElement, changeSize, changeColor, settin
         {HEAD_SETTINGS.map((item, index) => (
           <TouchableOpacity
             key={index}
-            style={[elementsMenuStyles.button, selectedValue.selectedIndex === index && elementsMenuStyles.buttonSelected]}
+            style={[elementsMenuStyles.button, selectedValue?.selectedIndex === index && elementsMenuStyles.buttonSelected]}
             onPress={() => changeElementHandle(index)}
           >
             {item.icon}
@@ -69,5 +70,5 @@ ConstructorHead.propTypes = {
   changeSize: PropTypes.func.isRequired,
   changeColor: PropTypes.func.isRequired,
   settings: PropTypes.object,
-  selectedValue: PropTypes.number,
+  selectedValue: PropTypes.object,
 };

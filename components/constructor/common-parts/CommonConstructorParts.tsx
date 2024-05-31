@@ -5,29 +5,23 @@ import { RangeSlider } from "../../ui/RangeSlider";
 import { elementsMenuStyles } from "../styles";
 import { Color } from "../../../model/Config";
 
-export const CommonConstructorParts = ({
-  settings,
-  changeSizeHandle,
-  changeColorHandle,
-}) => {
+export const CommonConstructorParts = ({ settings, changeSizeHandle, changeColorHandle, selectedValue }) => {
   return (
     <View>
       {settings.isSizeChangeable && (
         <View>
-          <RangeSlider initialSize={0} changeSize={changeSizeHandle} />
+          <RangeSlider initialSize={selectedValue?.size || 0} changeSize={changeSizeHandle} />
         </View>
       )}
       <View style={elementsMenuStyles.colorContainerWrapper}>
-        <ScrollView
-          horizontal={true}
-          contentContainerStyle={elementsMenuStyles.colorContainer}
-        >
+        <ScrollView horizontal={true} contentContainerStyle={elementsMenuStyles.colorContainer}>
           {settings.colorSettings.map((color: Color) => (
             <TouchableOpacity
               key={color.id}
               style={[
                 elementsMenuStyles.colorButton,
                 { backgroundColor: `#${color.hex}` },
+                color.id == selectedValue?.colorSet.id ? elementsMenuStyles.colorButtonSelected : null,
               ]}
               onPress={() => {
                 changeColorHandle(color);
@@ -46,6 +40,7 @@ export const CommonConstructorParts = ({
 
 CommonConstructorParts.propTypes = {
   settings: PropTypes.object.isRequired,
+  selectedValue: PropTypes.object,
   changeSizeHandle: PropTypes.func.isRequired,
   changeColorHandle: PropTypes.func.isRequired,
 };
