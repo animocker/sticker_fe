@@ -1,9 +1,7 @@
-import { getAnimationLayers } from "../backend/db/AvatarWatermelonDao";
-import { allElements, AnimationType } from "../model/enum";
+import { allElements } from "../model/enum";
 import { State } from "../backend/avatar/State";
 import { supabase } from "../backend/supabase";
 import initialize from "../backend/Initializer";
-import configService from "../backend/ConfigService";
 import { createRandomState } from "./test-helper-methods";
 
 beforeAll(async () => {

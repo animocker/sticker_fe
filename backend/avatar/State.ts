@@ -1,5 +1,4 @@
 import { ElementType } from "../../model/enum";
-import * as serialijse from "serialijse";
 
 export class State {
   readonly id: string;
@@ -27,11 +26,28 @@ export class State {
   }
 
   serialize(): string {
-    return serialijse.serialize(this);
+    const obj = {};
+    for (const key in this) {
+      if (this[key] instanceof Map) {
+        obj[key] = Array.from(this[key].entries());
+      } else {
+        obj[key] = this[key];
+      }
+    }
+    return JSON.stringify(obj);
   }
 
   static deserialize(serialized: string): State {
-    return serialijse.deserialize(serialized);
+    const obj = JSON.parse(serialized);
+    const state = new State(obj.id);
+    for (const key in obj) {
+      if (Array.isArray(obj[key])) {
+        state[key] = new Map(obj[key]);
+      } else {
+        state[key] = obj[key];
+      }
+    }
+    return state;
   }
 
   private propertyEqual(field1: Map<any, any>, field2: Map<any, any>): boolean {
