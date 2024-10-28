@@ -3,8 +3,8 @@ import { createClient } from "@supabase/supabase-js";
 import { Database } from "./db/database.types";
 import { AppState } from "react-native";
 
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
+const supabaseUrl = "https://jljadahvsoxbudnapfqh.supabase.co";
+const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpsamFkYWh2c294YnVkbmFwZnFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzAxMTk3MDEsImV4cCI6MjA0NTY5NTcwMX0.TIAv6ddlz2kQUB-3LasqdOq1ud6N5Q3tkFhPbJAK9N4";
 export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
   auth: {
     storage: AsyncStorage,
