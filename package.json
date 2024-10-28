@@ -30,7 +30,6 @@
     "@react-navigation/native": "^6.1.12",
     "@react-navigation/native-stack": "^6.9.20",
     "@react-navigation/stack": "^6.3.21",
-    "@rneui/base": "^4.0.0-rc.8",
     "@rneui/themed": "^4.0.0-rc.8",
     "@supabase/supabase-js": "^2.41.1",
     "@types/react": "~18.2.45",
