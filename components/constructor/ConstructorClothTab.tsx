@@ -37,9 +37,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     height: "100%",
   },
-  content: {
-    flexGrow: 1,
-  },
   lottie: {
     height: 300,
     width: Dimensions.get("window").width * 0.7,

@@ -1,7 +1,11 @@
 import React, { useRef } from "react";
 import { StyleSheet, Animated, PanResponder, Text } from "react-native";
 
-export const SwipablePanel = ({ children }) => {
+interface SwipablePanelProps {
+  children: React.ReactNode;
+}
+
+export const SwipablePanel = ({ children }: SwipablePanelProps) => {
   const MENU_HEIGHT = {
     min: 100,
     max: 450,

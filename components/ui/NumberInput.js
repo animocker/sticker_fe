@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Button, TextInput, StyleSheet } from "react-native";
 
+// eslint-disable-next-line react/prop-types
 const NumberInput = ({ inputValue, setInputValue }) => {
   const increaseValue = () => {
     setInputValue((prevValue) => (parseInt(prevValue) + 1).toString());

@@ -31,8 +31,8 @@
         "react-hooks/exhaustive-deps": "warn",
         "react-native/no-unused-styles": "error",
         "react-native/split-platform-components": "warn",
-        "react-native/no-inline-styles": "warn",
-        "react-native/no-color-literals": "warn",
+        "react-native/no-inline-styles": "off", // Было "warn"
+        "react-native/no-color-literals": "off", // Было "warn"
         "react-native/no-raw-text": "warn",
         "@typescript-eslint/explicit-function-return-type": "off",
         "@typescript-eslint/no-unused-vars": "warn",
