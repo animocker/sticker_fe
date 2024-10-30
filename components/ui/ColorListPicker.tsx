@@ -3,7 +3,7 @@ import { TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import PropTypes from "prop-types";
 import { styleAssets } from "../../styleAssets";
 
-export const ColorListPicker = ({colors, changeColor}) => {
+export const ColorListPicker = ({ colors, changeColor }) => {
   return (
     <ScrollView style={styles.container} horizontal>
       {colors.map((color, index) => (

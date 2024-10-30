@@ -33,7 +33,7 @@ export const ConstructorScreen = () => {
   );
 
   return (
-    <ImageBackground source={image} style={styles.container} >
+    <ImageBackground source={image} style={styles.container}>
       <TabView
         navigationState={{ index, routes }}
         renderScene={renderScene}

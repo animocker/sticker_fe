@@ -1,5 +1,5 @@
-import React, {useRef} from "react";
-import {StyleSheet, Animated, PanResponder, Text} from "react-native";
+import React, { useRef } from "react";
+import { StyleSheet, Animated, PanResponder, Text } from "react-native";
 
 export const SwipablePanel = ({ children }) => {
   const MENU_HEIGHT = {
