@@ -41,7 +41,10 @@
         "linebreak-style": ["error", "unix"],
         "quotes": ["error", "double"],
         "semi": ["error", "always"],
-        "prettier/prettier": ["error", { "printWidth": 150 }],
+        "prettier/prettier": ["error", { 
+            "printWidth": 150,
+            "endOfLine": "auto" 
+            }],
         "max-len": ["error", { "code": 150 }]
     },
     "overrides": [ // Правила только для файлов js
