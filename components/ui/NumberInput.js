@@ -24,7 +24,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
   },
-  // eslint-disable-next-line react-native/no-color-literals
   input: {
     borderColor: "gray",
     borderWidth: 1,

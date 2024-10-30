@@ -19,12 +19,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginTop: 20,
   },
-  // eslint-disable-next-line react-native/no-unused-styles
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
+  // title: {
+  //   fontSize: 24,
+  //   fontWeight: "bold",
+  //   marginBottom: 20,
+  // },
 });
 
 export default OnboardingStartScreen;

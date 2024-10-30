@@ -17,7 +17,6 @@ export const ConstructorScreen = () => {
     cloth: ConstructorClothTab,
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const image = require("../../assets/background.png");
 
   const renderTabBar = (props) => (

@@ -37,7 +37,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     height: "100%",
   },
-  // eslint-disable-next-line react-native/no-unused-styles
   content: {
     flexGrow: 1,
   },
