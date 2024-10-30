@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { View, Button, StyleSheet, ScrollView, Text, ImageBackground } from "react-native";
 import { TabView, SceneMap, TabBar, TabBarItem } from "react-native-tab-view";
-import {ConstructorAppearanceTab} from "../../components/constructor/ConstructorAppearanceTab";
-import {ConstructorClothTab} from "../../components/constructor/ConstructorClothTab";
-import {styleAssets} from "../../styleAssets";
+import { ConstructorAppearanceTab } from "../../components/constructor/ConstructorAppearanceTab";
+import { ConstructorClothTab } from "../../components/constructor/ConstructorClothTab";
+import { styleAssets } from "../../styleAssets";
 
 export const ConstructorScreen = () => {
   const [index, setIndex] = useState(0);
@@ -17,14 +17,14 @@ export const ConstructorScreen = () => {
     cloth: ConstructorClothTab,
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const image = require("../../assets/background.png");
 
-
-  const renderTabBar = props => (
+  const renderTabBar = (props) => (
     <TabBar
       {...props}
       indicatorStyle={styles.indicator}
-      style={{...styles.tabs}}
+      style={{ ...styles.tabs }}
       labelStyle={styles.label}
       activeColor={styleAssets.colorsPalette.white}
       pressColor={styleAssets.colorsPalette.white}
@@ -42,21 +42,20 @@ export const ConstructorScreen = () => {
         swipeEnabled={false}
       />
     </ImageBackground>
-
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 16
+    paddingTop: 16,
   },
   indicator: {
     backgroundColor: styleAssets.colorsPalette.primeBlue,
     borderColor: styleAssets.colorsPalette.white,
     borderRadius: 8,
     borderWidth: 6,
-    height: 48
+    height: 48,
   },
   label: {
     borderRadius: 8,
@@ -76,5 +75,5 @@ const styles = StyleSheet.create({
   },
   tabsContainer: {
     borderRadius: 8,
-  }
+  },
 });

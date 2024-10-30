@@ -71,11 +71,11 @@ export default function App() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    alignItems: "center",
-    backgroundColor: "#fff",
-    flex: 1,
-    justifyContent: "center",
-  },
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     alignItems: "center",
+//     backgroundColor: "#fff",
+//     flex: 1,
+//     justifyContent: "center",
+//   },
+// });

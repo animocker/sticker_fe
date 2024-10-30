@@ -2,7 +2,7 @@ import React from "react";
 import { View, Button, StyleSheet, Text } from "react-native";
 import AvatarService from "../../backend/avatar/AvatarService";
 import LottieView from "lottie-react-native";
-import {ElementType} from "../../model/enum";
+import { ElementType } from "../../model/enum";
 
 const AuthStartScreen = ({ navigation }) => {
   return (
@@ -19,7 +19,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: 10,
   },
-
 });
 
 export default AuthStartScreen;

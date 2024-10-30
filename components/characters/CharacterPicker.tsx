@@ -5,9 +5,7 @@ import AvatarService from "../../backend/avatar/AvatarService";
 import { AnimationType } from "../../model/enum";
 import { Animation } from "@lottiefiles/lottie-js";
 export const CharacterPicker = () => {
-  const [selectedAnimation, setSelectedAnimation] = useState(
-    AnimationType.IDLE,
-  );
+  const [selectedAnimation, setSelectedAnimation] = useState(AnimationType.IDLE);
   const [lottie, setLottie] = useState<Animation>();
 
   AvatarService.getAvatar().then((animation) => {
