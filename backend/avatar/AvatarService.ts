@@ -1,4 +1,4 @@
-import { allElements, AnimationType, ElementType } from "../../model/enum";
+import { allElementsTypes, AnimationType, ElementType } from "../../model/enum";
 import { ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand, ChangeStateCommand } from "../../model/ChangeStateCommand";
 import { getAnimationLayers } from "../db/AvatarWatermelonDao";
 import { Animation, ColorRgba, Shape } from "@lottiefiles/lottie-js";
@@ -27,7 +27,7 @@ class Avatar {
   private isInitialized = false;
 
   async init() {
-    for (const elementType of allElements) {
+    for (const elementType of allElementsTypes) {
       this.state.elementSize.set(elementType, 0);
       this.state.elements.set(elementType, 1);
       await this.updateCurrentColors(elementType);
@@ -161,10 +161,7 @@ class Avatar {
   }
 
   private async getAnimationForAllElements(animationType: string | AnimationType) {
-    const elements = Array.from(this.state.elements.entries()).map((it) => ({
-      elementType: it[0],
-      elementNumber: it[1],
-    }));
+    const elements = Array.from(this.state.elements.entries()).map((it) => `${it[0]}_${it[1]}`);
     const layers = await getAnimationLayers(animationType, elements, "MALE");
     const lottieJson = this.transformToLottie(layers.flat());
     return new Animation().fromJSON(lottieJson);

@@ -1,18 +1,13 @@
 import { ElementType } from "./enum";
 import { State } from "../backend/avatar/State";
-import ConfigService from "../backend/ConfigService";
 import { ElementTypeAndNumber } from "./ElementTypeAndNumber";
 
-//TODO WIP
-
 export type ChangeStateCommand = {
-  type: CommandType;
   execute(state: State): void;
   rollback(state: State): void;
 };
 
 export class ChangeSizeCommand implements ChangeStateCommand {
-  type = CommandType.CHANGE_SIZE;
   elementType: ElementType;
   sizePercent: number;
   prevValue: number;
@@ -33,7 +28,6 @@ export class ChangeSizeCommand implements ChangeStateCommand {
 }
 
 export class ChangeColorCommand implements ChangeStateCommand {
-  type = CommandType.CHANGE_COLOR;
   elementType: ElementType;
   elementNumber?: number;
   colorSetId: string;
@@ -58,7 +52,6 @@ export class ChangeColorCommand implements ChangeStateCommand {
 }
 
 export class ChangeElementCommand implements ChangeStateCommand {
-  type = CommandType.CHANGE_ELEMENT;
   elementType: ElementType;
   number: number;
   prevNumber: number;
@@ -76,10 +69,4 @@ export class ChangeElementCommand implements ChangeStateCommand {
   rollback(state: State): void {
     state.elements.set(this.elementType, this.prevNumber);
   }
-}
-
-export enum CommandType {
-  CHANGE_SIZE,
-  CHANGE_COLOR,
-  CHANGE_ELEMENT,
 }

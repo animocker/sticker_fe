@@ -1,5 +1,5 @@
 import AvatarService from "../backend/avatar/AvatarService";
-import { allElements, AnimationType, ElementType } from "../model/enum";
+import { allElementsTypes, AnimationType, ElementType } from "../model/enum";
 import { Animation } from "@lottiefiles/lottie-js";
 import { ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand } from "../model/ChangeStateCommand";
 import ConfigService from "../backend/ConfigService";
@@ -16,7 +16,7 @@ it("Avatar backend could create basic avatar", async () => {
   const result = await AvatarService.getAvatar();
   expect(result).not.toBeUndefined();
   const layerNames = extractLayerNames(result);
-  allElements
+  allElementsTypes
     .map((it) => it.toLowerCase())
     .forEach((elementType) => {
       expect(layerNames).toContain(`${elementType}_1`);

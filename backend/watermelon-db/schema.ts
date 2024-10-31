@@ -1,8 +1,8 @@
-import { appSchema, tableSchema } from "@nozbe/watermelondb";
-import { colorSetsColorsSchema, colorSetsSchema, colorsSchema, layersSchema } from "./read-only/schema";
+import { appSchema } from "@nozbe/watermelondb";
+import { colorSetsColorsSchema, colorSetsSchema, colorsSchema, elementsColorSetsSchema, elementsSchema, layersSchema } from "./read-only/schema";
 import { avatarStateSchema } from "./read-write/schema";
 
 export default appSchema({
-  version: 10,
-  tables: [layersSchema, colorsSchema, colorSetsSchema, colorSetsColorsSchema, avatarStateSchema],
+  version: 12,
+  tables: [layersSchema, colorsSchema, colorSetsSchema, colorSetsColorsSchema, avatarStateSchema, elementsSchema, elementsColorSetsSchema],
 });

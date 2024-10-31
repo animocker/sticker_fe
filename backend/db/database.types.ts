@@ -9,70 +9,253 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      _elements: {
+      color_sets: {
         Row: {
-          jsonb_build_object: Json | null
+          created_date: string
+          id: number
+          modified_date: string
         }
         Insert: {
-          jsonb_build_object?: Json | null
+          created_date?: string
+          id: number
+          modified_date?: string
         }
         Update: {
-          jsonb_build_object?: Json | null
+          created_date?: string
+          id?: number
+          modified_date?: string
         }
         Relationships: []
       }
-      animation: {
+      color_sets_colors_m2m: {
         Row: {
-          element_id: string
-          id: string
-          type: string
-          value_array: string[]
+          color_id: number
+          color_set_id: number
+          created_date: string
+          id: number
+          modified_date: string
         }
         Insert: {
-          element_id?: string
-          id: string
-          type: string
-          value_array: string[]
+          color_id: number
+          color_set_id: number
+          created_date?: string
+          id?: number
+          modified_date?: string
         }
         Update: {
-          element_id?: string
-          id?: string
-          type?: string
-          value_array?: string[]
+          color_id?: number
+          color_set_id?: number
+          created_date?: string
+          id?: number
+          modified_date?: string
         }
         Relationships: [
           {
-            foreignKeyName: "fkewxkilr8ro1ajdpydr5peo9od"
-            columns: ["element_id"]
+            foreignKeyName: "color_id_fk"
+            columns: ["color_id"]
             isOneToOne: false
-            referencedRelation: "element"
+            referencedRelation: "colors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "color_sets_id_fk"
+            columns: ["color_set_id"]
+            isOneToOne: false
+            referencedRelation: "color_sets"
             referencedColumns: ["id"]
           },
         ]
       }
-      element: {
+      colors: {
         Row: {
-          gender: string
-          icon: string
+          created_date: string
+          hex: string
+          id: number
+          modified_date: string
+          name: string
+        }
+        Insert: {
+          created_date?: string
+          hex: string
+          id: number
+          modified_date?: string
+          name: string
+        }
+        Update: {
+          created_date?: string
+          hex?: string
+          id?: number
+          modified_date?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      databasechangelog: {
+        Row: {
+          author: string
+          comments: string | null
+          contexts: string | null
+          dateexecuted: string
+          deployment_id: string | null
+          description: string | null
+          exectype: string
+          filename: string
           id: string
-          idx_nbr: number
+          labels: string | null
+          liquibase: string | null
+          md5sum: string | null
+          orderexecuted: number
+          tag: string | null
+        }
+        Insert: {
+          author: string
+          comments?: string | null
+          contexts?: string | null
+          dateexecuted: string
+          deployment_id?: string | null
+          description?: string | null
+          exectype: string
+          filename: string
+          id: string
+          labels?: string | null
+          liquibase?: string | null
+          md5sum?: string | null
+          orderexecuted: number
+          tag?: string | null
+        }
+        Update: {
+          author?: string
+          comments?: string | null
+          contexts?: string | null
+          dateexecuted?: string
+          deployment_id?: string | null
+          description?: string | null
+          exectype?: string
+          filename?: string
+          id?: string
+          labels?: string | null
+          liquibase?: string | null
+          md5sum?: string | null
+          orderexecuted?: number
+          tag?: string | null
+        }
+        Relationships: []
+      }
+      databasechangeloglock: {
+        Row: {
+          id: number
+          locked: boolean
+          lockedby: string | null
+          lockgranted: string | null
+        }
+        Insert: {
+          id: number
+          locked: boolean
+          lockedby?: string | null
+          lockgranted?: string | null
+        }
+        Update: {
+          id?: number
+          locked?: boolean
+          lockedby?: string | null
+          lockgranted?: string | null
+        }
+        Relationships: []
+      }
+      elements: {
+        Row: {
+          created_date: string
+          id: string
+          modified_date: string
+          number: number
           type: string
         }
         Insert: {
-          gender: string
-          icon: string
+          created_date?: string
           id: string
-          idx_nbr: number
+          modified_date?: string
+          number: number
           type: string
         }
         Update: {
-          gender?: string
-          icon?: string
+          created_date?: string
           id?: string
-          idx_nbr?: number
+          modified_date?: string
+          number?: number
           type?: string
         }
         Relationships: []
+      }
+      elements_color_sets_m2m: {
+        Row: {
+          color_set_id: number
+          element_id: string
+          id: number
+        }
+        Insert: {
+          color_set_id: number
+          element_id: string
+          id?: number
+        }
+        Update: {
+          color_set_id?: number
+          element_id?: string
+          id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "color_sets_id_fk"
+            columns: ["color_set_id"]
+            isOneToOne: false
+            referencedRelation: "color_sets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "elements_id_fk"
+            columns: ["element_id"]
+            isOneToOne: false
+            referencedRelation: "elements"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      layers: {
+        Row: {
+          animation_type: string
+          created_date: string
+          element_id: string
+          gender: string
+          id: number
+          modified_date: string
+          value: string
+        }
+        Insert: {
+          animation_type: string
+          created_date?: string
+          element_id: string
+          gender: string
+          id?: number
+          modified_date?: string
+          value: string
+        }
+        Update: {
+          animation_type?: string
+          created_date?: string
+          element_id?: string
+          gender?: string
+          id?: number
+          modified_date?: string
+          value?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "elements_id_fk"
+            columns: ["element_id"]
+            isOneToOne: false
+            referencedRelation: "elements"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
@@ -187,4 +370,19 @@ export type Enums<
   ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
     ? PublicSchema["Enums"][PublicEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof PublicSchema["CompositeTypes"]
+    | { schema: keyof Database },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
+    ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never

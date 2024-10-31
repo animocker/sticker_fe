@@ -1,7 +1,7 @@
 import { getAllColorSets } from "./db/AvatarWatermelonDao";
 import _ from "lodash";
 import { Color, ColorSet, ElementTypeConfig } from "../model/Config";
-import { allElements, ElementType } from "../model/enum";
+import { allElementsTypes, ElementType } from "../model/enum";
 import { ColorSetWDB, ColorWDB } from "./watermelon-db/read-only/model";
 
 class ConfigService {
@@ -44,9 +44,10 @@ class ConfigService {
   }
 
   private async buildElementTypeConfig(): Promise<ElementTypeConfig[]> {
+    const allElementsWithColors =
     const allColorSets = await getAllColorSets();
     const elementTypeToColors = _.groupBy(allColorSets, "elementType");
-    const resultPromises = allElements.map(async (elementType) => {
+    const resultPromises = allElementsTypes.map(async (elementType) => {
       const colorSetsWdb = elementTypeToColors[elementType] || [];
       const colorSets = await this.buildColorSet(colorSetsWdb);
       return {
@@ -69,10 +70,17 @@ class ConfigService {
     if (this.colorSetById.has(source.id)) {
       return this.colorSetById.get(source.id);
     }
+    const elements = await source.elements.fetch();
+    const elementType = elements[0].type;
+    let elementNumber = null;
+    if (elements.length == 1) {
+      //if more than one element, it means that the colors is for all elements of the given type
+      elementNumber = elements[0].number;
+    }
     const result = {
       id: source.id,
-      elementType: source.elementType as ElementType,
-      elementNumber: source.elementNumber,
+      elementType: elementType as ElementType,
+      elementNumber: elementNumber,
       colors: (await source.colors.fetch()).map((it) => this.mapColor(it)),
     };
     this.colorSetById.set(source.id, result);

@@ -4,6 +4,7 @@ import { State } from "../avatar/State";
 import { AvatarStateWDB } from "../watermelon-db/read-write/model";
 import { Q } from "@nozbe/watermelondb";
 
+//TODO add state to watermelonDb
 export async function saveAvatarState(state: State): Promise<AvatarStateWDB> {
   const userId = await supabase.auth.getUser().then((response) => response.data.user.id);
   return database.write(async () => {

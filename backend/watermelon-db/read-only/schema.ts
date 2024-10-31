@@ -4,8 +4,7 @@ export const layersSchema = tableSchema({
   name: "layers",
   columns: [
     { name: "animation_type", type: "string" },
-    { name: "element_nbr", type: "number" },
-    { name: "element_type", type: "string" },
+    { name: "element_id", type: "string" },
     { name: "gender", type: "string" },
     { name: "value", type: "string" },
   ],
@@ -13,10 +12,7 @@ export const layersSchema = tableSchema({
 
 export const colorSetsSchema = tableSchema({
   name: "color_sets",
-  columns: [
-    { name: "element_nbr", type: "number", isOptional: true },
-    { name: "element_type", type: "string" },
-  ],
+  columns: [], //use many-to-many relations, so no columns
 });
 
 export const colorsSchema = tableSchema({
@@ -28,9 +24,25 @@ export const colorsSchema = tableSchema({
 });
 
 export const colorSetsColorsSchema = tableSchema({
-  name: "color_sets_colors",
+  name: "color_sets_colors_m2m",
   columns: [
     { name: "color_id", type: "string" },
+    { name: "color_set_id", type: "string" },
+  ],
+});
+
+export const elementsSchema = tableSchema({
+  name: "elements",
+  columns: [
+    { name: "number", type: "number" },
+    { name: "type", type: "string" },
+  ],
+});
+
+export const elementsColorSetsSchema = tableSchema({
+  name: "elements_color_sets_m2m",
+  columns: [
+    { name: "element_id", type: "string" },
     { name: "color_set_id", type: "string" },
   ],
 });

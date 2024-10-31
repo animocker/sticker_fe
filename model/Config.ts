@@ -6,13 +6,10 @@ export type ElementTypeConfig = {
   colorSets: ColorSet[];
 };
 
-/**
- * If elementNumber is not provided, it means that the colors is for all elements of the given type
- */
 export type ColorSet = {
   id: string;
   elementType: ElementType;
-  elementNumber?: number;
+  elementNumber: number;
   colors: Color[];
 };
 

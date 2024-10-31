@@ -1,6 +1,6 @@
 import { Animation } from "@lottiefiles/lottie-js";
 import { State } from "../backend/avatar/State";
-import { allElements } from "../model/enum";
+import { allElementsTypes } from "../model/enum";
 import configService from "../backend/ConfigService";
 
 export function isAnimationsEquals(a: Animation, b: Animation) {
@@ -12,7 +12,7 @@ export function isAnimationsEquals(a: Animation, b: Animation) {
 export async function createRandomState(): Promise<State> {
   const state = new State();
 
-  for (const elementType of allElements) {
+  for (const elementType of allElementsTypes) {
     state.elementSize.set(elementType, random(-50, 50));
     state.elements.set(elementType, random(1, 5));
     const elementTypeConfig = await configService.getElementTypeConfig(elementType);

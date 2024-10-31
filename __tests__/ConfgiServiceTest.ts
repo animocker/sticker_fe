@@ -1,5 +1,5 @@
 import { sync } from "../backend/watermelon-db/watermelon";
-import { allElements, ElementType } from "../model/enum";
+import { allElementsTypes, ElementType } from "../model/enum";
 import ConfigService from "../backend/ConfigService";
 import _ from "lodash";
 import { supabase } from "../backend/supabase";
@@ -13,7 +13,7 @@ beforeAll(async () => {
 it("Retrieve config for element type", async () => {
   const elementTypeConfig = await ConfigService.getElementTypeConfigs();
   expect(elementTypeConfig).not.toBeUndefined();
-  allElements.forEach((elementType) => {
+  allElementsTypes.forEach((elementType) => {
     const configForElementType = _.find(elementTypeConfig, ["elementType", elementType]);
     expect(configForElementType).not.toBeUndefined();
     expect(configForElementType.elementType).toBe(elementType);
