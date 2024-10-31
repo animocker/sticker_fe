@@ -7,7 +7,10 @@ export const ColorListPicker = ({ colors, changeColor }) => {
   return (
     <ScrollView style={styles.container} horizontal>
       {colors.map((color, index) => (
-        <TouchableOpacity key={index} style={[styles.colorButton, { backgroundColor: color }]} onPress={() => changeColor(color)} />
+        <TouchableOpacity 
+          key={index} 
+          style={[styles.colorButton, { backgroundColor: color }]} onPress={() => changeColor(color)} 
+        />
       ))}
     </ScrollView>
   );

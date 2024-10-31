@@ -14,7 +14,12 @@ const NumberInput = ({ inputValue, setInputValue }) => {
   return (
     <View style={styles.container}>
       <Button title="-" onPress={decreaseValue} />
-      <TextInput style={styles.input} onChangeText={setInputValue} value={inputValue.toString()} keyboardType="numeric" />
+      <TextInput 
+        style={styles.input} 
+        onChangeText={setInputValue} 
+        value={inputValue.toString()} 
+        keyboardType="numeric" 
+      />
       <Button title="+" onPress={increaseValue} />
     </View>
   );

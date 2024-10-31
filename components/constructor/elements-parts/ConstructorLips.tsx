@@ -22,7 +22,11 @@ export const ConstructorLips = ({ changeElement }) => {
   return (
     <ScrollView contentContainerStyle={elementsMenuStyles.container}>
       {LIPS_SETTINGS.map((item, index) => (
-        <TouchableOpacity key={index} style={elementsMenuStyles.button} onPress={() => changeElement(ElementType.MOUTH, index + 1)}>
+        <TouchableOpacity 
+          key={index} 
+          style={elementsMenuStyles.button} 
+          onPress={() => changeElement(ElementType.MOUTH, index + 1)}
+        >
           {item.icon}
         </TouchableOpacity>
       ))}
