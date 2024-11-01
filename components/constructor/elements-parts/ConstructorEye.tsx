@@ -24,11 +24,7 @@ export const ConstructorEye = ({ changeElement }) => {
   return (
     <ScrollView contentContainerStyle={elementsMenuStyles.container}>
       {EYE_SETTINGS.map((item, index) => (
-        <TouchableOpacity
-          key={index}
-          style={elementsMenuStyles.button}
-          onPress={() => changeElement(ElementType.EYES, index + 1)}
-        >
+        <TouchableOpacity key={index} style={elementsMenuStyles.button} onPress={() => changeElement(ElementType.EYES, index + 1)}>
           {item.icon}
         </TouchableOpacity>
       ))}
