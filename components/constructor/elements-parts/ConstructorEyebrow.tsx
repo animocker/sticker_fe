@@ -28,9 +28,9 @@ export const ConstructorEyebrow = ({ changeElement }) => {
   return (
     <ScrollView contentContainerStyle={elementsMenuStyles.container}>
       {EYEBROW_SETTINGS.map((item, index) => (
-        <TouchableOpacity
-          key={index}
-          style={elementsMenuStyles.button}
+        <TouchableOpacity 
+          key={index} 
+          style={elementsMenuStyles.button} 
           onPress={() => changeElement(ElementType.EYEBROWS, index + 1)}
         >
           {item.icon}

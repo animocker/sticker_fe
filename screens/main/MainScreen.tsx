@@ -17,7 +17,7 @@ const MainScreen = () => {
   const [size, setSize] = useState(0);
   const [color, setColor] = useState("");
 
-  const changeAnimation = (value) => {
+  const changeAnimation = (value: any) => {
     // setSelectedAnimation(value);
     // setLottie(AvatarService.getAvatar());
   };

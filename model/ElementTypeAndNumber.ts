@@ -10,8 +10,6 @@ export class ElementTypeAndNumber {
   }
 
   toString() {
-    return this.elementNumber === null
-      ? this.elementType
-      : `${this.elementType}_${this.elementNumber}`;
+    return this.elementNumber === null ? this.elementType : `${this.elementType}_${this.elementNumber}`;
   }
 }
