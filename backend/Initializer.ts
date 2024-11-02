@@ -1,10 +1,9 @@
 import { sync } from "./watermelon-db/watermelon";
 import AvatarService from "./avatar/AvatarService";
-import ElementConfigService from "./ElementConfigService";
+import { MMKV } from "react-native-mmkv";
 
 export default async function initialize() {
   await sync();
-  await ElementConfigService.getElementTypeConfigs();
   await AvatarService.init();
-  console.log("Watermelon synchronized");
+  console.log("Initialization completed");
 }

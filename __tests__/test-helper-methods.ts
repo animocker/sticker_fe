@@ -1,7 +1,7 @@
 import { Animation } from "@lottiefiles/lottie-js";
 import { State } from "../backend/avatar/State";
 import { allElementsTypes } from "../model/enum";
-import ElementConfigService from "../backend/ElementConfigService";
+import ColorService from "../backend/ColorService";
 
 export function isAnimationsEquals(a: Animation, b: Animation) {
   a.name = "";
@@ -14,16 +14,17 @@ export async function createRandomState(): Promise<State> {
 
   for (const elementType of allElementsTypes) {
     state.elementSize.set(elementType, random(-50, 50));
-    state.elements.set(elementType, random(1, 5));
-    const elementTypeConfig = await ElementConfigService.getElementTypeConfig(elementType);
-    if (elementTypeConfig.colorSets.length > 0) {
-      const randomColorSet = elementTypeConfig.colorSets[random(0, elementTypeConfig.colorSets.length)];
+    const elementNumber = random(1, 5); //TODO change 5 to actual number of elements
+    state.elements.set(elementType, elementNumber);
+    const colorSets = await ColorService.getColorsForElement(elementType, elementNumber);
+    if (colorSets.length > 0) {
+      const randomColorSet = colorSets[random(0, colorSets.length)];
       state.elementColorSet.set(elementType.toString(), randomColorSet.id);
     }
   }
   return state;
 }
 
-export function random(from, to) {
+export function random(from: number, to: number) {
   return Math.floor(Math.random() * (to - from) + from);
 }

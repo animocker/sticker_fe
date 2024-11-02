@@ -1,6 +1,5 @@
 import { ElementType } from "./enum";
 import { State } from "../backend/avatar/State";
-import ElementConfigService from "../backend/ElementConfigService";
 import { ElementTypeAndNumber } from "./ElementTypeAndNumber";
 
 export type ChangeStateCommand = {
@@ -30,25 +29,23 @@ export class ChangeSizeCommand implements ChangeStateCommand {
 
 export class ChangeColorCommand implements ChangeStateCommand {
   elementType: ElementType;
-  elementNumber?: number;
+  elementNumber: number;
   colorSetId: string;
   prevColorSetId: string;
 
-  constructor(elementType: ElementType, colorId: string, elementNumber = null) {
+  constructor(elementType: ElementType, elementNumber: number, colorId: string) {
     this.elementType = elementType;
     this.elementNumber = elementNumber;
     this.colorSetId = colorId;
   }
 
   execute(state: State): void {
-    const key = new ElementTypeAndNumber(this.elementType, this.elementNumber).toString();
-    this.prevColorSetId = state.elementColorSet.get(key);
-    state.elementColorSet.set(key.toString(), this.colorSetId);
+    this.prevColorSetId = state.elementColorSet.get(this.elementType);
+    state.elementColorSet.set(this.elementType, this.colorSetId);
   }
 
   rollback(state: State): void {
-    const key = new ElementTypeAndNumber(this.elementType, this.elementNumber).toString();
-    state.elementColorSet.set(key.toString(), this.prevColorSetId);
+    state.elementColorSet.set(this.elementType, this.prevColorSetId);
   }
 }
 

@@ -11,16 +11,15 @@ import { ConstructorNose } from "./elements-parts/ConstructorNose";
 import { ConstructorLips } from "./elements-parts/ConstructorLips";
 import PropTypes from "prop-types";
 import { styleAssets } from "../../styleAssets";
-import ElementConfigService from "../../backend/ElementConfigService";
-import { ElementTypeConfig } from "../../model/Config";
 import { ElementType } from "../../model/enum";
 
 export const ConstructorAppearanceMenu = ({ selectedValues, changeElement, changeSize, changeColor }) => {
   const buttonTitles = Object.values(SETTINGS_APPEARANCE);
   const [selectedTab, setSelectedTab] = useState(Object.values(SETTINGS_APPEARANCE)[0]);
-  const [settings, setSettings] = useState({} as Record<ElementType, ElementTypeConfig>);
+  //TODO colors could be different for each element, use ColorService.getColorsForElement
+  //const [settings, setSettings] = useState({} as Record<ElementType, ElementTypeConfig>);
 
-  useEffect(() => {
+  /*  useEffect(() => {
     ElementConfigService.getElementTypeConfigs().then((config) => {
       const result = config.reduce(
         (acc, item) => {
@@ -32,7 +31,7 @@ export const ConstructorAppearanceMenu = ({ selectedValues, changeElement, chang
       );
       setSettings(result);
     });
-  }, []);
+  }, []);*/
 
   const tabs = {
     [ElementType.HEAD]: (props) => (
@@ -41,7 +40,7 @@ export const ConstructorAppearanceMenu = ({ selectedValues, changeElement, chang
         changeElement={changeElement}
         changeSize={changeSize}
         changeColor={changeColor}
-        settings={settings[ElementType.HEAD]}
+        //settings={settings[ElementType.HEAD]}
         selectedValue={selectedValues[ElementType.HEAD]}
       />
     ),

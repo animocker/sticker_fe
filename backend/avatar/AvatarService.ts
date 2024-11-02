@@ -2,14 +2,11 @@ import { allElementsTypes, AnimationType, ElementType } from "../../model/enum";
 import { ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand, ChangeStateCommand } from "../../model/ChangeStateCommand";
 import { getAnimationLayers } from "../db/AvatarWatermelonDao";
 import { Animation, ColorRgba, Shape } from "@lottiefiles/lottie-js";
-import { Color, ColorSet } from "../../model/Config";
-import ElementConfigService from "../ElementConfigService";
-import _ from "lodash";
 import { uuid } from "@supabase/supabase-js/dist/main/lib/helpers";
 
 import AsyncLock from "async-lock";
 import { State } from "./State";
-import { ElementTypeAndNumber } from "../../model/ElementTypeAndNumber";
+import ColorService, { Color } from "../ColorService";
 
 const lock = new AsyncLock();
 const getAvatarLockKey = "getAvatarLockKey";
@@ -19,10 +16,9 @@ const LOTTIE_BODY = '{"v":"5.9.0","fr":30,"ip":0,"op":90,"w":430,"h":430,"nm":"{
 const redoStack: ChangeStateCommand[] = [];
 const undoStack: ChangeStateCommand[] = [];
 
-class Avatar {
+class AvatarService {
   private state: State = new State();
   private lastState: State;
-  private readonly layersIndexes = new Map<ElementType, number[]>();
   private avatarAnimation: Animation;
   private isInitialized = false;
 
@@ -62,14 +58,11 @@ class Avatar {
     }
   }
 
-  private async updateCurrentColors(elementType: ElementType | string) {
-    const elementTypeConfig = await ElementConfigService.getElementTypeConfig(elementType);
-    const colorSets = elementTypeConfig.colorSets;
-
-    const groupedColorSets = _.groupBy(colorSets, (it) => new ElementTypeAndNumber(it.elementType, it.elementNumber));
-    for (const key in groupedColorSets) {
-      const colorSets = groupedColorSets[key] as ColorSet[];
-      this.state.elementColorSet.set(key, colorSets[0].id);
+  private async updateCurrentColors(elementType: ElementType) {
+    const elementNumber = this.state.elements.get(elementType);
+    const colorSets = await ColorService.getColorsForElement(elementType, elementNumber);
+    if (colorSets.length > 0) {
+      this.state.elementColorSet.set(elementType, colorSets[0].id);
     }
   }
 
@@ -113,10 +106,10 @@ class Avatar {
     }
   }
 
-  private changeElementsColor(lottieAnimation: Animation) {
+  private async changeElementsColor(lottieAnimation: Animation) {
     for (const [, newValueId] of this.state.elementColorSet) {
-      const newValue = ElementConfigService.getColorSetById(newValueId);
-      newValue.colors.forEach((color) => this.updateColor(lottieAnimation, color));
+      const colors = await ColorService.getColorSetById(newValueId).then((it) => it.colors);
+      colors.forEach((color) => this.updateColor(lottieAnimation, color));
     }
   }
 
@@ -176,7 +169,7 @@ class Avatar {
         ? await this.changeStaticElements(animationType)
         :*/ await this.getAnimationForAllElements(animationType);
     this.changeElementsSize(result);
-    this.changeElementsColor(result);
+    await this.changeElementsColor(result);
     return result;
   }
 
@@ -212,4 +205,4 @@ class Avatar {
   }
 }
 
-export default new Avatar();
+export default new AvatarService();

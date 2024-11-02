@@ -9,7 +9,6 @@ import { Animation } from "@lottiefiles/lottie-js";
 import { Color } from "../../model/Config";
 import { SETTINGS_APPEARANCE } from "./types";
 import { ElementTypeAndNumber } from "../../model/ElementTypeAndNumber";
-import ElementConfigService from "../../backend/ElementConfigService";
 
 export const ConstructorAppearanceTab = () => {
   const animationRef = useRef<LottieView>(null);
@@ -71,7 +70,7 @@ export const ConstructorAppearanceTab = () => {
       ...selectedValues,
       [elementType]: { ...selectedValues[elementType], colorSet: color.id },
     });
-    AvatarService.changeColor(new ChangeColorCommand(elementType, color.id, selectedValues[elementType].selectedIndex));
+    AvatarService.changeColor(new ChangeColorCommand(elementType, selectedValues[elementType].selectedIndex, color.id));
     reloadAnimation();
   };
 
