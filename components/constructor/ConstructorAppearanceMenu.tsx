@@ -11,7 +11,7 @@ import { ConstructorNose } from "./elements-parts/ConstructorNose";
 import { ConstructorLips } from "./elements-parts/ConstructorLips";
 import PropTypes from "prop-types";
 import { styleAssets } from "../../styleAssets";
-import ConfigService from "../../backend/ConfigService";
+import ElementConfigService from "../../backend/ElementConfigService";
 import { ElementTypeConfig } from "../../model/Config";
 import { ElementType } from "../../model/enum";
 
@@ -21,7 +21,7 @@ export const ConstructorAppearanceMenu = ({ selectedValues, changeElement, chang
   const [settings, setSettings] = useState({} as Record<ElementType, ElementTypeConfig>);
 
   useEffect(() => {
-    ConfigService.getElementTypeConfigs().then((config) => {
+    ElementConfigService.getElementTypeConfigs().then((config) => {
       const result = config.reduce(
         (acc, item) => {
           acc[item.elementType] = item;

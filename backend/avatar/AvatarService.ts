@@ -3,7 +3,7 @@ import { ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand, ChangeStat
 import { getAnimationLayers } from "../db/AvatarWatermelonDao";
 import { Animation, ColorRgba, Shape } from "@lottiefiles/lottie-js";
 import { Color, ColorSet } from "../../model/Config";
-import ConfigService from "../ConfigService";
+import ElementConfigService from "../ElementConfigService";
 import _ from "lodash";
 import { uuid } from "@supabase/supabase-js/dist/main/lib/helpers";
 
@@ -63,7 +63,7 @@ class Avatar {
   }
 
   private async updateCurrentColors(elementType: ElementType | string) {
-    const elementTypeConfig = await ConfigService.getElementTypeConfig(elementType);
+    const elementTypeConfig = await ElementConfigService.getElementTypeConfig(elementType);
     const colorSets = elementTypeConfig.colorSets;
 
     const groupedColorSets = _.groupBy(colorSets, (it) => new ElementTypeAndNumber(it.elementType, it.elementNumber));
@@ -115,7 +115,7 @@ class Avatar {
 
   private changeElementsColor(lottieAnimation: Animation) {
     for (const [, newValueId] of this.state.elementColorSet) {
-      const newValue = ConfigService.getColorSetById(newValueId);
+      const newValue = ElementConfigService.getColorSetById(newValueId);
       newValue.colors.forEach((color) => this.updateColor(lottieAnimation, color));
     }
   }

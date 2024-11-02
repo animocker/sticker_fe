@@ -1,10 +1,22 @@
 import { getAllColorSets } from "./db/AvatarWatermelonDao";
 import _ from "lodash";
-import { Color, ColorSet, ElementTypeConfig } from "../model/Config";
 import { allElementsTypes, ElementType } from "../model/enum";
 import { ColorSetWDB, ColorWDB } from "./watermelon-db/read-only/model";
 
-class ConfigService {
+export type ColorSet = {
+  id: string;
+  elementType: ElementType;
+  elementNumber?: number;
+  colors: Color[];
+};
+
+export type Color = {
+  id: string;
+  name: string;
+  hex: string;
+};
+
+class ElementConfigService {
   private elementTypeConfigs: ElementTypeConfig[] = null;
   private readonly colorById: Map<string, Color> = new Map<string, Color>();
   private readonly colorSetById: Map<string, ColorSet> = new Map<string, ColorSet>();
@@ -38,6 +50,8 @@ class ConfigService {
   public getColorSetById(id: string): ColorSet {
     return this.colorSetById.get(id);
   }
+
+  public getColorSetsByElementId(elementId: string): ColorSet[] {}
 
   public getColorById(id: string): Color {
     return this.colorById.get(id);
@@ -101,4 +115,4 @@ class ConfigService {
   }
 }
 
-export default new ConfigService();
+export default new ElementConfigService();

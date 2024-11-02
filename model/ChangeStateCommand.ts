@@ -1,5 +1,6 @@
 import { ElementType } from "./enum";
 import { State } from "../backend/avatar/State";
+import ElementConfigService from "../backend/ElementConfigService";
 import { ElementTypeAndNumber } from "./ElementTypeAndNumber";
 
 export type ChangeStateCommand = {

@@ -2,7 +2,7 @@ import AvatarService from "../backend/avatar/AvatarService";
 import { allElementsTypes, AnimationType, ElementType } from "../model/enum";
 import { Animation } from "@lottiefiles/lottie-js";
 import { ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand } from "../model/ChangeStateCommand";
-import ConfigService from "../backend/ConfigService";
+import ElementConfigService from "../backend/ElementConfigService";
 import initialize from "../backend/Initializer";
 import { supabase } from "../backend/supabase";
 import "dotenv/config";
@@ -45,7 +45,7 @@ it("Avatar backend could change elements color", async () => {
   expect(originalResult).not.toBeUndefined();
   const originalColors = originalResult.colors;
 
-  const headConfig = await ConfigService.getElementTypeConfig(ElementType.HEAD);
+  const headConfig = await ElementConfigService.getElementTypeConfig(ElementType.HEAD);
   const newSet = headConfig.colorSets[2];
   AvatarService.changeColor(new ChangeColorCommand(ElementType.HEAD, newSet.id));
 
