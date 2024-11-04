@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
 import { supabase } from "../backend/supabase";
-import { Button, Input } from "@rneui/themed"; //TODO change and delete npm?
 
 export default function Auth() {
   const [email, setEmail] = useState("");
@@ -36,7 +35,7 @@ export default function Auth() {
 
   return (
     <View style={styles.container}>
-      <View style={[styles.verticallySpaced, styles.mt20]}>
+      {/*      <View style={[styles.verticallySpaced, styles.mt20]}>
         <Input
           label="Email"
           leftIcon={{ type: "font-awesome", name: "envelope" }}
@@ -62,7 +61,7 @@ export default function Auth() {
       </View>
       <View style={styles.verticallySpaced}>
         <Button title="Sign up" disabled={loading} onPress={() => signUpWithEmail()} />
-      </View>
+      </View>*/}
     </View>
   );
 }

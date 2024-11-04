@@ -33,6 +33,8 @@ export default function App() {
   const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
+    supabase.auth.signInWithPassword({ email: "test@animocker.org", password: "test" });
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
     });
@@ -49,8 +51,9 @@ export default function App() {
   if (!session) {
     return (
       <View>
-        <Auth />
-        {session && session.user && <Text>{session.user.id}</Text>}
+        //TODO fix Auth (rneu removed)
+        {/*<Auth />
+        {session && session.user && <Text>{session.user.id}</Text>}*/}
       </View>
     );
   }
