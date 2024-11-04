@@ -5,7 +5,7 @@ import { Animation, ColorRgba, Shape } from "@lottiefiles/lottie-js";
 import { uuid } from "@supabase/supabase-js/dist/main/lib/helpers";
 
 import AsyncLock from "async-lock";
-import { State } from "./State";
+import { ElementState, State } from "./State";
 import ColorService, { Color } from "../ColorService";
 
 const lock = new AsyncLock();
@@ -34,6 +34,10 @@ class AvatarService {
   loadState(state: State) {
     this.state = state;
     this.isInitialized = true;
+  }
+
+  getElementState(type: ElementType): ElementState {
+    return this.state.getElementState(type);
   }
 
   async getState() {
