@@ -1,5 +1,11 @@
 import { ElementType } from "../../model/enum";
 
+export type ElementState = {
+  selectedIndex: number;
+  size: number;
+  colorSet: string;
+};
+
 export class State {
   readonly id: string;
   readonly elements = new Map<ElementType, number>();
@@ -98,5 +104,13 @@ export class State {
         differenceProperty.set(key, value);
       }
     });
+  }
+
+  getElementState(type: ElementType): ElementState {
+    return {
+      selectedIndex: this.elements.get(type),
+      size: this.elementSize.get(type),
+      colorSet: this.elementColorSet.get(type),
+    };
   }
 }
