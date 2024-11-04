@@ -52,7 +52,7 @@ export const ConstructorAppearanceTab = () => {
       ...selectedValues,
       [elementType]: { ...selectedValues[elementType], selectedIndex: number },
     });
-    const request = new ChangeElementCommand(elementType, number + 1);
+    const request = new ChangeElementCommand(elementType, number);
     AvatarService.changeElement(request);
     reloadAnimation();
   };

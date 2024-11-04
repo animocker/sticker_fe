@@ -26,7 +26,6 @@ class ConfigService {
       this.elementTypeConfigs = await this.buildElementTypeConfig();
     }
     this.customize();
-    console.log(this.elementTypeConfigs);
     return this.elementTypeConfigs;
   }
 
