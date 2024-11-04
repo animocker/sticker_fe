@@ -15,7 +15,7 @@ export enum ElementType {
 
 export const hairElements = [ElementType.HAIR, ElementType.FRINGE, ElementType.BEARD, ElementType.EYEBROWS];
 
-export const allElements = Object.values(ElementType);
+export const allElementsTypes = Object.values(ElementType);
 
 export enum AnimationType {
   LIKE = "LIKE",

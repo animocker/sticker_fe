@@ -1,11 +1,11 @@
 import AvatarService from "../backend/avatar/AvatarService";
 import { ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand } from "../model/ChangeStateCommand";
 import { ElementType } from "../model/enum";
-import ConfigService from "../backend/ConfigService";
 import { Animation } from "@lottiefiles/lottie-js";
 import initialize from "../backend/Initializer";
 import { supabase } from "../backend/supabase";
 import { isAnimationsEquals } from "./test-helper-methods";
+import ColorService from "../backend/ColorService";
 
 beforeAll(async () => {
   await supabase.auth.signInWithPassword({ email: process.env.TEST_LOGIN, password: process.env.TEST_PASSWORD });
@@ -46,9 +46,10 @@ it("Avatar backend could undo and redo change color command", async () => {
   const step0Result = await AvatarService.getAvatar();
   expect(step0Result).not.toBeUndefined();
 
-  const headConfig = await ConfigService.getElementTypeConfig(ElementType.HEAD);
-  const newSet = headConfig.colorSets[2];
-  AvatarService.changeColor(new ChangeColorCommand(ElementType.HEAD, newSet.id));
+  const currentHeadNumber = await AvatarService.getState().then((it) => it.elements.get(ElementType.HEAD));
+  const colorSets = await ColorService.getColorsForElement(ElementType.HEAD, currentHeadNumber);
+  const newSet = colorSets[2];
+  AvatarService.changeColor(new ChangeColorCommand(ElementType.HEAD, currentHeadNumber, newSet.id));
   const step1Result = await AvatarService.getAvatar();
   await verifyUndoAndRedo(step1Result, step0Result);
 });
@@ -63,9 +64,10 @@ it("Avatar backend could undo and redo all commands", async () => {
   AvatarService.changeSize(new ChangeSizeCommand(ElementType.HEAD, 10));
   const step2Result = await AvatarService.getAvatar();
   expect(isAnimationsEquals(step1Result, step2Result)).toBeFalsy();
-  const headConfig = await ConfigService.getElementTypeConfig(ElementType.HEAD);
-  const newSet = headConfig.colorSets[2];
-  AvatarService.changeColor(new ChangeColorCommand(ElementType.HEAD, newSet.id));
+  const currentHeadNumber = await AvatarService.getState().then((it) => it.elements.get(ElementType.HEAD));
+  const colorSets = await ColorService.getColorsForElement(ElementType.HEAD, currentHeadNumber);
+  const newSet = colorSets[2];
+  AvatarService.changeColor(new ChangeColorCommand(ElementType.HEAD, currentHeadNumber, newSet.id));
   const step3Result = await AvatarService.getAvatar();
   expect(isAnimationsEquals(step2Result, step3Result)).toBeFalsy();
 

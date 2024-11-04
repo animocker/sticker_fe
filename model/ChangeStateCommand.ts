@@ -1,18 +1,13 @@
 import { ElementType } from "./enum";
 import { State } from "../backend/avatar/State";
-import ConfigService from "../backend/ConfigService";
 import { ElementTypeAndNumber } from "./ElementTypeAndNumber";
 
-//TODO WIP
-
 export type ChangeStateCommand = {
-  type: CommandType;
   execute(state: State): void;
   rollback(state: State): void;
 };
 
 export class ChangeSizeCommand implements ChangeStateCommand {
-  type = CommandType.CHANGE_SIZE;
   elementType: ElementType;
   sizePercent: number;
   prevValue: number;
@@ -33,32 +28,28 @@ export class ChangeSizeCommand implements ChangeStateCommand {
 }
 
 export class ChangeColorCommand implements ChangeStateCommand {
-  type = CommandType.CHANGE_COLOR;
   elementType: ElementType;
-  elementNumber?: number;
+  elementNumber: number;
   colorSetId: string;
   prevColorSetId: string;
 
-  constructor(elementType: ElementType, colorId: string, elementNumber = null) {
+  constructor(elementType: ElementType, elementNumber: number, colorId: string) {
     this.elementType = elementType;
     this.elementNumber = elementNumber;
     this.colorSetId = colorId;
   }
 
   execute(state: State): void {
-    const key = new ElementTypeAndNumber(this.elementType, this.elementNumber).toString();
-    this.prevColorSetId = state.elementColorSet.get(key);
-    state.elementColorSet.set(key.toString(), this.colorSetId);
+    this.prevColorSetId = state.elementColorSet.get(this.elementType);
+    state.elementColorSet.set(this.elementType, this.colorSetId);
   }
 
   rollback(state: State): void {
-    const key = new ElementTypeAndNumber(this.elementType, this.elementNumber).toString();
-    state.elementColorSet.set(key.toString(), this.prevColorSetId);
+    state.elementColorSet.set(this.elementType, this.prevColorSetId);
   }
 }
 
 export class ChangeElementCommand implements ChangeStateCommand {
-  type = CommandType.CHANGE_ELEMENT;
   elementType: ElementType;
   number: number;
   prevNumber: number;
@@ -76,10 +67,4 @@ export class ChangeElementCommand implements ChangeStateCommand {
   rollback(state: State): void {
     state.elements.set(this.elementType, this.prevNumber);
   }
-}
-
-export enum CommandType {
-  CHANGE_SIZE,
-  CHANGE_COLOR,
-  CHANGE_ELEMENT,
 }

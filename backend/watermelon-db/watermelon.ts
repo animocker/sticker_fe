@@ -1,7 +1,7 @@
 import { Database } from "@nozbe/watermelondb";
 import SQLiteAdapter from "@nozbe/watermelondb/adapters/sqlite";
 
-import { LayerWDB, ColorWDB, ColorSetWDB, ColorSetColorWDB } from "./read-only/model";
+import { LayerWDB, ColorWDB, ColorSetWDB, ColorSetColorWDB, ElementsWDB, ElementsColorSetsWDB } from "./read-only/model";
 import { supabase } from "../supabase";
 import { SyncDatabaseChangeSet, synchronize } from "@nozbe/watermelondb/sync";
 import schema from "./schema";
@@ -27,7 +27,7 @@ const adapter = new SQLiteAdapter({
 // Then, make a Watermelon database from it!
 export const database = new Database({
   adapter,
-  modelClasses: [LayerWDB, ColorWDB, ColorSetWDB, ColorSetColorWDB, AvatarStateWDB],
+  modelClasses: [LayerWDB, ColorWDB, ColorSetWDB, ColorSetColorWDB, AvatarStateWDB, ElementsWDB, ElementsColorSetsWDB],
 });
 
 export async function sync() {

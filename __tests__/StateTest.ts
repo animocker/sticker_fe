@@ -1,4 +1,4 @@
-import { allElements } from "../model/enum";
+import { allElementsTypes } from "../model/enum";
 import { State } from "../backend/avatar/State";
 import { supabase } from "../backend/supabase";
 import initialize from "../backend/Initializer";
@@ -13,9 +13,9 @@ it("Test equals", async () => {
   const state = new State();
   const state2 = new State();
   expect(state.equals(state2)).toBeTruthy();
-  state.elementSize.set(allElements[0], 1);
+  state.elementSize.set(allElementsTypes[0], 1);
   expect(state.equals(state2)).toBeFalsy();
-  state2.elementSize.set(allElements[0], 1);
+  state2.elementSize.set(allElementsTypes[0], 1);
   expect(state.equals(state2)).toBeTruthy();
 });
 
@@ -23,7 +23,7 @@ it("Test copy", async () => {
   const state = new State();
   const state2 = state.copy();
   expect(state.equals(state2)).toBeTruthy();
-  state.elementSize.set(allElements[0], 1);
+  state.elementSize.set(allElementsTypes[0], 1);
   expect(state.equals(state2)).toBeFalsy();
 });
 

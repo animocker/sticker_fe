@@ -1,11 +1,11 @@
 import AvatarService from "../backend/avatar/AvatarService";
-import { allElements, AnimationType, ElementType } from "../model/enum";
+import { allElementsTypes, AnimationType, ElementType } from "../model/enum";
 import { Animation } from "@lottiefiles/lottie-js";
 import { ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand } from "../model/ChangeStateCommand";
-import ConfigService from "../backend/ConfigService";
 import initialize from "../backend/Initializer";
 import { supabase } from "../backend/supabase";
 import "dotenv/config";
+import ColorService from "../backend/ColorService";
 
 beforeAll(async () => {
   await supabase.auth.signInWithPassword({ email: process.env.TEST_LOGIN, password: process.env.TEST_PASSWORD });
@@ -16,7 +16,7 @@ it("Avatar backend could create basic avatar", async () => {
   const result = await AvatarService.getAvatar();
   expect(result).not.toBeUndefined();
   const layerNames = extractLayerNames(result);
-  allElements
+  allElementsTypes
     .map((it) => it.toLowerCase())
     .forEach((elementType) => {
       expect(layerNames).toContain(`${elementType}_1`);
@@ -45,9 +45,11 @@ it("Avatar backend could change elements color", async () => {
   expect(originalResult).not.toBeUndefined();
   const originalColors = originalResult.colors;
 
-  const headConfig = await ConfigService.getElementTypeConfig(ElementType.HEAD);
-  const newSet = headConfig.colorSets[2];
-  AvatarService.changeColor(new ChangeColorCommand(ElementType.HEAD, newSet.id));
+  const avatarState = await AvatarService.getState();
+  const headNumber = avatarState.elements.get(ElementType.HEAD);
+  const colorSets = await ColorService.getColorsForElement(ElementType.HEAD, headNumber);
+  const newSet = colorSets[2];
+  AvatarService.changeColor(new ChangeColorCommand(ElementType.HEAD, headNumber, newSet.id));
 
   const result = await AvatarService.getAvatar();
   expect(result).not.toBeUndefined();
