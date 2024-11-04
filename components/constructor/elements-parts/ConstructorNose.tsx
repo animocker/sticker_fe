@@ -2,7 +2,6 @@ import React from "react";
 import { ScrollView, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { elementsMenuStyles } from "../styles";
 import { ElementType } from "../../../model/enum";
-import PropTypes from "prop-types";
 
 const NOSE_1 = require("../icons/nose/nose_1.png");
 const NOSE_2 = require("../icons/nose/nose_2.png");
@@ -28,8 +27,4 @@ export const ConstructorNose = ({ changeElement }) => {
       ))}
     </ScrollView>
   );
-};
-
-ConstructorNose.propTypes = {
-  changeElement: PropTypes.func.isRequired,
 };

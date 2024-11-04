@@ -1,7 +1,6 @@
 import { View, StyleSheet } from "react-native";
 import React, { useState } from "react";
 import Slider from "react-native-slider";
-import PropTypes from "prop-types";
 import { styleAssets } from "../../styleAssets";
 
 export const RangeSlider = ({ initialSize, changeSize, step = 1 }) => {
@@ -22,12 +21,6 @@ export const RangeSlider = ({ initialSize, changeSize, step = 1 }) => {
       />
     </View>
   );
-};
-
-RangeSlider.propTypes = {
-  changeSize: PropTypes.func.isRequired,
-  initialSize: PropTypes.number.isRequired,
-  step: PropTypes.number,
 };
 
 const styles = StyleSheet.create({

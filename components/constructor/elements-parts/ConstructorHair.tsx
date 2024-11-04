@@ -1,8 +1,6 @@
 import React from "react";
 import { ScrollView, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { elementsMenuStyles } from "../styles";
-import PropTypes from "prop-types";
-import { styleAssets } from "../../../styleAssets";
 import { ElementType } from "../../../model/enum";
 
 const HAIR_1 = require("../icons/hair/hair_1.png");
@@ -35,7 +33,7 @@ const HAIR_SETTINGS = [
   { icon: <Image source={HAIR_11} />, name: "hair_11" },
 ];
 
-export const ConstructorHair = ({ changeElement }) => {
+export const ConstructorHair = () => {
   return (
     <ScrollView contentContainerStyle={elementsMenuStyles.container}>
       {HAIR_SETTINGS.map((item, index) => (
@@ -45,8 +43,4 @@ export const ConstructorHair = ({ changeElement }) => {
       ))}
     </ScrollView>
   );
-};
-
-ConstructorHair.propTypes = {
-  changeElement: PropTypes.func.isRequired,
 };

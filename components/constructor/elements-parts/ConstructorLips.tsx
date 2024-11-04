@@ -2,8 +2,6 @@ import React from "react";
 import { ScrollView, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { elementsMenuStyles } from "../styles";
 import { ElementType } from "../../../model/enum";
-import PropTypes from "prop-types";
-
 const LIPS_1 = require("../icons/lips/lips_1.png");
 const LIPS_2 = require("../icons/lips/lips_2.png");
 const LIPS_3 = require("../icons/lips/lips_3.png");
@@ -22,18 +20,10 @@ export const ConstructorLips = ({ changeElement }) => {
   return (
     <ScrollView contentContainerStyle={elementsMenuStyles.container}>
       {LIPS_SETTINGS.map((item, index) => (
-        <TouchableOpacity 
-          key={index} 
-          style={elementsMenuStyles.button} 
-          onPress={() => changeElement(ElementType.MOUTH, index + 1)}
-        >
+        <TouchableOpacity key={index} style={elementsMenuStyles.button} onPress={() => changeElement(ElementType.MOUTH, index + 1)}>
           {item.icon}
         </TouchableOpacity>
       ))}
     </ScrollView>
   );
-};
-
-ConstructorLips.propTypes = {
-  changeElement: PropTypes.func.isRequired,
 };

@@ -2,7 +2,6 @@ import React from "react";
 import { ScrollView, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { elementsMenuStyles } from "../styles";
 import { ElementType } from "../../../model/enum";
-import PropTypes from "prop-types";
 
 const EYE_1 = require("../icons/eye/eye_1.png");
 const EYE_2 = require("../icons/eye/eye_2.png");
@@ -30,8 +29,4 @@ export const ConstructorEye = ({ changeElement }) => {
       ))}
     </ScrollView>
   );
-};
-
-ConstructorEye.propTypes = {
-  changeElement: PropTypes.func.isRequired,
 };

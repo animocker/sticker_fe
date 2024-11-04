@@ -1,7 +1,6 @@
 import React from "react";
 import { View, Button, TextInput, StyleSheet } from "react-native";
 
-// eslint-disable-next-line react/prop-types
 const NumberInput = ({ inputValue, setInputValue }) => {
   const increaseValue = () => {
     setInputValue((prevValue) => (parseInt(prevValue) + 1).toString());
@@ -14,12 +13,7 @@ const NumberInput = ({ inputValue, setInputValue }) => {
   return (
     <View style={styles.container}>
       <Button title="-" onPress={decreaseValue} />
-      <TextInput 
-        style={styles.input} 
-        onChangeText={setInputValue} 
-        value={inputValue.toString()} 
-        keyboardType="numeric" 
-      />
+      <TextInput style={styles.input} onChangeText={setInputValue} value={inputValue.toString()} keyboardType="numeric" />
       <Button title="+" onPress={increaseValue} />
     </View>
   );

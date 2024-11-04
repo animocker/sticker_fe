@@ -2,7 +2,6 @@ import React from "react";
 import { ScrollView, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { elementsMenuStyles } from "../styles";
 import { ElementType } from "../../../model/enum";
-import PropTypes from "prop-types";
 
 const EYEBROW_1 = require("../icons/eyebrow/eyebrow_1.png");
 const EYEBROW_2 = require("../icons/eyebrow/eyebrow_2.png");
@@ -28,18 +27,10 @@ export const ConstructorEyebrow = ({ changeElement }) => {
   return (
     <ScrollView contentContainerStyle={elementsMenuStyles.container}>
       {EYEBROW_SETTINGS.map((item, index) => (
-        <TouchableOpacity 
-          key={index} 
-          style={elementsMenuStyles.button} 
-          onPress={() => changeElement(ElementType.EYEBROWS, index + 1)}
-        >
+        <TouchableOpacity key={index} style={elementsMenuStyles.button} onPress={() => changeElement(ElementType.EYEBROWS, index + 1)}>
           {item.icon}
         </TouchableOpacity>
       ))}
     </ScrollView>
   );
-};
-
-ConstructorEyebrow.propTypes = {
-  changeElement: PropTypes.func.isRequired,
 };

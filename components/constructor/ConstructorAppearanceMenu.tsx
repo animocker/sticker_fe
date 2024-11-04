@@ -9,7 +9,6 @@ import { ConstructorEyebrow } from "./elements-parts/ConstructorEyebrow";
 import { ConstructorEye } from "./elements-parts/ConstructorEye";
 import { ConstructorNose } from "./elements-parts/ConstructorNose";
 import { ConstructorLips } from "./elements-parts/ConstructorLips";
-import PropTypes from "prop-types";
 import { styleAssets } from "../../styleAssets";
 import { ElementType } from "../../model/enum";
 
@@ -68,13 +67,6 @@ export const ConstructorAppearanceMenu = ({ selectedValues, changeElement, chang
       </View>
     </View>
   );
-};
-
-ConstructorAppearanceMenu.propTypes = {
-  selectedValues: PropTypes.object.isRequired,
-  changeElement: PropTypes.func.isRequired,
-  changeSize: PropTypes.func.isRequired,
-  changeColor: PropTypes.func.isRequired,
 };
 
 const styles = StyleSheet.create({

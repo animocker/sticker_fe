@@ -1,11 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
-import PropTypes from "prop-types";
 import { RangeSlider } from "../../ui/RangeSlider";
 import { elementsMenuStyles } from "../styles";
 import { Color } from "../../../model/Config";
+import { ElementType } from "../../../model/enum";
 
-export const CommonConstructorParts = ({ settings, changeSizeHandle, changeColorHandle, selectedValue }) => {
+export const CommonConstructorParts = ({ settings, elementType: ElementType }) => {
+  const changeSizeHandle = (size: number) => {
+    changeSize(ElementType.HEAD, size);
+  };
+
+  const changeColorHandle = (color: string) => {
+    changeColor(ElementType.HEAD, color);
+  };
+
   return (
     <View>
       {settings.isSizeChangeable && (
@@ -37,10 +45,3 @@ export const CommonConstructorParts = ({ settings, changeSizeHandle, changeColor
 {
   /*<ColorListPicker colors={colorsList} changeColor={changeColorHandle} />*/
 }
-
-CommonConstructorParts.propTypes = {
-  settings: PropTypes.object.isRequired,
-  selectedValue: PropTypes.object,
-  changeSizeHandle: PropTypes.func.isRequired,
-  changeColorHandle: PropTypes.func.isRequired,
-};
