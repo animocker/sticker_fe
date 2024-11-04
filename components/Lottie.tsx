@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, Dimensions, View, Text, Button } from "react-native";
 import LottieView from "lottie-react-native";
-import AvatarService from "../../backend/avatar/AvatarService";
-//import { AnimationType } from "../../model/enum";
+import React, { useRef, useState } from "react";
+import { Dimensions, StyleSheet, Text, View } from "react-native";
 import { Animation } from "@lottiefiles/lottie-js";
-export const CharacterPicker = () => {
-  //const [selectedAnimation, setSelectedAnimation] = useState(AnimationType.IDLE);
+import AvatarService from "../backend/avatar/AvatarService";
+
+export function Lottie() {
+  const animationRef = useRef<LottieView>(null);
   const [lottie, setLottie] = useState<Animation>();
 
   AvatarService.getAvatar().then((animation) => {
@@ -13,15 +13,12 @@ export const CharacterPicker = () => {
     setLottie(animation);
   });
 
-  if (!lottie) {
-    return <Text>Loading...</Text>;
-  }
   return (
     <View style={styles.lottieContainer}>
-      <LottieView source={lottie} autoPlay loop style={styles.lottie} />
+      {!lottie ? <Text>Loading...</Text> : <LottieView source={lottie} autoPlay style={styles.lottie} ref={animationRef} />}
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   lottie: {
