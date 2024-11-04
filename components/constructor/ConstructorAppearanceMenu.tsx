@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { SETTINGS_APPEARANCE } from "./types";
 import { SvgXml } from "react-native-svg";
-import { ICONS_APPERANCE } from "./icons/icons_element_menu";
+import { ICONS_APPEARANCE } from "./icons/icons_element_menu";
 import { ConstructorHead } from "./elements-parts/ConstructorHead";
 import { ConstructorHair } from "./elements-parts/ConstructorHair";
 import { ConstructorEyebrow } from "./elements-parts/ConstructorEyebrow";
@@ -59,7 +59,7 @@ export const ConstructorAppearanceMenu = ({ selectedValues, changeElement, chang
           {buttonTitles.map((title, index) => (
             <View key={index} style={{ flexDirection: "row", alignItems: "center" }}>
               <TouchableOpacity style={[styles.button, selectedTab === title && styles.selectedButton]} onPress={() => setSelectedTab(title)}>
-                <SvgXml xml={ICONS_APPERANCE[title]} />
+                {<SvgXml xml={ICONS_APPEARANCE[title]} />}
                 <Text>{title}</Text>
               </TouchableOpacity>
             </View>
