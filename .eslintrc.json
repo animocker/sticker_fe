@@ -44,7 +44,8 @@
         "semi": ["error", "always"],
         "prettier/prettier": ["error", { 
             "printWidth": 150,
-            "endOfLine": "auto" 
+            "endOfLine": "auto",
+            "arrowParens": "avoid"
             }],
         "max-len": ["error", { "code": 150 }]
     },
