@@ -19,7 +19,7 @@ export async function createRandomState(): Promise<State> {
     const colorSets = await ColorService.getColorsForElement(elementType, elementNumber);
     if (colorSets.length > 0) {
       const randomColorSet = colorSets[random(0, colorSets.length)];
-      state.elementColorSet.set(elementType.toString(), randomColorSet.id);
+      state.elementColorSet.set(elementType, randomColorSet.id);
     }
   }
   return state;
