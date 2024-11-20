@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { View, Button, StyleSheet, ScrollView, Text, ImageBackground } from "react-native";
-import { TabView, SceneMap, TabBar, TabBarItem } from "react-native-tab-view";
+import { StyleSheet, ImageBackground } from "react-native";
+import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import { ConstructorAppearanceTab } from "../../components/constructor/ConstructorAppearanceTab";
 import { ConstructorClothTab } from "../../components/constructor/ConstructorClothTab";
 import { styleAssets } from "../../styleAssets";

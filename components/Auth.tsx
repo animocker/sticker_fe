@@ -35,7 +35,7 @@ export default function Auth() {
 
   return (
     <View style={styles.container}>
-      {/*      <View style={[styles.verticallySpaced, styles.mt20]}>
+      <View style={[styles.verticallySpaced, styles.mt20]}>
         <Input
           label="Email"
           leftIcon={{ type: "font-awesome", name: "envelope" }}
@@ -61,7 +61,7 @@ export default function Auth() {
       </View>
       <View style={styles.verticallySpaced}>
         <Button title="Sign up" disabled={loading} onPress={() => signUpWithEmail()} />
-      </View>*/}
+      </View>
     </View>
   );
 }

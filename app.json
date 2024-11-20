@@ -1,8 +1,9 @@
 {
   "expo": {
     "name": "sticker_fe",
-    "slug": "sticker_fe",
+    "slug": "sticker-fe",
     "version": "1.0.0",
+    "scheme": "com.stolenwhale.sticker_fe",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
@@ -10,12 +11,10 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "ios"
+      "bundleIdentifier": "com.stolenwhale.sticker_fe"
     },
     "android": {
       "adaptiveIcon": {
@@ -31,6 +30,12 @@
       "eas": {
         "projectId": "55fce5a2-98a4-44c2-8af9-e738a983bdcd"
       }
+    },
+    "plugins": [
+      "expo-router"
+    ],
+    "linking": {
+      "prefixes": ["stickerfe://"]
     }
   }
 }
