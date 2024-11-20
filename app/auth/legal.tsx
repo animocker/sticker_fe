@@ -4,7 +4,6 @@ import { router } from "expo-router";
 import Background from "../../components/for_screens/Background";
 import Logo from "../../components/for_screens/Logo";
 import Button from "../../components/buttons/Button";
-import { LinearGradient } from "expo-linear-gradient";
 
 export default function Legal() {
   return (
