@@ -1,30 +1,27 @@
 import React from "react";
-import { Dimensions, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import Button from "../components/buttons/Button";
 import { router } from "expo-router";
 import Background from "../components/for_screens/Background";
 import StartImageView from "../components/for_screens/ImageStartScreen";
-
-const { height: screenHeight } = Dimensions.get("window");
+import Logo from "../components/for_screens/Logo";
 
 export default function Start() {
+  // Сюда можно вставить логику главного меню, переход на него в если зарегестрирован
   return (
     <Background>
-      <View style={styles.logoView}>
-        <Text>LOGO</Text>
-        <StartImageView />
-        <Button text="Login" onPress={() => router.push("auth/login")} />
+      <Logo />
+      <StartImageView />
+      <View style={styles.buttons}>
+        <Button text="Регистрация" onPress={() => router.push("auth/legal")} />
+        <Button text="Войти" onPress={() => router.push("auth/login")} />
       </View>
     </Background>
   );
 }
 
 const styles = StyleSheet.create({
-  logoView: {
-    alignItems: "center",
-    display: "flex",
-    height: screenHeight,
-    justifyContent: "center",
-    width: "100%",
+  buttons: {
+    gap: 24,
   },
 });

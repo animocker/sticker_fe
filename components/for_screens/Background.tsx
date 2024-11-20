@@ -19,5 +19,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 16,
+    alignItems: "center",
+    display: "flex",
+    height: "auto",
+    width: "100%",
   },
 });

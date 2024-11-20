@@ -19,13 +19,15 @@ export default function Button({ text, onPress }: ButtonProps) {
 
 const styles = StyleSheet.create({
   background: {
-    backgroundColor: "purple",
-    borderColor: "black",
-    borderRadius: 24,
-    height: 56,
+    backgroundColor: "#007DF8",
+    borderRadius: 26,
+    //height: 56,
     paddingHorizontal: 24,
     paddingVertical: 16,
     width: 312,
+    borderWidth: 3,
+    borderColor: "#1E10BE",
+    borderStyle: "solid",
   },
   text: {
     color: "white",

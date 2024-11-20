@@ -1,8 +1,8 @@
 import React from "react";
 import { Dimensions, StyleSheet, Text, View } from "react-native";
-import Button from "../../components/buttons/Button";
+import Button from "../../../components/buttons/Button";
 import { router } from "expo-router";
-import Background from "../../components/for_screens/Background";
+import Background from "../../../components/for_screens/Background";
 
 const { height: screenHeight } = Dimensions.get("window");
 
