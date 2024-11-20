@@ -1,6 +1,6 @@
 import { allElementsTypes, AnimationType, ElementType } from "../../model/enum";
 import { ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand, ChangeStateCommand } from "../../model/ChangeStateCommand";
-import { getAnimationLayers } from "../db/AvatarWatermelonDao";
+import { getAnimationLayers } from "../db/AvatarLocalDao";
 import { Animation, ColorRgba, Shape } from "@lottiefiles/lottie-js";
 import { uuid } from "@supabase/supabase-js/dist/main/lib/helpers";
 

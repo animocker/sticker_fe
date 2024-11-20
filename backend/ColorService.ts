@@ -1,5 +1,4 @@
-import { getColorSetById, getColorSetsByElementId } from "./db/ColorWatermelonDao";
-import { ColorSetWDB, ColorWDB } from "./watermelon-db/read-only/model";
+import { getColorSetById, getColorSetsByElementId } from "./db/ColorLocalDao";
 import { ElementType } from "../model/enum";
 
 export type ColorSet = {
@@ -24,13 +23,13 @@ class ColorService {
     return getColorSetById(id).then((colorSet) => this.mapColorSet(colorSet));
   }
 
-  private async mapColorSet(source: ColorSetWDB): Promise<ColorSet> {
+  private async mapColorSet(source: any): Promise<ColorSet> {
     const colorsWDB = await source.colors.fetch();
     const colors = colorsWDB.map((color) => this.mapColor(color));
     return { id: source.id, colors: colors };
   }
 
-  private mapColor(source: ColorWDB): Color {
+  private mapColor(source: any): Color {
     return { name: source.name, hex: source.hex };
   }
 }

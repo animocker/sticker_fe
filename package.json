@@ -9,7 +9,8 @@
     "web": "expo start --web",
     "types": "supabase gen types typescript --project-id putvmjrqftjxkfnqdvjs > backend/db/database.types.ts",
     "test": "jest",
-    "lint": "eslint --fix"
+    "lint": "eslint --fix",
+    "assets": "npx react-native-asset@latest"
   },
   "jest": {
     "preset": "react-native",
@@ -22,7 +23,7 @@
     "@expo/config-plugins": "~7.8.0",
     "@expo/metro-config": "^0.17.4",
     "@lottiefiles/lottie-js": "^0.4.2",
-    "@nozbe/watermelondb": "^0.27.1",
+    "@op-engineering/op-sqlite": "^10.1.0",
     "@react-native-async-storage/async-storage": "1.21.0",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-native-community/slider": "4.4.2",
