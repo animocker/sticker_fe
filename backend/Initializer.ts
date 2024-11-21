@@ -14,5 +14,5 @@ const openAssetsDb = async () => {
   }
   const db = open({ name: "lottie.db" });
   const users = db.execute("SELECT * FROM layers");
-  console.log(users);
+  console.log("asdsa" + users);
 };

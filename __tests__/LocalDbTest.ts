@@ -5,7 +5,7 @@ import initialize from "../backend/Initializer";
 import { getAllColorSets } from "../backend/db/ColorLocalDao";
 
 beforeAll(async () => {
-  await supabase.auth.signInWithPassword({ email: process.env.TEST_LOGIN, password: process.env.TEST_PASSWORD });
+  //await supabase.auth.signInWithPassword({ email: process.env.TEST_LOGIN, password: process.env.TEST_PASSWORD });
   await initialize();
 }, 10000);
 

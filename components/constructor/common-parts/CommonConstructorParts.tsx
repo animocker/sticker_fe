@@ -1,18 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import PropTypes from "prop-types";
-import { RangeSlider } from "../../ui/RangeSlider";
 import { elementsMenuStyles } from "../styles";
 import { Color } from "../../../model/Config";
 
 export const CommonConstructorParts = ({ settings, changeSizeHandle, changeColorHandle, selectedValue }) => {
   return (
     <View>
-      {settings.isSizeChangeable && (
-        <View>
-          <RangeSlider initialSize={selectedValue?.size || 0} changeSize={changeSizeHandle} />
-        </View>
-      )}
+      {settings.isSizeChangeable && <View>{/*    <RangeSlider initialSize={selectedValue?.size || 0} changeSize={changeSizeHandle} />*/}</View>}
       <View style={elementsMenuStyles.colorContainerWrapper}>
         <ScrollView horizontal={true} contentContainerStyle={elementsMenuStyles.colorContainer}>
           {settings.colorSettings.map((color: Color) => (
