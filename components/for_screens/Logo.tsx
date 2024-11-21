@@ -1,9 +1,13 @@
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
 
-export default function Logo() {
+interface LogoProps {
+  marginBottom: number;
+}
+
+export default function Logo({ marginBottom }: LogoProps) {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { marginBottom: marginBottom }]}>
       <Text style={styles.text}>AniMoker</Text>
     </View>
   );
@@ -13,7 +17,6 @@ const styles = StyleSheet.create({
   container: {
     height: 76,
     marginTop: 60,
-    marginBottom: 65,
     alignItems: "center",
     justifyContent: "center",
   },

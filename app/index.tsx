@@ -5,19 +5,33 @@ import { router } from "expo-router";
 import Background from "../components/for_screens/Background";
 import StartImageView from "../components/for_screens/ImageStartScreen";
 import Logo from "../components/for_screens/Logo";
+import MainImageView from "../components/for_screens/ImageMainScreen";
 
 export default function Start() {
-  // Сюда можно вставить логику главного меню, переход на него в если зарегестрирован
-  return (
-    <Background>
-      <Logo />
-      <StartImageView />
-      <View style={styles.buttons}>
-        <Button text="Регистрация" onPress={() => router.push("auth/legal")} />
-        <Button text="Войти" onPress={() => router.push("auth/login")} />
-      </View>
-    </Background>
-  );
+  const session = true;
+  if (session) {
+    return (
+      <Background>
+        <Logo marginBottom={40} />
+        <MainImageView />
+        <View style={styles.buttons}>
+          <Button text="📷 Сделать селфи" onPress={() => router.push("auth/legal")} />
+          <Button text="Создать вручную" onPress={() => router.push("auth/login")} />
+        </View>
+      </Background>
+    );
+  } else {
+    return (
+      <Background>
+        <Logo marginBottom={65} />
+        <StartImageView />
+        <View style={styles.buttons}>
+          <Button text="Регистрация" onPress={() => router.push("auth/legal")} />
+          <Button text="Войти" onPress={() => router.push("auth/login")} />
+        </View>
+      </Background>
+    );
+  }
 }
 
 const styles = StyleSheet.create({

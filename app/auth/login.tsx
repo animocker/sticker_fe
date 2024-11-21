@@ -11,7 +11,7 @@ export default function Login() {
   const [isPasswordVisible, setPasswordVisible] = useState(false);
   return (
     <Background>
-      <Logo />
+      <Logo marginBottom={65} />
       <Text style={styles.title}>Регистрация</Text>
       <Text style={styles.text}>Email</Text>
       <TextInput

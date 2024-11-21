@@ -8,7 +8,7 @@ import Button from "../../components/buttons/Button";
 export default function Legal() {
   return (
     <Background>
-      <Logo />
+      <Logo marginBottom={65} />
       <View style={styles.legalBox}>
         <Text style={styles.title}>Юридическая информация</Text>
         <ScrollView showsVerticalScrollIndicator={true}>
