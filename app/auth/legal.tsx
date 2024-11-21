@@ -30,7 +30,7 @@ export default function Legal() {
           </Text>
         </ScrollView>
         <View style={styles.buttonBox}>
-          <Button text="Принять" onPress={() => router.replace("auth/login")} />
+          <Button text="Принять" onPress={() => router.replace("auth/signup/signup")} />
         </View>
       </View>
     </Background>
@@ -66,5 +66,6 @@ const styles = StyleSheet.create({
   buttonBox: {
     top: "70%",
     position: "absolute",
+    zIndex: 2,
   },
 });

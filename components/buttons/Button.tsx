@@ -27,7 +27,6 @@ const styles = StyleSheet.create({
     width: 312,
     borderWidth: 3,
     borderColor: "#1E10BE",
-    borderStyle: "solid",
   },
   text: {
     color: "white",
