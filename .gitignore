@@ -42,3 +42,4 @@ yarn-error.*
 /.env
 /lottie.json
 /__tests__/.env.test
+/android/

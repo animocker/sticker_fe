@@ -1,9 +1,9 @@
 {
   "expo": {
-    "name": "sticker_fe",
-    "slug": "sticker-fe",
+    "name": "animocker",
+    "slug": "animocker",
     "version": "1.0.0",
-    "scheme": "com.stolenwhale.sticker_fe",
+    "scheme": "animocker",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
@@ -11,17 +11,16 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.stolenwhale.sticker_fe"
+      "bundleIdentifier": "com.animocker"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.stolenwhale.sticker_fe"
+      "package": "com.animocker"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -33,9 +32,6 @@
     },
     "plugins": [
       "expo-router"
-    ],
-    "linking": {
-      "prefixes": ["stickerfe://"]
-    }
+    ]
   }
 }
