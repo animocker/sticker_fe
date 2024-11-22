@@ -1,5 +1,5 @@
 import AvatarService from "./AvatarService";
-import { loadAvatarStates, saveAvatarState } from "../db/AvatarCollectionLocalDao";
+import { loadAvatarStates, saveAvatarState } from "../db/AvatarCollectionWatermelonDao";
 import { State } from "./State";
 
 //TODO make tests

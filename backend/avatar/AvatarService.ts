@@ -1,3 +1,4 @@
+import { allElementsTypes, AnimationType, ElementType } from "../../model/enum";
 import { ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand, ChangeStateCommand } from "../../model/ChangeStateCommand";
 import AsyncLock from "async-lock";
 //TODO refactor without lottie-js
@@ -7,6 +8,7 @@ import { getAnimationLayers } from "../db/AvatarLocalDao";
 
 import { uuid } from "@supabase/supabase-js/dist/main/lib/helpers";
 
+import AsyncLock from "async-lock";
 import { ElementState, State } from "./State";
 import ColorService, { Color } from "../ColorService";
 

@@ -1,4 +1,8 @@
 import { AnimationType } from "../../model/enum";
+import { database } from "../watermelon-db/watermelon";
+import { Q } from "@nozbe/watermelondb";
+import { LayerWDB } from "../watermelon-db/read-only/model";
+
 export async function getAnimationLayers(animationType: string | AnimationType, elementsIds: string[], gender: string): Promise<string[]> {
   const elementConditions = elementsIds.map(() => "(l.element_id = ?)").join(" OR ");
 
@@ -12,10 +16,9 @@ export async function getAnimationLayers(animationType: string | AnimationType, 
 
   const parameters = [animationType, ...elementsIds, gender];
 
-  return [""];
-  /*  return database
+  return database
     .get(LayerWDB.table)
     .query(Q.unsafeSqlQuery(sqlQuery, parameters))
     .unsafeFetchRaw()
-    .then((result) => result.map((it) => it.value));*/
+    .then((result) => result.map((it) => it.value));
 }
