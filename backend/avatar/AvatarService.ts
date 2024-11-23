@@ -11,6 +11,7 @@ import { AnimationObject } from "lottie-react-native";
 const lock = new AsyncLock();
 const getAvatarLockKey = "getAvatarLockKey";
 
+//change fr and op to 1 for static animation
 const LOTTIE_BODY = '{"v":"5.9.0","fr":30,"ip":0,"op":90,"w":430,"h":430,"nm":"{nameSpot}","ddd":0,"assets":[],{layersSpot}}';
 
 const redoStack: ChangeStateCommand[] = [];
@@ -21,6 +22,7 @@ class AvatarService {
   private lastState: State;
   private avatarAnimation: AnimationObject;
   private isInitialized = false;
+  public isNewAvailable = true;
 
   async init() {
     for (const elementType of allElementsTypes) {
@@ -74,20 +76,13 @@ class AvatarService {
     return LOTTIE_BODY.replace("{layersSpot}", `"layers": [${layersString}]`).replace("{nameSpot}", uuid());
   }
 
-  changeElement(command: ChangeElementCommand) {
+  executeCommand(command: ChangeStateCommand) {
     command.execute(this.state);
     undoStack.push(command);
-  }
-  //$[layer.ind].ks.s.k=[width,height, ???]
-  changeSize(command: ChangeSizeCommand) {
-    command.execute(this.state);
-    undoStack.push(command);
-  }
-  changeColor(command: ChangeColorCommand) {
-    command.execute(this.state);
-    undoStack.push(command);
+    this.isNewAvailable = true;
   }
 
+  //$[layer.ind].ks.s.k=[width,height, ???]
   private changeElementsSize(lottieAnimation: AnimationObject) {
     for (const [elementType, newSizeDiff] of this.state.elementSize) {
       if (newSizeDiff === 0 || elementType === undefined) {
@@ -204,6 +199,7 @@ class AvatarService {
     }
     this.avatarAnimation = await this.getAnimation(AnimationType.IDLE);
     this.lastState = this.state.copy();
+    this.isNewAvailable = false;
     return this.avatarAnimation;
   }
 

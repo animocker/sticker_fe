@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Dimensions, StyleSheet, Text, View } from "react-native";
-import AvatarService from "../../backend/avatar/AvatarService";
+import AvatarService, { useAvatar } from "../../backend/avatar/AvatarService";
 import { ElementType } from "../../model/enum";
 import { ConstructorAppearanceMenu } from "./ConstructorAppearanceMenu";
 import LottieView, { AnimationObject } from "lottie-react-native";
@@ -9,6 +9,7 @@ import { Color } from "../../model/Config";
 import { SETTINGS_APPEARANCE } from "./types";
 import { ElementTypeAndNumber } from "../../model/ElementTypeAndNumber";
 import ColorService from "../../backend/ColorService";
+import { Lottie } from "../Lottie";
 
 export const ConstructorAppearanceTab = () => {
   const animationRef = useRef<LottieView>(null);
@@ -32,10 +33,6 @@ export const ConstructorAppearanceTab = () => {
     });
   }, []);
 
-  AvatarService.getAvatar().then((animation) => {
-    setLottie(animation);
-  });
-
   const reloadAnimation = () => {
     AvatarService.getAvatar().then((animation) => {
       animationRef.current?.pause();
@@ -50,8 +47,8 @@ export const ConstructorAppearanceTab = () => {
       [elementType]: { ...selectedValues[elementType], selectedIndex: number },
     });
     const request = new ChangeElementCommand(elementType, number);
-    AvatarService.changeElement(request);
-    reloadAnimation();
+    AvatarService.executeCommand(request);
+    //reloadAnimation();
   };
 
   const changeSize = (elementType: ElementType, sizePercent: number) => {
@@ -59,8 +56,8 @@ export const ConstructorAppearanceTab = () => {
       ...selectedValues,
       [elementType]: { ...selectedValues[elementType], size: sizePercent },
     });
-    AvatarService.changeSize(new ChangeSizeCommand(elementType, sizePercent));
-    reloadAnimation();
+    AvatarService.executeCommand(new ChangeSizeCommand(elementType, sizePercent));
+    //reloadAnimation();
   };
 
   const changeColor = (elementType: ElementType, color: Color) => {
@@ -68,14 +65,14 @@ export const ConstructorAppearanceTab = () => {
       ...selectedValues,
       [elementType]: { ...selectedValues[elementType], colorSet: color.id },
     });
-    AvatarService.changeColor(new ChangeColorCommand(elementType, selectedValues[elementType].selectedIndex, color.id));
-    reloadAnimation();
+    AvatarService.executeCommand(new ChangeColorCommand(elementType, selectedValues[elementType].selectedIndex, color.id));
+    //reloadAnimation();
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.lottieContainer}>
-        {!lottie ? <Text>Loading...</Text> : <LottieView source={lottie} autoPlay style={styles.lottie} ref={animationRef} />}
+        <Lottie />
       </View>
       <View style={styles.menuContainer}>
         {/*<SwipablePanel>*/}

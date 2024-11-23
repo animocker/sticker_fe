@@ -1,4 +1,4 @@
-import AvatarService from "../../backend/avatar/AvatarService";
+import AvatarService, { useAvatar } from "../../backend/avatar/AvatarService";
 import { allElementsTypes, AnimationType, ElementType } from "../../model/enum";
 import { ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand } from "../../model/ChangeStateCommand";
 import "dotenv/config";
@@ -22,7 +22,7 @@ it("Avatar backend could change elements", async () => {
   const originalLayerNames = extractLayerNames(originalResult);
   expect(originalLayerNames).not.toContain("head_2");
 
-  AvatarService.changeElement(new ChangeElementCommand(ElementType.HEAD, 2));
+  AvatarService.executeCommand(new ChangeElementCommand(ElementType.HEAD, 2));
   const changedResult = await AvatarService.getAvatar();
   const changedLayerNames = extractLayerNames(changedResult);
   expect(changedLayerNames).toContain("head_2");
@@ -34,8 +34,9 @@ afterEach(async () => {
 });
 
 it("Avatar backend could change elements color", async () => {
+  const [lottie] = useAvatar();
   const elementType = ElementType.HEAD;
-  const originalResult = await AvatarService.getAvatar();
+  const originalResult = lottie;
   expect(originalResult).not.toBeUndefined();
   const originalColors = getLayer(originalResult, elementType)
     .shapes.flatMap((shape) => shape.it)
@@ -45,9 +46,9 @@ it("Avatar backend could change elements color", async () => {
   const headNumber = avatarState.elements.get(elementType);
   const colorSets = await ColorService.getColorsForElement(elementType, headNumber);
   const newSet = colorSets[2];
-  AvatarService.changeColor(new ChangeColorCommand(elementType, headNumber, newSet.id));
+  AvatarService.executeCommand(new ChangeColorCommand(elementType, headNumber, newSet.id));
 
-  const result = await AvatarService.getAvatar();
+  const result = lottie;
   expect(result).not.toBeUndefined();
   const newColors = getLayer(result, elementType)
     .shapes.flatMap((shape) => shape.it)
@@ -62,7 +63,7 @@ it("Avatar backend could change elements size", async () => {
   const originalHeadLayer = getLayer(originalResult, elementType);
   const originalScale = originalHeadLayer.ks.s.k;
 
-  AvatarService.changeSize(new ChangeSizeCommand(elementType, 10));
+  AvatarService.executeCommand(new ChangeSizeCommand(elementType, 10));
 
   const result = await AvatarService.getAvatar();
   expect(result).not.toBeUndefined();

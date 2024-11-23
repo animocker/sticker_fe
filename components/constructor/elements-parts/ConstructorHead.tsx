@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { RangeSlider } from "../../ui/RangeSlider";
+import PropTypes from "prop-types";
 import { ElementType } from "../../../model/enum";
 import { elementsMenuStyles } from "../styles";
 import { CommonConstructorParts } from "../common-parts/CommonConstructorParts";
 import { filterSettings } from "../helpers";
-import { SETTINGS_APPEARANCE } from "../types";
-import AvatarService from "../../../backend/avatar/AvatarService";
 
 const HEAD_1 = require("../icons/head/head_1.png");
 const HEAD_2 = require("../icons/head/head_2.png");
@@ -24,9 +23,7 @@ const HEAD_SETTINGS = [
   { icon: <Image source={HEAD_6} />, name: "head_6" },
 ];
 
-export const ConstructorHead = ({ changeElement, changeSize, changeColor, settings }) => {
-  const [state, setState] = useState(AvatarService.getElementState(ElementType.HEAD));
-
+export const ConstructorHead = ({ changeElement, changeSize, changeColor, settings, selectedValue }) => {
   const changeElementHandle = (index: number) => {
     changeElement(ElementType.HEAD, index);
   };
@@ -45,7 +42,7 @@ export const ConstructorHead = ({ changeElement, changeSize, changeColor, settin
         <View>
           <View>
             <CommonConstructorParts
-              selectedValue={state.selectedIndex}
+              selectedValue={selectedValue}
               settings={filterSettings(settings, selectedValue)}
               changeSizeHandle={changeSizeHandle}
               changeColorHandle={changeColorHandle}
