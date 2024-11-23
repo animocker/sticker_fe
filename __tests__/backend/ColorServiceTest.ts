@@ -1,14 +1,9 @@
-import { sync } from "../backend/watermelon-db/watermelon";
-import { allElementsTypes, ElementType } from "../model/enum";
+import { sync } from "../../backend/watermelon-db/watermelon";
+import { allElementsTypes, ElementType } from "../../model/enum";
 import _ from "lodash";
-import { supabase } from "../backend/supabase";
-import initialize from "../backend/Initializer";
-import ColorService from "../backend/ColorService";
-
-beforeAll(async () => {
-  await supabase.auth.signInWithPassword({ email: process.env.TEST_LOGIN, password: process.env.TEST_PASSWORD });
-  await initialize();
-}, 10000);
+import { supabase } from "../../backend/supabase";
+import initialize from "../../backend/Initializer";
+import ColorService from "../../backend/ColorService";
 
 it("Check colors for all element types", async () => {
   allElementsTypes.forEach(async (elementType) => {

@@ -1,15 +1,10 @@
-import { database, sync } from "../backend/watermelon-db/watermelon";
-import { getAnimationLayers } from "../backend/db/AvatarWatermelonDao";
-import { AnimationType } from "../model/enum";
-import { supabase } from "../backend/supabase";
-import initialize from "../backend/Initializer";
-import { ColorWDB, ElementsColorSetsWDB, ElementsWDB } from "../backend/watermelon-db/read-only/model";
-import { getAllColorSets } from "../backend/db/ColorWatermelonDao";
-
-beforeAll(async () => {
-  await supabase.auth.signInWithPassword({ email: process.env.TEST_LOGIN, password: process.env.TEST_PASSWORD });
-  await initialize();
-}, 10000);
+import { database, sync } from "../../backend/watermelon-db/watermelon";
+import { getAnimationLayers } from "../../backend/db/AvatarWatermelonDao";
+import { AnimationType } from "../../model/enum";
+import { supabase } from "../../backend/supabase";
+import initialize from "../../backend/Initializer";
+import { ColorWDB, ElementsColorSetsWDB, ElementsWDB } from "../../backend/watermelon-db/read-only/model";
+import { getAllColorSets } from "../../backend/db/ColorWatermelonDao";
 
 it("Find animation successful", async () => {
   const result = await getAnimationLayers(AnimationType.IDLE, ["HEAD_1", "HAIR_1", "CLOTHES_1"], "MALE");

@@ -1,13 +1,8 @@
-import { allElementsTypes } from "../model/enum";
-import { State } from "../backend/avatar/State";
-import { supabase } from "../backend/supabase";
-import initialize from "../backend/Initializer";
-import { createRandomState } from "./test-helper-methods";
-
-beforeAll(async () => {
-  await supabase.auth.signInWithPassword({ email: process.env.TEST_LOGIN, password: process.env.TEST_PASSWORD });
-  await initialize();
-}, 10000);
+import { allElementsTypes } from "../../model/enum";
+import { State } from "../../backend/avatar/State";
+import { supabase } from "../../backend/supabase";
+import initialize from "../../backend/Initializer";
+import { createRandomState } from "../test-helper-methods";
 
 it("Test equals", async () => {
   const state = new State();

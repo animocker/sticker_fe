@@ -1,14 +1,9 @@
-import { supabase } from "../backend/supabase";
-import initialize from "../backend/Initializer";
-import AvatarService from "../backend/avatar/AvatarService";
-import AvatarCollectionService from "../backend/avatar/AvatarCollectionService";
-import { State } from "../backend/avatar/State";
-import { createRandomState, isAnimationsEquals } from "./test-helper-methods";
-
-beforeAll(async () => {
-  await supabase.auth.signInWithPassword({ email: process.env.TEST_LOGIN, password: process.env.TEST_PASSWORD });
-  await initialize();
-}, 10000);
+import { supabase } from "../../backend/supabase";
+import initialize from "../../backend/Initializer";
+import AvatarService from "../../backend/avatar/AvatarService";
+import AvatarCollectionService from "../../backend/avatar/AvatarCollectionService";
+import { State } from "../../backend/avatar/State";
+import { createRandomState, isAnimationsEquals } from "../test-helper-methods";
 
 it("Avatar's new state could be saved and loaded", async () => {
   let randomState = await createRandomState();

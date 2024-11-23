@@ -1,16 +1,11 @@
-import AvatarService from "../backend/avatar/AvatarService";
-import { allElementsTypes, AnimationType, ElementType } from "../model/enum";
+import AvatarService from "../../backend/avatar/AvatarService";
+import { allElementsTypes, AnimationType, ElementType } from "../../model/enum";
 import { Animation } from "@lottiefiles/lottie-js";
-import { ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand } from "../model/ChangeStateCommand";
-import initialize from "../backend/Initializer";
-import { supabase } from "../backend/supabase";
+import { ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand } from "../../model/ChangeStateCommand";
+import initialize from "../../backend/Initializer";
+import { supabase } from "../../backend/supabase";
 import "dotenv/config";
-import ColorService from "../backend/ColorService";
-
-beforeAll(async () => {
-  await supabase.auth.signInWithPassword({ email: process.env.TEST_LOGIN, password: process.env.TEST_PASSWORD });
-  await initialize();
-}, 10000);
+import ColorService from "../../backend/ColorService";
 
 it("Avatar backend could create basic avatar", async () => {
   const result = await AvatarService.getAvatar();

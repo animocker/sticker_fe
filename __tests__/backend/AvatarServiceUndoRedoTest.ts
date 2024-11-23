@@ -1,16 +1,11 @@
-import AvatarService from "../backend/avatar/AvatarService";
-import { ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand } from "../model/ChangeStateCommand";
-import { ElementType } from "../model/enum";
+import AvatarService from "../../backend/avatar/AvatarService";
+import { ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand } from "../../model/ChangeStateCommand";
+import { ElementType } from "../../model/enum";
 import { Animation } from "@lottiefiles/lottie-js";
-import initialize from "../backend/Initializer";
-import { supabase } from "../backend/supabase";
-import { isAnimationsEquals } from "./test-helper-methods";
-import ColorService from "../backend/ColorService";
-
-beforeAll(async () => {
-  await supabase.auth.signInWithPassword({ email: process.env.TEST_LOGIN, password: process.env.TEST_PASSWORD });
-  await initialize();
-}, 10000);
+import initialize from "../../backend/Initializer";
+import { supabase } from "../../backend/supabase";
+import { isAnimationsEquals } from "../test-helper-methods";
+import ColorService from "../../backend/ColorService";
 
 async function verifyUndoAndRedo(step1Result: Animation, step0Result: Animation) {
   expect(isAnimationsEquals(step1Result, step0Result)).toBeFalsy();
