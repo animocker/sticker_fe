@@ -11,4 +11,5 @@ it("Performance check", async () => {
   }
   const end = new Date().getTime();
   console.log(`1000 iterations took ${end - start} ms`);
+  expect(end - start).toBeLessThan(15000);
 });
