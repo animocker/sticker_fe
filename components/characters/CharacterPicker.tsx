@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Dimensions, View, Text, Button } from "react-native";
-import LottieView from "lottie-react-native";
+import LottieView, { AnimationObject } from "lottie-react-native";
 import AvatarService from "../../backend/avatar/AvatarService";
 import { AnimationType } from "../../model/enum";
-import { Animation } from "@lottiefiles/lottie-js";
 export const CharacterPicker = () => {
   const [selectedAnimation, setSelectedAnimation] = useState(AnimationType.IDLE);
-  const [lottie, setLottie] = useState<Animation>();
+  const [lottie, setLottie] = useState<AnimationObject>();
 
   AvatarService.getAvatar().then((animation) => {
     console.log("Animation received" + animation);

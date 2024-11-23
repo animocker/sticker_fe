@@ -1,12 +1,12 @@
 import { allElementsTypes, AnimationType, ElementType } from "../../model/enum";
 import { ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand, ChangeStateCommand } from "../../model/ChangeStateCommand";
 import { getAnimationLayers } from "../db/AvatarWatermelonDao";
-import { Animation, ColorRgba, Shape } from "@lottiefiles/lottie-js";
 import { uuid } from "@supabase/supabase-js/dist/main/lib/helpers";
 
 import AsyncLock from "async-lock";
 import { ElementState, State } from "./State";
 import ColorService, { Color } from "../ColorService";
+import { AnimationObject } from "lottie-react-native";
 
 const lock = new AsyncLock();
 const getAvatarLockKey = "getAvatarLockKey";
@@ -19,7 +19,7 @@ const undoStack: ChangeStateCommand[] = [];
 class AvatarService {
   private state: State = new State();
   private lastState: State;
-  private avatarAnimation: Animation;
+  private avatarAnimation: AnimationObject;
   private isInitialized = false;
 
   async init() {
@@ -88,58 +88,66 @@ class AvatarService {
     undoStack.push(command);
   }
 
-  private changeElementsSize(lottieAnimation: Animation) {
+  private changeElementsSize(lottieAnimation: AnimationObject) {
     for (const [elementType, newSizeDiff] of this.state.elementSize) {
       if (newSizeDiff === 0 || elementType === undefined) {
         continue;
       }
       const elementNumber = this.state.elements.get(elementType);
       const searchedLayerName = `${elementType}_${elementNumber}`;
-      const layers = lottieAnimation.layers.filter((layer) => layer.name.toUpperCase().startsWith(searchedLayerName));
+      const layers = lottieAnimation.layers.filter((layer) => layer.nm.toUpperCase().startsWith(searchedLayerName));
       for (const layer of layers) {
-        const scale = layer.transform.scale;
-        const framesSizes = scale.values;
-        for (const frameSize of framesSizes) {
-          const sizeValues = frameSize.value;
-          const newWidth = sizeValues[0] + (sizeValues[0] * newSizeDiff) / 100;
-          const newHeight = sizeValues[1] + (sizeValues[1] * newSizeDiff) / 100;
-          sizeValues[0] = newWidth;
-          sizeValues[1] = newHeight;
+        const sizes = layer.ks.s.k;
+        if (typeof sizes[0] == "number") {
+          //same sizes for all frames
+          const newWidth = sizes[0] + (sizes[0] * newSizeDiff) / 100;
+          const newHeight = sizes[1] + (sizes[1] * newSizeDiff) / 100;
+          sizes[0] = newWidth;
+          sizes[1] = newHeight;
+        } else {
+          //different sizes for different frames
+          for (const frameSize of sizes) {
+            const sizeValues = frameSize.s;
+            const newWidth = sizeValues[0] + (sizeValues[0] * newSizeDiff) / 100;
+            const newHeight = sizeValues[1] + (sizeValues[1] * newSizeDiff) / 100;
+            sizeValues[0] = newWidth;
+            sizeValues[1] = newHeight;
+          }
         }
       }
     }
   }
 
-  private async changeElementsColor(lottieAnimation: Animation) {
+  private async changeElementsColor(lottieAnimation: AnimationObject) {
     for (const [, newValueId] of this.state.elementColorSet) {
       const colors = await ColorService.getColorSetById(newValueId).then((it) => it.colors);
       colors.forEach((color) => this.updateColor(lottieAnimation, color));
     }
   }
 
-  private updateColor(lottieAnimation: Animation, newColor: Color) {
+  private updateColor(lottieAnimation: AnimationObject, newColor: Color) {
     const shapesToChange = lottieAnimation.layers.flatMap((layer) =>
       layer.shapes.flatMap((shape) => this.recursiveFindShapesByName(newColor.name, shape)),
     );
-    shapesToChange.forEach((shape) => (shape.color.values[0].value = this.convertColor(newColor)));
+    shapesToChange.forEach((shape) => (shape.c.k = this.convertColor(newColor)));
   }
 
-  private recursiveFindShapesByName(name: string, shape: Shape) {
+  private recursiveFindShapesByName(name: string, shape: any) {
     if (shape === undefined) {
       return [];
     }
-    const result: Shape[] = [];
-    if (shape.name === name) {
+    const result: any[] = [];
+    if (shape.nm === name) {
       return [shape];
     }
-    if (shape.shapes === undefined) {
+    if (shape.it === undefined) {
       return [];
     }
-    shape.shapes.forEach((it) => result.push(...this.recursiveFindShapesByName(name, it)));
+    shape.it.forEach((it) => result.push(...this.recursiveFindShapesByName(name, it)));
     return result;
   }
 
-  private transformToLottie(jsonArray: string[]): Record<string, any> {
+  private transformToLottie(jsonArray: string[]): AnimationObject {
     // Extract the 'ind' value from the JSON strings using a regular expression
     const parsedArray = jsonArray.map((str) => {
       const match = str.match(/"ind":(\d+)/);
@@ -160,8 +168,7 @@ class AvatarService {
   private async getAnimationForAllElements(animationType: string | AnimationType) {
     const elements = Array.from(this.state.elements.entries()).map((it) => `${it[0]}_${it[1]}`);
     const layers = await getAnimationLayers(animationType, elements, "MALE");
-    const lottieJson = this.transformToLottie(layers.flat());
-    return new Animation().fromJSON(lottieJson);
+    return this.transformToLottie(layers.flat());
   }
 
   async getAnimation(animationType: string | AnimationType) {
@@ -177,7 +184,7 @@ class AvatarService {
     return result;
   }
 
-  async getAvatar(): Promise<Animation> {
+  async getAvatar(): Promise<AnimationObject> {
     if (lock.isBusy(getAvatarLockKey)) {
       return Promise.reject();
     }
@@ -188,7 +195,7 @@ class AvatarService {
       .then();
   }
 
-  private async getAvatarInternal(): Promise<Animation> {
+  private async getAvatarInternal(): Promise<AnimationObject> {
     if (!this.isInitialized) {
       await this.init();
     }
@@ -200,12 +207,12 @@ class AvatarService {
     return this.avatarAnimation;
   }
 
-  private convertColor(source: Color): ColorRgba {
+  private convertColor(source: Color): number[] {
     const hex = source.hex;
     const r = parseInt(hex.substring(0, 2), 16);
     const g = parseInt(hex.substring(2, 4), 16);
     const b = parseInt(hex.substring(4, 6), 16);
-    return new ColorRgba(r / 255, g / 255, b / 255);
+    return [r / 255, g / 255, b / 255, 1];
   }
 }
 

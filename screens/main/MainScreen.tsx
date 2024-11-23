@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { View, Button, StyleSheet, ScrollView, Text } from "react-native";
 import AvatarService from "../../backend/avatar/AvatarService";
-import LottieView from "lottie-react-native";
+import LottieView, { AnimationObject } from "lottie-react-native";
 import { AnimationType, ElementType } from "../../model/enum";
 import { CharacterPicker } from "../../components/characters/CharacterPicker";
 import { useNavigation } from "@react-navigation/native";
-import { Animation } from "@lottiefiles/lottie-js";
 import { ChangeElementCommand } from "../../model/ChangeStateCommand";
 const MainScreen = () => {
   const navigation = useNavigation();
@@ -13,7 +12,7 @@ const MainScreen = () => {
   const [selectedType, setSelectedType] = useState(ElementType.HAT);
   const [selectedAnimation, setSelectedAnimation] = useState(AnimationType.IDLE);
   const [inputValue, setInputValue] = useState(1);
-  const [lottie, setLottie] = useState<Animation>();
+  const [lottie, setLottie] = useState<AnimationObject>();
   const [size, setSize] = useState(0);
   const [color, setColor] = useState("");
 

@@ -3,9 +3,8 @@ import { Dimensions, StyleSheet, Text, View } from "react-native";
 import AvatarService from "../../backend/avatar/AvatarService";
 import { ElementType } from "../../model/enum";
 import { ConstructorAppearanceMenu } from "./ConstructorAppearanceMenu";
-import LottieView from "lottie-react-native";
+import LottieView, { AnimationObject } from "lottie-react-native";
 import { ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand } from "../../model/ChangeStateCommand";
-import { Animation } from "@lottiefiles/lottie-js";
 import { Color } from "../../model/Config";
 import { SETTINGS_APPEARANCE } from "./types";
 import { ElementTypeAndNumber } from "../../model/ElementTypeAndNumber";
@@ -13,7 +12,7 @@ import ColorService from "../../backend/ColorService";
 
 export const ConstructorAppearanceTab = () => {
   const animationRef = useRef<LottieView>(null);
-  const [lottie, setLottie] = useState<Animation>();
+  const [lottie, setLottie] = useState<AnimationObject>();
   const [selectedValues, setSelectedValues] = useState({});
 
   useEffect(() => {

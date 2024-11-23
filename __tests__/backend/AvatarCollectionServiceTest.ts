@@ -1,5 +1,3 @@
-import { supabase } from "../../backend/supabase";
-import initialize from "../../backend/Initializer";
 import AvatarService from "../../backend/avatar/AvatarService";
 import AvatarCollectionService from "../../backend/avatar/AvatarCollectionService";
 import { State } from "../../backend/avatar/State";

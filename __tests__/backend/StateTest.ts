@@ -1,7 +1,5 @@
 import { allElementsTypes } from "../../model/enum";
 import { State } from "../../backend/avatar/State";
-import { supabase } from "../../backend/supabase";
-import initialize from "../../backend/Initializer";
 import { createRandomState } from "../test-helper-methods";
 
 it("Test equals", async () => {

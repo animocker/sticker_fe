@@ -1,8 +1,6 @@
 import { database, sync } from "../../backend/watermelon-db/watermelon";
 import { getAnimationLayers } from "../../backend/db/AvatarWatermelonDao";
 import { AnimationType } from "../../model/enum";
-import { supabase } from "../../backend/supabase";
-import initialize from "../../backend/Initializer";
 import { ColorWDB, ElementsColorSetsWDB, ElementsWDB } from "../../backend/watermelon-db/read-only/model";
 import { getAllColorSets } from "../../backend/db/ColorWatermelonDao";
 

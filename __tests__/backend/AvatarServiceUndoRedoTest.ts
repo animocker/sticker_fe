@@ -1,13 +1,11 @@
 import AvatarService from "../../backend/avatar/AvatarService";
 import { ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand } from "../../model/ChangeStateCommand";
 import { ElementType } from "../../model/enum";
-import { Animation } from "@lottiefiles/lottie-js";
-import initialize from "../../backend/Initializer";
-import { supabase } from "../../backend/supabase";
 import { isAnimationsEquals } from "../test-helper-methods";
 import ColorService from "../../backend/ColorService";
+import { AnimationObject } from "lottie-react-native";
 
-async function verifyUndoAndRedo(step1Result: Animation, step0Result: Animation) {
+async function verifyUndoAndRedo(step1Result: AnimationObject, step0Result: AnimationObject) {
   expect(isAnimationsEquals(step1Result, step0Result)).toBeFalsy();
 
   AvatarService.undo();

@@ -1,11 +1,9 @@
 import AvatarService from "../../backend/avatar/AvatarService";
 import { allElementsTypes, AnimationType, ElementType } from "../../model/enum";
-import { Animation } from "@lottiefiles/lottie-js";
 import { ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand } from "../../model/ChangeStateCommand";
-import initialize from "../../backend/Initializer";
-import { supabase } from "../../backend/supabase";
 import "dotenv/config";
 import ColorService from "../../backend/ColorService";
+import { AnimationObject } from "lottie-react-native";
 
 it("Avatar backend could create basic avatar", async () => {
   const result = await AvatarService.getAvatar();
@@ -36,42 +34,49 @@ afterEach(async () => {
 });
 
 it("Avatar backend could change elements color", async () => {
+  const elementType = ElementType.HEAD;
   const originalResult = await AvatarService.getAvatar();
   expect(originalResult).not.toBeUndefined();
-  const originalColors = originalResult.colors;
+  const originalColors = getLayer(originalResult, elementType)
+    .shapes.flatMap((shape) => shape.it)
+    .map((it) => it?.c?.k);
 
   const avatarState = await AvatarService.getState();
-  const headNumber = avatarState.elements.get(ElementType.HEAD);
-  const colorSets = await ColorService.getColorsForElement(ElementType.HEAD, headNumber);
+  const headNumber = avatarState.elements.get(elementType);
+  const colorSets = await ColorService.getColorsForElement(elementType, headNumber);
   const newSet = colorSets[2];
-  AvatarService.changeColor(new ChangeColorCommand(ElementType.HEAD, headNumber, newSet.id));
+  AvatarService.changeColor(new ChangeColorCommand(elementType, headNumber, newSet.id));
 
   const result = await AvatarService.getAvatar();
   expect(result).not.toBeUndefined();
-  expect(result.colors).not.toEqual(originalColors);
+  const newColors = getLayer(result, elementType)
+    .shapes.flatMap((shape) => shape.it)
+    .map((it) => it?.c?.k);
+  expect(newColors).not.toEqual(originalColors);
 });
 
 it("Avatar backend could change elements size", async () => {
+  const elementType = ElementType.HEAD;
   const originalResult = await AvatarService.getAvatar();
   expect(originalResult).not.toBeUndefined();
-  const originalHeadLayer = getLayer(originalResult, ElementType.HEAD);
-  const originalScale = JSON.stringify(originalHeadLayer.transform.scale);
+  const originalHeadLayer = getLayer(originalResult, elementType);
+  const originalScale = originalHeadLayer.ks.s.k;
 
-  AvatarService.changeSize(new ChangeSizeCommand(ElementType.HEAD, 10));
+  AvatarService.changeSize(new ChangeSizeCommand(elementType, 10));
 
   const result = await AvatarService.getAvatar();
   expect(result).not.toBeUndefined();
-  const resultHeadLayer = getLayer(result, ElementType.HEAD);
-  const resultScale = JSON.stringify(resultHeadLayer.transform.scale);
+  const resultHeadLayer = getLayer(result, elementType);
+  const resultScale = resultHeadLayer.ks.s.k;
   expect(resultScale).not.toEqual(originalScale);
 });
 
-function extractLayerNames(result: Animation) {
+function extractLayerNames(result: AnimationObject) {
   return result.layers
-    .map((layer) => layer.name.split(";")[0]) //remove comment
+    .map((layer) => layer.nm.split(";")[0]) //remove comment
     .map((name) => name.replace("_m", "").replace("_f", "")); //remove gender
 }
 
-function getLayer(animation: Animation, elementType: ElementType) {
-  return animation.layers.find((layer) => layer.name.includes(elementType.toLowerCase()));
+function getLayer(animation: AnimationObject, elementType: ElementType) {
+  return animation.layers.find((layer) => layer.nm.includes(elementType.toLowerCase()));
 }
