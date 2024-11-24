@@ -5,7 +5,7 @@ import { uuid } from "@supabase/supabase-js/dist/main/lib/helpers";
 
 import AsyncLock from "async-lock";
 import { ElementState, State } from "./State";
-import ColorService, { Color } from "../ColorService";
+import ElementsService, { Color } from "../ElementsService";
 import { AnimationObject } from "lottie-react-native";
 
 const lock = new AsyncLock();
@@ -66,7 +66,7 @@ class AvatarService {
 
   private async updateCurrentColors(elementType: ElementType) {
     const elementNumber = this.state.elements.get(elementType);
-    const colorSets = await ColorService.getColorsForElement(elementType, elementNumber);
+    const colorSets = await ElementsService.getColorsForElement(elementType, elementNumber);
     if (colorSets.length > 0) {
       this.state.elementColorSet.set(elementType, colorSets[0].id);
     }
@@ -115,7 +115,7 @@ class AvatarService {
 
   private async changeElementsColor(lottieAnimation: AnimationObject) {
     for (const [, newValueId] of this.state.elementColorSet) {
-      const colors = await ColorService.getColorSetById(newValueId).then((it) => it.colors);
+      const colors = await ElementsService.getColorSetById(newValueId).then((it) => it.colors);
       colors.forEach((color) => this.updateColor(lottieAnimation, color));
     }
   }

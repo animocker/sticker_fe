@@ -5,11 +5,10 @@ import { ElementType } from "../../model/enum";
 import { ConstructorAppearanceMenu } from "./ConstructorAppearanceMenu";
 import LottieView, { AnimationObject } from "lottie-react-native";
 import { ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand } from "../../model/ChangeStateCommand";
-import { Color } from "../../model/Config";
 import { SETTINGS_APPEARANCE } from "./types";
 import { ElementTypeAndNumber } from "../../model/ElementTypeAndNumber";
-import ColorService from "../../backend/ColorService";
-import { Lottie } from "../Lottie";
+import { LottieWrapper } from "../LottieWrapper";
+import ElementsService, { Color, ColorSet } from "../../backend/ElementsService";
 
 export const ConstructorAppearanceTab = () => {
   const animationRef = useRef<LottieView>(null);
@@ -22,7 +21,7 @@ export const ConstructorAppearanceTab = () => {
       for (const key of SETTINGS_APPEARANCE) {
         const selectedIndex = state.elements.get(key);
         const colorSetId = state.elementColorSet.get(key);
-        const colorSet = ColorService.getColorSetById(colorSetId);
+        const colorSet = ElementsService.getColorSetById(colorSetId);
         newSelectedValues[key] = {
           selectedIndex: selectedIndex - 1,
           size: state.elementSize.get(key),
@@ -60,7 +59,7 @@ export const ConstructorAppearanceTab = () => {
     //reloadAnimation();
   };
 
-  const changeColor = (elementType: ElementType, color: Color) => {
+  const changeColor = (elementType: ElementType, color: ColorSet) => {
     setSelectedValues({
       ...selectedValues,
       [elementType]: { ...selectedValues[elementType], colorSet: color.id },
@@ -72,7 +71,7 @@ export const ConstructorAppearanceTab = () => {
   return (
     <View style={styles.container}>
       <View style={styles.lottieContainer}>
-        <Lottie />
+        <LottieWrapper />
       </View>
       <View style={styles.menuContainer}>
         {/*<SwipablePanel>*/}

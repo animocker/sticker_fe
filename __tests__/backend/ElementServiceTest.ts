@@ -1,9 +1,9 @@
 import { allElementsTypes, ElementType } from "../../model/enum";
-import ColorService from "../../backend/ColorService";
+import ElementsService from "../../backend/ElementsService";
 
 it("Check colors for all element types", async () => {
   for (const elementType of allElementsTypes) {
-    const colors = await ColorService.getColorsForElement(elementType, 1);
+    const colors = await ElementsService.getColorsForElement(elementType, 1);
     if (expectedElementTypesWithColors.includes(elementType)) {
       expect(colors.length).toBeGreaterThan(0);
       colors.forEach((colorSet) => {
@@ -12,6 +12,13 @@ it("Check colors for all element types", async () => {
     } else {
       expect(colors.length).toBe(0);
     }
+  }
+});
+
+it("Check elements for all element types", async () => {
+  for (const elementType of allElementsTypes) {
+    const elements = await ElementsService.getElements(elementType);
+    expect(elements.length).toBeGreaterThan(0);
   }
 });
 

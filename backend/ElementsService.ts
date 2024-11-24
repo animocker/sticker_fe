@@ -1,6 +1,13 @@
+import { ElementType } from "../model/enum";
 import { getColorSetById, getColorSetsByElementId } from "./db/ColorWatermelonDao";
 import { ColorSetWDB, ColorWDB } from "./watermelon-db/read-only/model";
-import { ElementType } from "../model/enum";
+import { Image } from "react-native";
+import { getElements } from "./db/ElementsDao";
+
+export type Element = {
+  number: number;
+  iconSource: any;
+};
 
 export type ColorSet = {
   id: string;
@@ -12,8 +19,20 @@ export type Color = {
   hex: string;
 };
 
-class ColorService {
-  //TODO check performance
+class ElementsService {
+  public async getElements(elementType: ElementType): Promise<Element[]> {
+    const elements = await getElements(elementType);
+    return elements.map((element) => {
+      try {
+        const icon = require.resolve(`../components/constructor/icons/${elementType.toLowerCase()}/${element.number}.png`);
+        return { iconSource: icon, number: element.number };
+      } catch (error) {
+        //TODO fix it
+        return { iconSource: require.resolve("../components/constructor/icons/head/1.png"), number: element.number };
+      }
+    });
+  }
+
   public async getColorsForElement(elementType: string | ElementType, elementNumber: number): Promise<ColorSet[]> {
     return getColorSetsByElementId(`${elementType}_${elementNumber}`)
       .then((colorSets) => colorSets.map((colorSet) => this.mapColorSet(colorSet)))
@@ -35,4 +54,4 @@ class ColorService {
   }
 }
 
-export default new ColorService();
+export default new ElementsService();

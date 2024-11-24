@@ -20,9 +20,9 @@ const HAIR_10 = require("../icons/hair/hair_10.png");
 const HAIR_11 = require("../icons/hair/hair_11.png");
 
 const HAIR_SETTINGS = [
-  { icon: <Image source={HAIR_1} />, name: "hair_1" },
-  { icon: <Image source={HAIR_2} />, name: "hair_2" },
-  { icon: <Image source={HAIR_3} />, name: "hair_3" },
+  { icon: <Image source={HAIR_1} />, name: "1" },
+  { icon: <Image source={HAIR_2} />, name: "2" },
+  { icon: <Image source={HAIR_3} />, name: "3" },
   { icon: <Image source={HAIR_4_0} />, name: "hair_4_0" },
   { icon: <Image source={HAIR_4_1} />, name: "hair_4_1" },
   { icon: <Image source={HAIR_4_2} />, name: "hair_4_2" },

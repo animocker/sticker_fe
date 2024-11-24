@@ -7,12 +7,12 @@ import { elementsMenuStyles } from "../styles";
 import { CommonConstructorParts } from "../common-parts/CommonConstructorParts";
 import { filterSettings } from "../helpers";
 
-const HEAD_1 = require("../icons/head/head_1.png");
-const HEAD_2 = require("../icons/head/head_2.png");
-const HEAD_3 = require("../icons/head/head_3.png");
-const HEAD_4 = require("../icons/head/head_4.png");
-const HEAD_5 = require("../icons/head/head_5.png");
-const HEAD_6 = require("../icons/head/head_6.png");
+const HEAD_1 = require("../icons/head/1.png");
+const HEAD_2 = require("../icons/head/2.png");
+const HEAD_3 = require("../icons/head/3.png");
+const HEAD_4 = require("../icons/head/4.png");
+const HEAD_5 = require("../icons/head/5.png");
+const HEAD_6 = require("../icons/head/6.png");
 
 const HEAD_SETTINGS = [
   { icon: <Image source={HEAD_1} />, name: "head_1" },

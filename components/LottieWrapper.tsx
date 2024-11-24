@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Dimensions, StyleSheet, Text, View } from "react-native";
 import AvatarService from "../backend/avatar/AvatarService";
 
-export function Lottie() {
+export function LottieWrapper() {
   const animationRef = useRef<LottieView>(null);
   const [lottie, setLottie] = useState<AnimationObject>();
 

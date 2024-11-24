@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useState } from "react";
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SETTINGS_APPEARANCE } from "./types";
 import { SvgXml } from "react-native-svg";
 import { ICONS_APPEARANCE } from "./icons/icons_element_menu";
-import { ConstructorHead } from "./elements-parts/ConstructorHead";
 import { ConstructorHair } from "./elements-parts/ConstructorHair";
 import { ConstructorEyebrow } from "./elements-parts/ConstructorEyebrow";
 import { ConstructorEye } from "./elements-parts/ConstructorEye";
@@ -11,43 +10,19 @@ import { ConstructorNose } from "./elements-parts/ConstructorNose";
 import { ConstructorLips } from "./elements-parts/ConstructorLips";
 import { styleAssets } from "../../styleAssets";
 import { ElementType } from "../../model/enum";
+import { ConstructorElements } from "./common-parts/ConstructorElements";
 
 export const ConstructorAppearanceMenu = ({ selectedValues, changeElement, changeSize, changeColor }) => {
   const buttonTitles = Object.values(SETTINGS_APPEARANCE);
   const [selectedTab, setSelectedTab] = useState(Object.values(SETTINGS_APPEARANCE)[0]);
-  //TODO colors could be different for each element, use ColorService.getColorsForElement
-  //const [settings, setSettings] = useState({} as Record<ElementType, ElementTypeConfig>);
-
-  /*  useEffect(() => {
-    ElementConfigService.getElementTypeConfigs().then((config) => {
-      const result = config.reduce(
-        (acc, item) => {
-          acc[item.elementType] = item;
-
-          return acc;
-        },
-        {} as Record<ElementType, ElementTypeConfig>,
-      );
-      setSettings(result);
-    });
-  }, []);*/
 
   const tabs = {
-    [ElementType.HEAD]: (props) => (
-      <ConstructorHead
-        {...props}
-        changeElement={changeElement}
-        changeSize={changeSize}
-        changeColor={changeColor}
-        //settings={settings[ElementType.HEAD]}
-        selectedValue={selectedValues[ElementType.HEAD]}
-      />
-    ),
-    [ElementType.HAIR]: (props) => <ConstructorHair {...props} changeElement={changeElement} />,
-    [ElementType.EYEBROWS]: (props) => <ConstructorEyebrow {...props} changeElement={changeElement} />,
-    [ElementType.EYES]: (props) => <ConstructorEye {...props} changeElement={changeElement} />,
-    [ElementType.NOSE]: (props) => <ConstructorNose {...props} changeElement={changeElement} />,
-    [ElementType.MOUTH]: (props) => <ConstructorLips {...props} changeElement={changeElement} />,
+    [ElementType.HEAD]: (props) => <ConstructorElements elementType={ElementType.HEAD} />,
+    [ElementType.HAIR]: (props) => <ConstructorElements elementType={ElementType.HAIR} />,
+    [ElementType.EYEBROWS]: (props) => <ConstructorElements elementType={ElementType.EYEBROWS} />,
+    [ElementType.EYES]: (props) => <ConstructorElements elementType={ElementType.EYES} />,
+    [ElementType.NOSE]: (props) => <ConstructorElements elementType={ElementType.NOSE} />,
+    [ElementType.MOUTH]: (props) => <ConstructorElements elementType={ElementType.MOUTH} />,
   };
 
   return (
