@@ -18,20 +18,22 @@ export const ConstructorElements = (props: Props) => {
   const [colors, setColors] = useState<ColorSet[]>([]);
   const [elements, setElements] = useState<Element[]>([]);
 
-  useEffect(() => {
+  const updateColors = () => {
     ElementsService.getColorsForElement(props.elementType, elementNumber).then((colors: ColorSet[]) => {
       setColors(colors);
     });
-  }, [elementNumber, props.elementType]);
+  };
 
-  useEffect(() => {
-    ElementsService.getElements(props.elementType).then((elements: Element[]) => setElements(elements));
-  }, [props.elementType]);
+  ElementsService.getElements(props.elementType).then((elements: Element[]) => {
+    setElements(elements);
+  });
+  updateColors();
 
   const changeElement = (number: number) => {
     setElementNumber(number);
     const request = new ChangeElementCommand(props.elementType, number);
     AvatarService.executeCommand(request);
+    updateColors();
   };
 
   const changeSize = (sizePercent: number) => {
@@ -66,13 +68,13 @@ export const ConstructorElements = (props: Props) => {
         </View>
       </View>
       <ScrollView contentContainerStyle={elementsMenuStyles.container}>
-        {elements.map((element) => (
+        {elements.map((Element) => (
           <TouchableOpacity
-            key={element.number}
-            style={[elementsMenuStyles.button, elementNumber === element.number && elementsMenuStyles.buttonSelected]}
-            onPress={() => changeElement(element.number)}
+            key={Element.number}
+            style={[elementsMenuStyles.button, elementNumber === Element.number && elementsMenuStyles.buttonSelected]}
+            onPress={() => changeElement(Element.number)}
           >
-            <Image source={element.iconSource} />
+            <Element.icon></Element.icon>
           </TouchableOpacity>
         ))}
       </ScrollView>

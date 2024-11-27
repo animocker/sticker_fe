@@ -9,7 +9,8 @@
     "web": "expo start --web",
     "types": "supabase gen types typescript --project-id putvmjrqftjxkfnqdvjs > backend/db/database.types.ts",
     "test": "jest",
-    "lint": "eslint --fix"
+    "lint": "eslint --fix",
+    "gen-icons": "npx @svgr/cli --native --out-dir ./codegen/icons/components --index-template ./codegen/icons/index-template.js -- ./codegen/icons/svg"
   },
   "jest": {
     "preset": "react-native",
@@ -19,7 +20,9 @@
     "globals": {
       "__DEV__": true
     },
-    "setupFilesAfterEnv": ["./__tests__/config/backendSetup.js"]
+    "setupFilesAfterEnv": [
+      "./__tests__/config/backendSetup.js"
+    ]
   },
   "dependencies": {
     "@expo/config": "^8.5.4",
@@ -67,12 +70,13 @@
   },
   "//": "better-sqlite3 is used for watermelondb testing in jest, do not remove",
   "devDependencies": {
-    "better-sqlite3": "^11.5.0",
+    "@svgr/cli": "^8.1.0",
     "@types/async-lock": "^1.4.2",
     "@types/jest": "^29.5.12",
     "@typescript-eslint/eslint-plugin": "^5.6.0",
     "@typescript-eslint/parser": "^5.6.0",
     "babel-plugin-transform-remove-console": "^6.9.4",
+    "better-sqlite3": "^11.5.0",
     "eslint": "^8.57.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^9.1.0",

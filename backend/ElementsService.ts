@@ -1,12 +1,23 @@
 import { ElementType } from "../model/enum";
 import { getColorSetById, getColorSetsByElementId } from "./db/ColorWatermelonDao";
 import { ColorSetWDB, ColorWDB } from "./watermelon-db/read-only/model";
-import { Image } from "react-native";
 import { getElements } from "./db/ElementsDao";
+import head from "../codegen/icons/components/head";
+import eyes from "../codegen/icons/components/eyes";
+import mouth from "../codegen/icons/components/mouth";
+import nose from "../codegen/icons/components/nose";
+import hair from "../codegen/icons/components/hair";
+import beard from "../codegen/icons/components/beard";
+import brows from "../codegen/icons/components/brows";
+import glasses from "../codegen/icons/components/glasses";
+import cloth from "../codegen/icons/components/cloth";
+import hat from "../codegen/icons/components/hat";
+import Unknown from "../codegen/icons/components/Unknown";
+import { FC } from "react";
 
 export type Element = {
   number: number;
-  iconSource: any;
+  icon: FC;
 };
 
 export type ColorSet = {
@@ -19,17 +30,34 @@ export type Color = {
   hex: string;
 };
 
+const ElementTypesToIcons = new Map<ElementType, unknown>();
+{
+  ElementTypesToIcons.set(ElementType.BEARD, beard);
+  ElementTypesToIcons.set(ElementType.CLOTHES, cloth);
+  ElementTypesToIcons.set(ElementType.EYEBROWS, brows);
+  ElementTypesToIcons.set(ElementType.EYES, eyes);
+  ElementTypesToIcons.set(ElementType.GLASSES, glasses);
+  ElementTypesToIcons.set(ElementType.HAIR, hair);
+  ElementTypesToIcons.set(ElementType.HAT, hat);
+  ElementTypesToIcons.set(ElementType.HEAD, head);
+  ElementTypesToIcons.set(ElementType.MOUTH, mouth);
+  ElementTypesToIcons.set(ElementType.NOSE, nose);
+}
+
 class ElementsService {
+  private elements = new Map<ElementType, Element[]>();
+
   public async getElements(elementType: ElementType): Promise<Element[]> {
     const elements = await getElements(elementType);
     return elements.map((element) => {
-      try {
-        const icon = require.resolve(`../components/constructor/icons/${elementType.toLowerCase()}/${element.number}.png`);
-        return { iconSource: icon, number: element.number };
-      } catch (error) {
-        //TODO fix it
-        return { iconSource: require.resolve("../components/constructor/icons/head/1.png"), number: element.number };
+      if (!ElementTypesToIcons.has(elementType)) {
+        return { icon: Unknown, number: element.number };
       }
+      const icon = ElementTypesToIcons.get(elementType)[element.number];
+      if (!icon) {
+        return { icon: Unknown, number: element.number };
+      }
+      return { icon: icon, number: element.number };
     });
   }
 
