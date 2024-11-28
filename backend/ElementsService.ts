@@ -1,4 +1,4 @@
-import { ElementType } from "../model/enum";
+import { allElementsTypes, ElementType } from "../model/enum";
 import { getColorSetById, getColorSetsByElementId } from "./db/ColorWatermelonDao";
 import { ColorSetWDB, ColorWDB } from "./watermelon-db/read-only/model";
 import { getElements } from "./db/ElementsDao";
@@ -46,8 +46,34 @@ const ElementTypesToIcons = new Map<ElementType, unknown>();
 
 class ElementsService {
   private elements = new Map<ElementType, Element[]>();
+  private colors = new Map<ElementType, Map<number, ColorSet[]>>();
 
-  public async getElements(elementType: ElementType): Promise<Element[]> {
+  async init() {
+    for (const elementType of allElementsTypes) {
+      const elements = await this.getElementsInternal(elementType);
+      this.elements.set(elementType, elements);
+      for (const element of elements) {
+        const colors = await this.getColorsForElementInternal(elementType, element.number);
+        if (!this.colors.has(elementType)) {
+          this.colors.set(elementType, new Map<number, ColorSet[]>());
+        }
+        this.colors.get(elementType).set(element.number, colors);
+      }
+    }
+  }
+
+  getElements(elementType: ElementType): Element[] {
+    return this.elements.get(elementType);
+  }
+
+  getColorsForElement(elementType: ElementType, elementNumber: number): ColorSet[] {
+    if (!this.colors.has(elementType)) {
+      return [];
+    }
+    return this.colors.get(elementType).get(elementNumber);
+  }
+
+  private async getElementsInternal(elementType: ElementType): Promise<Element[]> {
     const elements = await getElements(elementType);
     return elements.map((element) => {
       if (!ElementTypesToIcons.has(elementType)) {
@@ -61,13 +87,13 @@ class ElementsService {
     });
   }
 
-  public async getColorsForElement(elementType: string | ElementType, elementNumber: number): Promise<ColorSet[]> {
+  private async getColorsForElementInternal(elementType: string | ElementType, elementNumber: number): Promise<ColorSet[]> {
     return getColorSetsByElementId(`${elementType}_${elementNumber}`)
       .then((colorSets) => colorSets.map((colorSet) => this.mapColorSet(colorSet)))
       .then((colorPromise) => Promise.all(colorPromise));
   }
 
-  public async getColorSetById(id: string): Promise<ColorSet> {
+  private async getColorSetById(id: string): Promise<ColorSet> {
     return getColorSetById(id).then((colorSet) => this.mapColorSet(colorSet));
   }
 

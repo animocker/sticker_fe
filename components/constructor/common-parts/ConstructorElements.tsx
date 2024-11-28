@@ -15,25 +15,14 @@ export const ConstructorElements = (props: Props) => {
   const [elementNumber, setElementNumber] = useState(1);
   const [size, setSize] = useState(0);
   const [currentColor, setCurrentColor] = useState<ColorSet>();
-  const [colors, setColors] = useState<ColorSet[]>([]);
-  const [elements, setElements] = useState<Element[]>([]);
-
-  const updateColors = () => {
-    ElementsService.getColorsForElement(props.elementType, elementNumber).then((colors: ColorSet[]) => {
-      setColors(colors);
-    });
-  };
-
-  ElementsService.getElements(props.elementType).then((elements: Element[]) => {
-    setElements(elements);
-  });
-  updateColors();
+  const [colors, setColors] = useState<ColorSet[]>(ElementsService.getColorsForElement(props.elementType, elementNumber));
+  const elements = ElementsService.getElements(props.elementType);
 
   const changeElement = (number: number) => {
     setElementNumber(number);
     const request = new ChangeElementCommand(props.elementType, number);
     AvatarService.executeCommand(request);
-    updateColors();
+    setColors(ElementsService.getColorsForElement(props.elementType, number));
   };
 
   const changeSize = (sizePercent: number) => {
