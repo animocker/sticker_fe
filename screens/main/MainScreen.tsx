@@ -25,7 +25,7 @@ const MainScreen = () => {
     <ScrollView>
       <CharacterPicker />
 
-      <Button title="Edit character" onPress={() => navigation.navigate("ConstructorScreen")} />
+      <Button title="Edit character" onPress={() => navigation.navigate("ConstructorAvatar")} />
 
       {/*<View style={styles.lottieContainer}>*/}
       {/*  <LottieView source={lottie} autoPlay loop  style={styles.lottie} />*/}

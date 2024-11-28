@@ -2,18 +2,20 @@ import LottieView, { AnimationObject } from "lottie-react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { Dimensions, StyleSheet, Text, View } from "react-native";
 import AvatarService from "../backend/avatar/AvatarService";
+import { useMMKVBoolean } from "react-native-mmkv";
 
 export function LottieWrapper() {
   const animationRef = useRef<LottieView>(null);
   const [lottie, setLottie] = useState<AnimationObject>();
+  const [isNewAvatarAvailable] = useMMKVBoolean("isNewAvatarAvailable");
 
   useEffect(() => {
-    if (AvatarService.isNewAvailable) {
+    if (isNewAvatarAvailable) {
       AvatarService.getAvatar().then((animation) => {
         setLottie(animation);
       });
     }
-  });
+  }, [isNewAvatarAvailable]);
 
   return (
     <View style={styles.lottieContainer}>

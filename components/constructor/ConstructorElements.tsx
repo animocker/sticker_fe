@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { View, TouchableOpacity, ScrollView, Image, Text } from "react-native";
-import { RangeSlider } from "../../ui/RangeSlider";
-import { elementsMenuStyles } from "../styles";
-import { ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand } from "../../../model/ChangeStateCommand";
-import AvatarService from "../../../backend/avatar/AvatarService";
-import ElementsService, { ColorSet, Element } from "../../../backend/ElementsService";
-import { ElementType } from "../../../model/enum";
+import React, { useState } from "react";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { elementsMenuStyles } from "./styles";
+import { ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand } from "../../model/ChangeStateCommand";
+import AvatarService from "../../backend/avatar/AvatarService";
+import ElementsService, { ColorSet, Element } from "../../backend/ElementsService";
+import { ElementType } from "../../model/enum";
 
 interface Props {
   elementType: ElementType;
@@ -70,7 +69,3 @@ export const ConstructorElements = (props: Props) => {
     </View>
   );
 };
-
-{
-  /*<ColorListPicker colors={colorsList} changeColor={changeColorHandle} />*/
-}

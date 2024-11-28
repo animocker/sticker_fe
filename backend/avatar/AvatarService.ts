@@ -1,5 +1,5 @@
 import { allElementsTypes, AnimationType, ElementType } from "../../model/enum";
-import { ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand, ChangeStateCommand } from "../../model/ChangeStateCommand";
+import { ChangeStateCommand } from "../../model/ChangeStateCommand";
 import { getAnimationLayers } from "../db/AvatarWatermelonDao";
 import { uuid } from "@supabase/supabase-js/dist/main/lib/helpers";
 
@@ -7,6 +7,7 @@ import AsyncLock from "async-lock";
 import { ElementState, State } from "./State";
 import ElementsService, { Color } from "../ElementsService";
 import { AnimationObject } from "lottie-react-native";
+import { storage } from "../mmkv";
 
 const lock = new AsyncLock();
 const getAvatarLockKey = "getAvatarLockKey";
@@ -22,7 +23,6 @@ class AvatarService {
   private lastState: State;
   private avatarAnimation: AnimationObject;
   private isInitialized = false;
-  public isNewAvailable = true;
 
   async init() {
     for (const elementType of allElementsTypes) {
@@ -31,6 +31,7 @@ class AvatarService {
       await this.updateCurrentColors(elementType);
     }
     this.isInitialized = true;
+    storage.set("isNewAvatarAvailable", true);
   }
 
   loadState(state: State) {
@@ -66,8 +67,8 @@ class AvatarService {
 
   private async updateCurrentColors(elementType: ElementType) {
     const elementNumber = this.state.elements.get(elementType);
-    const colorSets = await ElementsService.getColorsForElement(elementType, elementNumber);
-    if (colorSets.length > 0) {
+    const colorSets = ElementsService.getColorsForElement(elementType, elementNumber);
+    if (colorSets && colorSets.length > 0) {
       this.state.elementColorSet.set(elementType, colorSets[0].id);
     }
   }
@@ -79,7 +80,7 @@ class AvatarService {
   executeCommand(command: ChangeStateCommand) {
     command.execute(this.state);
     undoStack.push(command);
-    this.isNewAvailable = true;
+    storage.set("isNewAvatarAvailable", true);
   }
 
   //$[layer.ind].ks.s.k=[width,height, ???]
@@ -181,7 +182,7 @@ class AvatarService {
 
   async getAvatar(): Promise<AnimationObject> {
     if (lock.isBusy(getAvatarLockKey)) {
-      return Promise.reject();
+      return this.avatarAnimation;
     }
     return lock
       .acquire(getAvatarLockKey, async () => {
@@ -199,7 +200,7 @@ class AvatarService {
     }
     this.avatarAnimation = await this.getAnimation(AnimationType.IDLE);
     this.lastState = this.state.copy();
-    this.isNewAvailable = false;
+    storage.set("isNewAvatarAvailable", false);
     return this.avatarAnimation;
   }
 

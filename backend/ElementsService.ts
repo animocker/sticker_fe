@@ -93,7 +93,7 @@ class ElementsService {
       .then((colorPromise) => Promise.all(colorPromise));
   }
 
-  private async getColorSetById(id: string): Promise<ColorSet> {
+  async getColorSetById(id: string): Promise<ColorSet> {
     return getColorSetById(id).then((colorSet) => this.mapColorSet(colorSet));
   }
 
