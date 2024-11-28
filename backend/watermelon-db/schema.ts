@@ -3,6 +3,6 @@ import { colorSetsColorsSchema, colorSetsSchema, colorsSchema, elementsColorSets
 import { avatarStateSchema } from "./read-write/schema";
 
 export default appSchema({
-  version: 12,
+  version: 13,
   tables: [layersSchema, colorsSchema, colorSetsSchema, colorSetsColorsSchema, avatarStateSchema, elementsSchema, elementsColorSetsSchema],
 });
