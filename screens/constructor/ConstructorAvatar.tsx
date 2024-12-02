@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Dimensions, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { constructorElementTypes, ElementType } from "../../model/enum";
 import { styleAssets } from "../../styleAssets";
 import { SvgXml } from "react-native-svg";
@@ -11,6 +11,7 @@ const FAR_TABS = new Set([ElementType.CLOTHES]);
 
 export const ConstructorAvatar = () => {
   const [selectedTab, setSelectedTab] = useState(constructorElementTypes[0]);
+  const background = require("../../assets/background.png");
 
   const tabs = new Map<ElementType, React.FC>();
   {
@@ -21,9 +22,11 @@ export const ConstructorAvatar = () => {
 
   return (
     <View style={styles.container}>
-      <View style={FAR_TABS.has(selectedTab) ? styles.lottieFar : styles.lottieClose}>
-        <LottieWrapper />
-      </View>
+      <ImageBackground source={background}>
+        <View style={FAR_TABS.has(selectedTab) ? styles.lottieFar : styles.lottieClose}>
+          <LottieWrapper />
+        </View>
+      </ImageBackground>
       <View style={styles.menuContainer}>
         <View style={styles.elementsContainer}>
           <View>
