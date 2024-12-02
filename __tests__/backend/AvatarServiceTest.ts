@@ -2,8 +2,9 @@ import AvatarService, { useAvatar } from "../../backend/avatar/AvatarService";
 import { allElementsTypes, AnimationType, ElementType } from "../../model/enum";
 import { ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand } from "../../model/ChangeStateCommand";
 import "dotenv/config";
-import ColorService from "../../backend/ColorService";
 import { AnimationObject } from "lottie-react-native";
+import avatarService from "../../backend/avatar/AvatarService";
+import ElementsService from "../../backend/ElementsService";
 
 it("Avatar backend could create basic avatar", async () => {
   const result = await AvatarService.getAvatar();
@@ -34,9 +35,8 @@ afterEach(async () => {
 });
 
 it("Avatar backend could change elements color", async () => {
-  const [lottie] = useAvatar();
   const elementType = ElementType.HEAD;
-  const originalResult = lottie;
+  const originalResult = await avatarService.getAvatar();
   expect(originalResult).not.toBeUndefined();
   const originalColors = getLayer(originalResult, elementType)
     .shapes.flatMap((shape) => shape.it)
@@ -44,11 +44,11 @@ it("Avatar backend could change elements color", async () => {
 
   const avatarState = await AvatarService.getState();
   const headNumber = avatarState.elements.get(elementType);
-  const colorSets = await ColorService.getColorsForElement(elementType, headNumber);
+  const colorSets = await ElementsService.getColorsForElement(elementType, headNumber);
   const newSet = colorSets[2];
   AvatarService.executeCommand(new ChangeColorCommand(elementType, headNumber, newSet.id));
 
-  const result = lottie;
+  const result = await avatarService.getAvatar();
   expect(result).not.toBeUndefined();
   const newColors = getLayer(result, elementType)
     .shapes.flatMap((shape) => shape.it)
