@@ -5,10 +5,13 @@ import { ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand } from "../
 import AvatarService from "../../backend/avatar/AvatarService";
 import ElementsService, { ColorSet, Element } from "../../backend/ElementsService";
 import { ElementType } from "../../model/enum";
+import common from "../../codegen/icons/components/common";
 
 interface Props {
   elementType: ElementType;
 }
+
+const REMOVABLE_ELEMENTS = [ElementType.GLASSES, ElementType.HAT, ElementType.BEARD];
 
 export const ConstructorElements = (props: Props) => {
   const [elementNumber, setElementNumber] = useState(1);
@@ -16,6 +19,9 @@ export const ConstructorElements = (props: Props) => {
   const [currentColor, setCurrentColor] = useState<ColorSet>();
   const [colors, setColors] = useState<ColorSet[]>(ElementsService.getColorsForElement(props.elementType, elementNumber));
   const elements = ElementsService.getElements(props.elementType);
+  {
+    elements.push({ number: 0, icon: common.Disable });
+  }
 
   const changeElement = (number: number) => {
     setElementNumber(number);

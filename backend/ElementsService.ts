@@ -12,8 +12,8 @@ import brows from "../codegen/icons/components/brows";
 import glasses from "../codegen/icons/components/glasses";
 import cloth from "../codegen/icons/components/cloth";
 import hat from "../codegen/icons/components/hat";
-import Unknown from "../codegen/icons/components/Unknown";
 import { FC } from "react";
+import common from "../codegen/icons/components/common";
 
 export type Element = {
   number: number;
@@ -77,11 +77,11 @@ class ElementsService {
     const elements = await getElements(elementType);
     return elements.map((element) => {
       if (!ElementTypesToIcons.has(elementType)) {
-        return { icon: Unknown, number: element.number };
+        return { icon: common.Unknown, number: element.number };
       }
       const icon = ElementTypesToIcons.get(elementType)[element.number];
       if (!icon) {
-        return { icon: Unknown, number: element.number };
+        return { icon: common.Unknown, number: element.number };
       }
       return { icon: icon, number: element.number };
     });

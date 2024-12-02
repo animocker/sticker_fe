@@ -162,8 +162,10 @@ class AvatarService {
   }
 
   private async getAnimationForAllElements(animationType: string | AnimationType) {
-    const elements = Array.from(this.state.elements.entries()).map((it) => `${it[0]}_${it[1]}`);
-    const layers = await getAnimationLayers(animationType, elements, "MALE");
+    const elementsKeys = Array.from(this.state.elements.entries())
+      .filter((it) => it[1] !== 0)
+      .map((it) => `${it[0]}_${it[1]}`);
+    const layers = await getAnimationLayers(animationType, elementsKeys, "MALE");
     return this.transformToLottie(layers.flat());
   }
 
