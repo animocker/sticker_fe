@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { allElementsTypes, ElementType } from "../../model/enum";
+import { constructorElementTypes, ElementType } from "../../model/enum";
 import { LottieWrapper } from "../LottieWrapper";
 import { styleAssets } from "../../styleAssets";
 import { SvgXml } from "react-native-svg";
@@ -10,12 +10,12 @@ import { ConstructorElements } from "./ConstructorElements";
 const FAR_TABS = new Set([ElementType.CLOTHES, ElementType.HAT, ElementType.HAIR]);
 
 export const ConstructorAvatar = () => {
-  const buttonTitles = Object.values(allElementsTypes);
-  const [selectedTab, setSelectedTab] = useState(allElementsTypes[0]);
+  const buttonTitles = Object.values(constructorElementTypes);
+  const [selectedTab, setSelectedTab] = useState(constructorElementTypes[0]);
 
   const tabs2 = new Map<ElementType, React.FC>();
   {
-    allElementsTypes.forEach((type) => {
+    constructorElementTypes.forEach((type) => {
       tabs2.set(type, () => <ConstructorElements elementType={type} />);
     });
   }

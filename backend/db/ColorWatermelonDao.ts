@@ -7,10 +7,7 @@ export async function getAllColorSets(): Promise<ColorSetWDB[]> {
 }
 
 export async function getColorSetById(id: string): Promise<ColorSetWDB> {
-  return database
-    .get<ColorSetWDB>(ColorSetWDB.table)
-    .find(id)
-    .catch((reason) => console.log(`Can't get color by id = ${id}`, reason));
+  return database.get<ColorSetWDB>(ColorSetWDB.table).find(id);
 }
 
 export async function getColorSetsByElementId(elementId: string): Promise<ColorSetWDB[]> {

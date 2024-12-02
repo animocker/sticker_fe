@@ -1,5 +1,5 @@
-import AvatarService, { useAvatar } from "../../backend/avatar/AvatarService";
-import { allElementsTypes, AnimationType, ElementType } from "../../model/enum";
+import AvatarService from "../../backend/avatar/AvatarService";
+import { allElementsTypes, ElementType } from "../../model/enum";
 import { ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand } from "../../model/ChangeStateCommand";
 import "dotenv/config";
 import { AnimationObject } from "lottie-react-native";
