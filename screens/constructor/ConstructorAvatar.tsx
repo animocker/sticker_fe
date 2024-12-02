@@ -1,36 +1,34 @@
 import React, { useState } from "react";
 import { Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { allElementsTypes, ElementType } from "../../model/enum";
-
+import { constructorElementTypes, ElementType } from "../../model/enum";
 import { styleAssets } from "../../styleAssets";
 import { SvgXml } from "react-native-svg";
-import { LottieWrapper } from "../../components/LottieWrapper";
 import { ConstructorElements } from "../../components/constructor/ConstructorElements";
+import { LottieWrapper } from "../../components/LottieWrapper";
 import { ICONS_APPEARANCE } from "../../components/constructor/icons/icons_element_menu";
 
-const FAR_TABS = new Set([ElementType.CLOTHES, ElementType.HAT, ElementType.HAIR]);
+const FAR_TABS = new Set([ElementType.CLOTHES]);
 
 export const ConstructorAvatar = () => {
-  const buttonTitles = allElementsTypes;
-  const [selectedTab, setSelectedTab] = useState(allElementsTypes[0]);
+  const [selectedTab, setSelectedTab] = useState(constructorElementTypes[0]);
 
-  const tabs2 = new Map<ElementType, React.FC>();
+  const tabs = new Map<ElementType, React.FC>();
   {
-    allElementsTypes.forEach((type) => {
-      tabs2.set(type, () => <ConstructorElements elementType={type} />);
+    constructorElementTypes.forEach((type) => {
+      tabs.set(type, () => <ConstructorElements elementType={type} />);
     });
   }
 
   return (
     <View style={styles.container}>
-      <View style={styles.lottieFar}>
+      <View style={FAR_TABS.has(selectedTab) ? styles.lottieFar : styles.lottieClose}>
         <LottieWrapper />
       </View>
       <View style={styles.menuContainer}>
         <View style={styles.elementsContainer}>
           <View>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {buttonTitles.map((title, index) => (
+              {constructorElementTypes.map((title, index) => (
                 <View key={index} style={{ flexDirection: "row", alignItems: "center" }}>
                   <TouchableOpacity style={[styles.button, selectedTab === title && styles.selectedButton]} onPress={() => setSelectedTab(title)}>
                     {<SvgXml xml={ICONS_APPEARANCE[title]} />}
@@ -39,7 +37,7 @@ export const ConstructorAvatar = () => {
                 </View>
               ))}
             </ScrollView>
-            {tabs2.get(selectedTab) ? React.createElement(tabs2.get(selectedTab)) : null}
+            {tabs.get(selectedTab) ? React.createElement(tabs.get(selectedTab)) : null}
           </View>
         </View>
       </View>
