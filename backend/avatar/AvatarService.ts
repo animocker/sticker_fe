@@ -13,7 +13,7 @@ const lock = new AsyncLock();
 const getAvatarLockKey = "getAvatarLockKey";
 
 //change fr and op to 1 for static animation
-const LOTTIE_BODY = '{"v":"5.9.0","fr":30,"ip":0,"op":90,"w":430,"h":430,"nm":"{nameSpot}","ddd":0,"assets":[],{layersSpot}}';
+const LOTTIE_BODY = '{"v":"5.9.0","fr":1,"ip":0,"op":1,"w":430,"h":430,"nm":"{nameSpot}","ddd":0,"assets":[],{layersSpot}}';
 
 const redoStack: ChangeStateCommand[] = [];
 const undoStack: ChangeStateCommand[] = [];
@@ -28,7 +28,11 @@ class AvatarService {
     for (const elementType of allElementsTypes) {
       this.state.elementSize.set(elementType, 0);
       this.state.elementNumber.set(elementType, 1);
-      this.updateCurrentColors(elementType);
+      const elementNumber = this.state.elementNumber.get(elementType);
+      const colorSets = ElementsService.getColorsForElement(elementType, elementNumber);
+      if (colorSets && colorSets.length > 0) {
+        this.state.elementColorSet.set(elementType, colorSets[0].id);
+      }
     }
     this.isInitialized = true;
     storage.set("isNewAvatarAvailable", true);
@@ -62,14 +66,6 @@ class AvatarService {
     if (command) {
       command.execute(this.state);
       undoStack.push(command);
-    }
-  }
-
-  private updateCurrentColors(elementType: ElementType) {
-    const elementNumber = this.state.elementNumber.get(elementType);
-    const colorSets = ElementsService.getColorsForElement(elementType, elementNumber);
-    if (colorSets && colorSets.length > 0) {
-      this.state.elementColorSet.set(elementType, colorSets[0].id);
     }
   }
 
@@ -200,7 +196,7 @@ class AvatarService {
     if (this.state.equals(this.lastState)) {
       return this.avatarAnimation;
     }
-    this.avatarAnimation = await this.getAnimation(AnimationType.IDLE);
+    this.avatarAnimation = await this.getAnimation(AnimationType.STATIC);
     this.lastState = this.state.copy();
     storage.set("isNewAvatarAvailable", false);
     return this.avatarAnimation;

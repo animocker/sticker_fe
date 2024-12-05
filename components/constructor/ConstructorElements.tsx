@@ -13,11 +13,11 @@ interface Props {
 
 export const ConstructorElements = (props: Props) => {
   const state = useMemo(() => AvatarService.getElementState(props.elementType), [props.elementType]);
+  const elements = useMemo(() => ElementsService.getElements(props.elementType), [props.elementType]);
   const [elementNumber, setElementNumber] = useState(state.selectedIndex);
   const [size, setSize] = useState(state.size);
   const [currentColor, setCurrentColor] = useState<string>(state.colorSet);
   const [colors, setColors] = useState<ColorSet[]>(ElementsService.getColorsForElement(props.elementType, elementNumber));
-  const elements = useMemo(() => ElementsService.getElements(props.elementType), [props.elementType]);
 
   const changeElement = (number: number) => {
     setElementNumber(number);

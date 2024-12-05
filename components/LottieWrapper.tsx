@@ -19,7 +19,7 @@ export function LottieWrapper() {
 
   return (
     <View style={styles.lottieContainer}>
-      {!lottie ? <Text>Loading...</Text> : <LottieView source={lottie} autoPlay style={styles.lottie} ref={animationRef} />}
+      {!lottie ? <Text>Loading...</Text> : <LottieView source={lottie} cacheComposition={false} autoPlay style={styles.lottie} ref={animationRef} />}
     </View>
   );
 }
