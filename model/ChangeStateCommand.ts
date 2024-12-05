@@ -60,11 +60,11 @@ export class ChangeElementCommand implements ChangeStateCommand {
   }
 
   execute(state: State): void {
-    this.prevNumber = state.elements.get(this.elementType);
-    state.elements.set(this.elementType, this.number);
+    this.prevNumber = state.elementNumber.get(this.elementType);
+    state.elementNumber.set(this.elementType, this.number);
   }
 
   rollback(state: State): void {
-    state.elements.set(this.elementType, this.prevNumber);
+    state.elementNumber.set(this.elementType, this.prevNumber);
   }
 }

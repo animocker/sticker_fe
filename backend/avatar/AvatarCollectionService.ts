@@ -5,7 +5,8 @@ import { State } from "./State";
 //TODO make tests
 class AvatarCollectionService {
   saveCurrentState() {
-    return AvatarService.getState().then((state) => saveAvatarState(state));
+    const state = AvatarService.getState();
+    return saveAvatarState(state);
   }
 
   async load(): Promise<State[]> {

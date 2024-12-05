@@ -8,7 +8,7 @@ export type ElementState = {
 
 export class State {
   readonly id: string;
-  readonly elements = new Map<ElementType, number>();
+  readonly elementNumber = new Map<ElementType, number>();
   readonly elementSize = new Map<ElementType, number>(); // change percent size as value
   readonly elementColorSet = new Map<ElementType, string>(); //colorSet.id as value
 
@@ -108,7 +108,7 @@ export class State {
 
   getElementState(type: ElementType): ElementState {
     return {
-      selectedIndex: this.elements.get(type),
+      selectedIndex: this.elementNumber.get(type),
       size: this.elementSize.get(type),
       colorSet: this.elementColorSet.get(type),
     };

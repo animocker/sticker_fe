@@ -4,8 +4,6 @@ const SvgUnknown = (props) => (
   <Svg
     xmlns="http://www.w3.org/2000/svg"
     xmlSpace="preserve"
-    width={800}
-    height={800}
     viewBox="0 0 32 32"
     {...props}
   >

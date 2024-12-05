@@ -24,11 +24,11 @@ class AvatarService {
   private avatarAnimation: AnimationObject;
   private isInitialized = false;
 
-  async init() {
+  init() {
     for (const elementType of allElementsTypes) {
       this.state.elementSize.set(elementType, 0);
-      this.state.elements.set(elementType, 1);
-      await this.updateCurrentColors(elementType);
+      this.state.elementNumber.set(elementType, 1);
+      this.updateCurrentColors(elementType);
     }
     this.isInitialized = true;
     storage.set("isNewAvatarAvailable", true);
@@ -43,9 +43,9 @@ class AvatarService {
     return this.state.getElementState(type);
   }
 
-  async getState() {
+  getState() {
     if (!this.isInitialized) {
-      await this.init();
+      this.init();
     }
     return this.state;
   }
@@ -65,8 +65,8 @@ class AvatarService {
     }
   }
 
-  private async updateCurrentColors(elementType: ElementType) {
-    const elementNumber = this.state.elements.get(elementType);
+  private updateCurrentColors(elementType: ElementType) {
+    const elementNumber = this.state.elementNumber.get(elementType);
     const colorSets = ElementsService.getColorsForElement(elementType, elementNumber);
     if (colorSets && colorSets.length > 0) {
       this.state.elementColorSet.set(elementType, colorSets[0].id);
@@ -89,7 +89,7 @@ class AvatarService {
       if (newSizeDiff === 0 || elementType === undefined) {
         continue;
       }
-      const elementNumber = this.state.elements.get(elementType);
+      const elementNumber = this.state.elementNumber.get(elementType);
       const searchedLayerName = `${elementType}_${elementNumber}`;
       const layers = lottieAnimation.layers.filter((layer) => layer.nm.toUpperCase().startsWith(searchedLayerName));
       for (const layer of layers) {
@@ -162,7 +162,7 @@ class AvatarService {
   }
 
   private async getAnimationForAllElements(animationType: string | AnimationType) {
-    const elementsKeys = Array.from(this.state.elements.entries())
+    const elementsKeys = Array.from(this.state.elementNumber.entries())
       .filter((it) => it[1] !== 0)
       .map((it) => `${it[0]}_${it[1]}`);
     const layers = await getAnimationLayers(animationType, elementsKeys, "MALE");
