@@ -12,7 +12,7 @@ export default function Login() {
   return (
     <Background>
       <Logo marginBottom={65} />
-      <Text style={styles.title}>Регистрация</Text>
+      <Text style={styles.title}>Войти</Text>
       <Text style={styles.text}>Email</Text>
       <TextInput
         style={styles.input}
