@@ -14,22 +14,22 @@ import OnboardingStartScreen from "./screens/onboarding/OnboardingStartScreen";
 import OnboardingSelfieScreen from "./screens/onboarding/OnboardingSelfieScreen";
 import OnboardingManualCreateCharacterScreen from "./screens/onboarding/OnboardingManualCreateCharacterScreen";
 import MainScreen from "./screens/main/MainScreen";
-import { ConstructorScreen } from "./screens/constructor/ConstructorScreen";
-import { sync } from "./backend/watermelon-db/watermelon";
+import { ConstructorAvatar } from "./screens/constructor/ConstructorAvatar";
 import initialize from "./backend/Initializer";
 import { supabase } from "./backend/supabase";
 import { Session } from "@supabase/supabase-js";
-import Auth from "./components/Auth";
 
 const Stack = createStackNavigator();
 
 export default function App() {
   const [isInitialized, setInit] = useState(false);
-  useEffect(() => {
-    if (!isInitialized) {
-      initialize().then(() => setInit(true));
-    }
-  });
+
+  if (!isInitialized) {
+    initialize().then(
+      () => setInit(true),
+      () => {}, //expected reject
+    );
+  }
   const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
@@ -60,7 +60,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="ConstructorScreen">
+      <Stack.Navigator initialRouteName="ConstructorAvatar">
         <Stack.Screen name="AuthStart" component={AuthStartScreen} options={{ headerShown: false }} />
         <Stack.Screen name="AuthLegal" component={AuthLegalScreen} />
         <Stack.Screen name="AuthLogin" component={AuthLoginScreen} />
@@ -68,7 +68,7 @@ export default function App() {
         <Stack.Screen name="OnboardingSelfie" component={OnboardingSelfieScreen} />
         <Stack.Screen name="OnboardingManualCreateCharacter" component={OnboardingManualCreateCharacterScreen} />
         <Stack.Screen name="MainScreen" component={MainScreen} />
-        <Stack.Screen name="ConstructorScreen" component={ConstructorScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="ConstructorAvatar" component={ConstructorAvatar} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

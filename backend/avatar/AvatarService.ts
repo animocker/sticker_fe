@@ -1,16 +1,18 @@
 import { allElementsTypes, AnimationType, ElementType } from "../../model/enum";
-import { ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand, ChangeStateCommand } from "../../model/ChangeStateCommand";
+import { ChangeStateCommand } from "../../model/ChangeStateCommand";
 import { getAnimationLayers } from "../db/AvatarWatermelonDao";
-import { Animation, ColorRgba, Shape } from "@lottiefiles/lottie-js";
 import { uuid } from "@supabase/supabase-js/dist/main/lib/helpers";
 
 import AsyncLock from "async-lock";
 import { ElementState, State } from "./State";
-import ColorService, { Color } from "../ColorService";
+import ElementsService, { Color } from "../ElementsService";
+import { AnimationObject } from "lottie-react-native";
+import { storage } from "../mmkv";
 
 const lock = new AsyncLock();
 const getAvatarLockKey = "getAvatarLockKey";
 
+//change fr and op to 1 for static animation
 const LOTTIE_BODY = '{"v":"5.9.0","fr":30,"ip":0,"op":90,"w":430,"h":430,"nm":"{nameSpot}","ddd":0,"assets":[],{layersSpot}}';
 
 const redoStack: ChangeStateCommand[] = [];
@@ -19,7 +21,7 @@ const undoStack: ChangeStateCommand[] = [];
 class AvatarService {
   private state: State = new State();
   private lastState: State;
-  private avatarAnimation: Animation;
+  private avatarAnimation: AnimationObject;
   private isInitialized = false;
 
   async init() {
@@ -29,6 +31,7 @@ class AvatarService {
       await this.updateCurrentColors(elementType);
     }
     this.isInitialized = true;
+    storage.set("isNewAvatarAvailable", true);
   }
 
   loadState(state: State) {
@@ -64,8 +67,8 @@ class AvatarService {
 
   private async updateCurrentColors(elementType: ElementType) {
     const elementNumber = this.state.elements.get(elementType);
-    const colorSets = await ColorService.getColorsForElement(elementType, elementNumber);
-    if (colorSets.length > 0) {
+    const colorSets = ElementsService.getColorsForElement(elementType, elementNumber);
+    if (colorSets && colorSets.length > 0) {
       this.state.elementColorSet.set(elementType, colorSets[0].id);
     }
   }
@@ -74,72 +77,73 @@ class AvatarService {
     return LOTTIE_BODY.replace("{layersSpot}", `"layers": [${layersString}]`).replace("{nameSpot}", uuid());
   }
 
-  changeElement(command: ChangeElementCommand) {
+  executeCommand(command: ChangeStateCommand) {
     command.execute(this.state);
     undoStack.push(command);
-  }
-  //$[layer.ind].ks.s.k=[width,height, ???]
-  changeSize(command: ChangeSizeCommand) {
-    command.execute(this.state);
-    undoStack.push(command);
-  }
-  changeColor(command: ChangeColorCommand) {
-    command.execute(this.state);
-    undoStack.push(command);
+    storage.set("isNewAvatarAvailable", true);
   }
 
-  private changeElementsSize(lottieAnimation: Animation) {
+  //$[layer.ind].ks.s.k=[width,height, ???]
+  private changeElementsSize(lottieAnimation: AnimationObject) {
     for (const [elementType, newSizeDiff] of this.state.elementSize) {
       if (newSizeDiff === 0 || elementType === undefined) {
         continue;
       }
       const elementNumber = this.state.elements.get(elementType);
       const searchedLayerName = `${elementType}_${elementNumber}`;
-      const layers = lottieAnimation.layers.filter((layer) => layer.name.toUpperCase().startsWith(searchedLayerName));
+      const layers = lottieAnimation.layers.filter((layer) => layer.nm.toUpperCase().startsWith(searchedLayerName));
       for (const layer of layers) {
-        const scale = layer.transform.scale;
-        const framesSizes = scale.values;
-        for (const frameSize of framesSizes) {
-          const sizeValues = frameSize.value;
-          const newWidth = sizeValues[0] + (sizeValues[0] * newSizeDiff) / 100;
-          const newHeight = sizeValues[1] + (sizeValues[1] * newSizeDiff) / 100;
-          sizeValues[0] = newWidth;
-          sizeValues[1] = newHeight;
+        const sizes = layer.ks.s.k;
+        if (typeof sizes[0] == "number") {
+          //same sizes for all frames
+          const newWidth = sizes[0] + (sizes[0] * newSizeDiff) / 100;
+          const newHeight = sizes[1] + (sizes[1] * newSizeDiff) / 100;
+          sizes[0] = newWidth;
+          sizes[1] = newHeight;
+        } else {
+          //different sizes for different frames
+          for (const frameSize of sizes) {
+            const sizeValues = frameSize.s;
+            const newWidth = sizeValues[0] + (sizeValues[0] * newSizeDiff) / 100;
+            const newHeight = sizeValues[1] + (sizeValues[1] * newSizeDiff) / 100;
+            sizeValues[0] = newWidth;
+            sizeValues[1] = newHeight;
+          }
         }
       }
     }
   }
 
-  private async changeElementsColor(lottieAnimation: Animation) {
+  private async changeElementsColor(lottieAnimation: AnimationObject) {
     for (const [, newValueId] of this.state.elementColorSet) {
-      const colors = await ColorService.getColorSetById(newValueId).then((it) => it.colors);
+      const colors = await ElementsService.getColorSetById(newValueId).then((it) => it.colors);
       colors.forEach((color) => this.updateColor(lottieAnimation, color));
     }
   }
 
-  private updateColor(lottieAnimation: Animation, newColor: Color) {
+  private updateColor(lottieAnimation: AnimationObject, newColor: Color) {
     const shapesToChange = lottieAnimation.layers.flatMap((layer) =>
       layer.shapes.flatMap((shape) => this.recursiveFindShapesByName(newColor.name, shape)),
     );
-    shapesToChange.forEach((shape) => (shape.color.values[0].value = this.convertColor(newColor)));
+    shapesToChange.forEach((shape) => (shape.c.k = this.convertColor(newColor)));
   }
 
-  private recursiveFindShapesByName(name: string, shape: Shape) {
+  private recursiveFindShapesByName(name: string, shape: any) {
     if (shape === undefined) {
       return [];
     }
-    const result: Shape[] = [];
-    if (shape.name === name) {
+    const result: any[] = [];
+    if (shape.nm === name) {
       return [shape];
     }
-    if (shape.shapes === undefined) {
+    if (shape.it === undefined) {
       return [];
     }
-    shape.shapes.forEach((it) => result.push(...this.recursiveFindShapesByName(name, it)));
+    shape.it.forEach((it) => result.push(...this.recursiveFindShapesByName(name, it)));
     return result;
   }
 
-  private transformToLottie(jsonArray: string[]): Record<string, any> {
+  private transformToLottie(jsonArray: string[]): AnimationObject {
     // Extract the 'ind' value from the JSON strings using a regular expression
     const parsedArray = jsonArray.map((str) => {
       const match = str.match(/"ind":(\d+)/);
@@ -158,10 +162,11 @@ class AvatarService {
   }
 
   private async getAnimationForAllElements(animationType: string | AnimationType) {
-    const elements = Array.from(this.state.elements.entries()).map((it) => `${it[0]}_${it[1]}`);
-    const layers = await getAnimationLayers(animationType, elements, "MALE");
-    const lottieJson = this.transformToLottie(layers.flat());
-    return new Animation().fromJSON(lottieJson);
+    const elementsKeys = Array.from(this.state.elements.entries())
+      .filter((it) => it[1] !== 0)
+      .map((it) => `${it[0]}_${it[1]}`);
+    const layers = await getAnimationLayers(animationType, elementsKeys, "MALE");
+    return this.transformToLottie(layers.flat());
   }
 
   async getAnimation(animationType: string | AnimationType) {
@@ -177,9 +182,9 @@ class AvatarService {
     return result;
   }
 
-  async getAvatar(): Promise<Animation> {
+  async getAvatar(): Promise<AnimationObject> {
     if (lock.isBusy(getAvatarLockKey)) {
-      return Promise.reject();
+      return this.avatarAnimation;
     }
     return lock
       .acquire(getAvatarLockKey, async () => {
@@ -188,7 +193,7 @@ class AvatarService {
       .then();
   }
 
-  private async getAvatarInternal(): Promise<Animation> {
+  private async getAvatarInternal(): Promise<AnimationObject> {
     if (!this.isInitialized) {
       await this.init();
     }
@@ -197,15 +202,16 @@ class AvatarService {
     }
     this.avatarAnimation = await this.getAnimation(AnimationType.IDLE);
     this.lastState = this.state.copy();
+    storage.set("isNewAvatarAvailable", false);
     return this.avatarAnimation;
   }
 
-  private convertColor(source: Color): ColorRgba {
+  private convertColor(source: Color): number[] {
     const hex = source.hex;
     const r = parseInt(hex.substring(0, 2), 16);
     const g = parseInt(hex.substring(2, 4), 16);
     const b = parseInt(hex.substring(4, 6), 16);
-    return new ColorRgba(r / 255, g / 255, b / 255);
+    return [r / 255, g / 255, b / 255, 1];
   }
 }
 

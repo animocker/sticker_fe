@@ -31,7 +31,6 @@ export const database = new Database({
 });
 
 export async function sync() {
-  //await database.write(async () => await database.unsafeResetDatabase());
   await synchronize({
     database,
     pullChanges: async ({ lastPulledAt, schemaVersion, migration }) => {

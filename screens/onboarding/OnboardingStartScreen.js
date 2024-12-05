@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { View, Button, StyleSheet, Text } from "react-native";
 
 const OnboardingStartScreen = ({ navigation }) => {
@@ -20,12 +19,6 @@ const OnboardingStartScreen = ({ navigation }) => {
       <Button title="Create manually" onPress={handleMake} />
     </View>
   );
-};
-
-OnboardingStartScreen.propTypes = {
-  navigation: PropTypes.shape({
-    navigate: PropTypes.func.isRequired,
-  }).isRequired,
 };
 
 const styles = StyleSheet.create({

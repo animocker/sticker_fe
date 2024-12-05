@@ -1,11 +1,11 @@
-import { Animation } from "@lottiefiles/lottie-js";
 import { State } from "../backend/avatar/State";
 import { allElementsTypes } from "../model/enum";
 import ColorService from "../backend/ColorService";
+import { AnimationObject } from "lottie-react-native";
 
-export function isAnimationsEquals(a: Animation, b: Animation) {
-  a.name = "";
-  b.name = "";
+export function isAnimationsEquals(a: AnimationObject, b: AnimationObject) {
+  a.nm = "";
+  b.nm = "";
   return JSON.stringify(a) === JSON.stringify(b);
 }
 
@@ -19,7 +19,7 @@ export async function createRandomState(): Promise<State> {
     const colorSets = await ColorService.getColorsForElement(elementType, elementNumber);
     if (colorSets.length > 0) {
       const randomColorSet = colorSets[random(0, colorSets.length)];
-      state.elementColorSet.set(elementType.toString(), randomColorSet.id);
+      state.elementColorSet.set(elementType, randomColorSet.id);
     }
   }
   return state;

@@ -40,7 +40,7 @@ yarn-error.*
 # idea
 .idea
 /.env
-/lottie.json
+/lottie-player/lottie.json
 /__tests__/.env.test
 /android/
 /ios/
