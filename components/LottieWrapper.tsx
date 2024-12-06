@@ -17,9 +17,10 @@ export function LottieWrapper() {
     }
   }, [isNewAvatarAvailable]);
 
+  //TODO add autoPlay and idle animation if performance is good (prod build mobile device)
   return (
     <View style={styles.lottieContainer}>
-      {!lottie ? <Text>Loading...</Text> : <LottieView source={lottie} autoPlay style={styles.lottie} ref={animationRef} />}
+      {!lottie ? <Text>Loading...</Text> : <LottieView source={lottie} cacheComposition={false} style={styles.lottie} ref={animationRef} />}
     </View>
   );
 }

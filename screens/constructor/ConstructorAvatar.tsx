@@ -7,7 +7,7 @@ import { ConstructorElements } from "../../components/constructor/ConstructorEle
 import { LottieWrapper } from "../../components/LottieWrapper";
 import { ICONS_APPEARANCE } from "../../components/constructor/icons/icons_element_menu";
 
-const FAR_TABS = new Set([ElementType.CLOTHES]);
+const FAR_TABS = [ElementType.CLOTHES];
 
 export const ConstructorAvatar = () => {
   const [selectedTab, setSelectedTab] = useState(constructorElementTypes[0]);
@@ -23,7 +23,7 @@ export const ConstructorAvatar = () => {
   return (
     <View style={styles.container}>
       <ImageBackground source={background}>
-        <View style={FAR_TABS.has(selectedTab) ? styles.lottieFar : styles.lottieClose}>
+        <View style={FAR_TABS.includes(selectedTab) ? styles.lottieFar : styles.lottieClose}>
           <LottieWrapper />
         </View>
       </ImageBackground>
@@ -35,7 +35,6 @@ export const ConstructorAvatar = () => {
                 <View key={index} style={{ flexDirection: "row", alignItems: "center" }}>
                   <TouchableOpacity style={[styles.button, selectedTab === title && styles.selectedButton]} onPress={() => setSelectedTab(title)}>
                     {<SvgXml xml={ICONS_APPEARANCE[title]} />}
-                    <Text>{title}</Text>
                   </TouchableOpacity>
                 </View>
               ))}
@@ -57,10 +56,12 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     flexDirection: "row",
     gap: 8,
+    height: 50,
     margin: 5,
     paddingBottom: 5,
     paddingTop: 5,
     padding: 10,
+    width: 50,
   },
   container: {
     flex: 1,

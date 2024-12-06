@@ -14,7 +14,8 @@ export enum ElementType {
   CLOTHES = "CLOTHES",
 }
 
-export const allElementsTypes = Object.values(ElementType);
+//FRINGE is used only with HAIR, should not be used alone
+export const allElementsTypes = Object.values(ElementType).filter((type) => type !== ElementType.FRINGE);
 
 export const constructorElementTypes = allElementsTypes.filter((type) => ![ElementType.COMMON, ElementType.FRINGE].includes(type));
 

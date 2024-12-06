@@ -13,7 +13,7 @@ const lock = new AsyncLock();
 const getAvatarLockKey = "getAvatarLockKey";
 
 //change fr and op to 1 for static animation
-const LOTTIE_BODY = '{"v":"5.9.0","fr":30,"ip":0,"op":90,"w":430,"h":430,"nm":"{nameSpot}","ddd":0,"assets":[],{layersSpot}}';
+const LOTTIE_BODY = '{"v":"5.9.0","fr":1,"ip":0,"op":1,"w":430,"h":430,"nm":"{nameSpot}","ddd":0,"assets":[],{layersSpot}}';
 
 const redoStack: ChangeStateCommand[] = [];
 const undoStack: ChangeStateCommand[] = [];
@@ -24,11 +24,15 @@ class AvatarService {
   private avatarAnimation: AnimationObject;
   private isInitialized = false;
 
-  async init() {
+  init() {
     for (const elementType of allElementsTypes) {
       this.state.elementSize.set(elementType, 0);
-      this.state.elements.set(elementType, 1);
-      await this.updateCurrentColors(elementType);
+      this.state.elementNumber.set(elementType, 1);
+      const elementNumber = this.state.elementNumber.get(elementType);
+      const colorSets = ElementsService.getColorsForElement(elementType, elementNumber);
+      if (colorSets && colorSets.length > 0) {
+        this.state.elementColorSet.set(elementType, colorSets[0].id);
+      }
     }
     this.isInitialized = true;
     storage.set("isNewAvatarAvailable", true);
@@ -43,9 +47,9 @@ class AvatarService {
     return this.state.getElementState(type);
   }
 
-  async getState() {
+  getState() {
     if (!this.isInitialized) {
-      await this.init();
+      this.init();
     }
     return this.state;
   }
@@ -65,14 +69,6 @@ class AvatarService {
     }
   }
 
-  private async updateCurrentColors(elementType: ElementType) {
-    const elementNumber = this.state.elements.get(elementType);
-    const colorSets = ElementsService.getColorsForElement(elementType, elementNumber);
-    if (colorSets && colorSets.length > 0) {
-      this.state.elementColorSet.set(elementType, colorSets[0].id);
-    }
-  }
-
   private addLottieBody(layersString: string) {
     return LOTTIE_BODY.replace("{layersSpot}", `"layers": [${layersString}]`).replace("{nameSpot}", uuid());
   }
@@ -81,6 +77,7 @@ class AvatarService {
     command.execute(this.state);
     undoStack.push(command);
     storage.set("isNewAvatarAvailable", true);
+    console.log("new avatar");
   }
 
   //$[layer.ind].ks.s.k=[width,height, ???]
@@ -89,7 +86,7 @@ class AvatarService {
       if (newSizeDiff === 0 || elementType === undefined) {
         continue;
       }
-      const elementNumber = this.state.elements.get(elementType);
+      const elementNumber = this.state.elementNumber.get(elementType);
       const searchedLayerName = `${elementType}_${elementNumber}`;
       const layers = lottieAnimation.layers.filter((layer) => layer.nm.toUpperCase().startsWith(searchedLayerName));
       for (const layer of layers) {
@@ -162,7 +159,7 @@ class AvatarService {
   }
 
   private async getAnimationForAllElements(animationType: string | AnimationType) {
-    const elementsKeys = Array.from(this.state.elements.entries())
+    const elementsKeys = Array.from(this.state.elementNumber.entries())
       .filter((it) => it[1] !== 0)
       .map((it) => `${it[0]}_${it[1]}`);
     const layers = await getAnimationLayers(animationType, elementsKeys, "MALE");
@@ -171,14 +168,12 @@ class AvatarService {
 
   async getAnimation(animationType: string | AnimationType) {
     if (!this.isInitialized) {
-      await this.init();
+      this.init();
     }
-    const result =
-      /* animationType === AnimationType.IDLE
-        ? await this.changeStaticElements(animationType)
-        :*/ await this.getAnimationForAllElements(animationType);
+    const result = await this.getAnimationForAllElements(animationType);
     this.changeElementsSize(result);
     await this.changeElementsColor(result);
+    console.log("new avatar", result.nm);
     return result;
   }
 
@@ -200,7 +195,7 @@ class AvatarService {
     if (this.state.equals(this.lastState)) {
       return this.avatarAnimation;
     }
-    this.avatarAnimation = await this.getAnimation(AnimationType.IDLE);
+    this.avatarAnimation = await this.getAnimation(AnimationType.STATIC);
     this.lastState = this.state.copy();
     storage.set("isNewAvatarAvailable", false);
     return this.avatarAnimation;

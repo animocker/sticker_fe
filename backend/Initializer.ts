@@ -9,8 +9,8 @@ export default async function initialize() {
   if (!isInitialized) {
     isInitialized = true;
     await sync();
-    await AvatarService.init();
     await ElementsService.init();
+    AvatarService.init(); //should be after ElementsService.init
     console.log("Initialization completed");
     return Promise.resolve();
   } else {

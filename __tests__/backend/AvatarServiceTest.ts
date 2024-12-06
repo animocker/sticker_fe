@@ -42,9 +42,9 @@ it("Avatar backend could change elements color", async () => {
     .shapes.flatMap((shape) => shape.it)
     .map((it) => it?.c?.k);
 
-  const avatarState = await AvatarService.getState();
-  const headNumber = avatarState.elements.get(elementType);
-  const colorSets = await ElementsService.getColorsForElement(elementType, headNumber);
+  const avatarState = AvatarService.getState();
+  const headNumber = avatarState.elementNumber.get(elementType);
+  const colorSets = ElementsService.getColorsForElement(elementType, headNumber);
   const newSet = colorSets[2];
   AvatarService.executeCommand(new ChangeColorCommand(elementType, headNumber, newSet.id));
 

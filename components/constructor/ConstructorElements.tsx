@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { elementsMenuStyles } from "./styles";
 import { ChangeColorCommand, ChangeElementCommand, ChangeSizeCommand } from "../../model/ChangeStateCommand";
@@ -6,22 +6,21 @@ import AvatarService from "../../backend/avatar/AvatarService";
 import ElementsService, { ColorSet, Element } from "../../backend/ElementsService";
 import { ElementType } from "../../model/enum";
 import common from "../../codegen/icons/components/common";
+import { RangeSlider } from "../ui/RangeSlider";
 
 interface Props {
   elementType: ElementType;
 }
 
-const REMOVABLE_ELEMENTS = [ElementType.GLASSES, ElementType.HAT, ElementType.BEARD];
+const NO_SIZE_ELEMENTS = [ElementType.CLOTHES];
 
 export const ConstructorElements = (props: Props) => {
-  const [elementNumber, setElementNumber] = useState(1);
-  const [size, setSize] = useState(0);
-  const [currentColor, setCurrentColor] = useState<ColorSet>();
+  const state = useMemo(() => AvatarService.getElementState(props.elementType), [props.elementType]);
+  const elements = useMemo(() => ElementsService.getElements(props.elementType), [props.elementType]);
+  const [elementNumber, setElementNumber] = useState(state.selectedIndex);
+  const [size, setSize] = useState(state.size);
+  const [currentColor, setCurrentColor] = useState<string>(state.colorSet);
   const [colors, setColors] = useState<ColorSet[]>(ElementsService.getColorsForElement(props.elementType, elementNumber));
-  const elements = ElementsService.getElements(props.elementType);
-  {
-    elements.push({ number: 0, icon: common.Disable });
-  }
 
   const changeElement = (number: number) => {
     setElementNumber(number);
@@ -36,7 +35,7 @@ export const ConstructorElements = (props: Props) => {
   };
 
   const changeColor = (color: ColorSet) => {
-    setCurrentColor(color);
+    setCurrentColor(color.id);
     AvatarService.executeCommand(new ChangeColorCommand(props.elementType, elementNumber, color.id));
   };
 
@@ -44,22 +43,27 @@ export const ConstructorElements = (props: Props) => {
     <View>
       <View>
         <View>
-          <Text>size</Text>
-          {/*     <RangeSlider initialSize={size} changeSize={changeSize} />*/}
+          {elementNumber > 0 && !NO_SIZE_ELEMENTS.includes(props.elementType) && <RangeSlider initialSize={size} changeSize={changeSize} />}
         </View>
-        <View style={elementsMenuStyles.colorContainerWrapper}>
-          <ScrollView horizontal={true} contentContainerStyle={elementsMenuStyles.colorContainer}>
-            {colors.map((color: ColorSet) => (
-              <TouchableOpacity
-                key={color.id}
-                style={[elementsMenuStyles.colorButton, { backgroundColor: `#${color.colors[0].hex}` }]}
-                onPress={() => {
-                  changeColor(color);
-                }}
-              />
-            ))}
-          </ScrollView>
-        </View>
+        {colors.length > 0 && (
+          <View style={elementsMenuStyles.colorContainerWrapper}>
+            <ScrollView horizontal={true} contentContainerStyle={elementsMenuStyles.colorContainer}>
+              {colors.map((color: ColorSet) => (
+                <TouchableOpacity
+                  key={color.id}
+                  style={[
+                    elementsMenuStyles.colorButton,
+                    currentColor == color.id && elementsMenuStyles.colorButtonSelected,
+                    { backgroundColor: `#${color.colors[0].hex}` },
+                  ]}
+                  onPress={() => {
+                    changeColor(color);
+                  }}
+                />
+              ))}
+            </ScrollView>
+          </View>
+        )}
       </View>
       <ScrollView contentContainerStyle={elementsMenuStyles.container}>
         {elements.map((Element) => (

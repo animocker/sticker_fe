@@ -44,6 +44,8 @@ const ElementTypesToIcons = new Map<ElementType, unknown>();
   ElementTypesToIcons.set(ElementType.NOSE, nose);
 }
 
+const UNREMOVABLE_ELEMENTS = [ElementType.HEAD, ElementType.CLOTHES];
+
 class ElementsService {
   private elements = new Map<ElementType, Element[]>();
   private colors = new Map<ElementType, Map<number, ColorSet[]>>();
@@ -70,12 +72,12 @@ class ElementsService {
     if (!this.colors.has(elementType)) {
       return [];
     }
-    return this.colors.get(elementType).get(elementNumber);
+    return this.colors.get(elementType).get(elementNumber) ?? [];
   }
 
   private async getElementsInternal(elementType: ElementType): Promise<Element[]> {
     const elements = await getElements(elementType);
-    return elements.map((element) => {
+    const result = elements.map((element) => {
       if (!ElementTypesToIcons.has(elementType)) {
         return { icon: common.Unknown, number: element.number };
       }
@@ -85,6 +87,10 @@ class ElementsService {
       }
       return { icon: icon, number: element.number };
     });
+    if (!UNREMOVABLE_ELEMENTS.includes(elementType)) {
+      result.push({ icon: common.Disable, number: 0 });
+    }
+    return result.reverse();
   }
 
   private async getColorsForElementInternal(elementType: string | ElementType, elementNumber: number): Promise<ColorSet[]> {

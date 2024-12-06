@@ -3,7 +3,6 @@ import { View, Button, StyleSheet, ScrollView, Text } from "react-native";
 import AvatarService from "../../backend/avatar/AvatarService";
 import LottieView, { AnimationObject } from "lottie-react-native";
 import { AnimationType, ElementType } from "../../model/enum";
-import { CharacterPicker } from "../../components/characters/CharacterPicker";
 import { useNavigation } from "@react-navigation/native";
 import { ChangeElementCommand } from "../../model/ChangeStateCommand";
 const MainScreen = () => {
@@ -23,8 +22,6 @@ const MainScreen = () => {
 
   return (
     <ScrollView>
-      <CharacterPicker />
-
       <Button title="Edit character" onPress={() => navigation.navigate("ConstructorAvatar")} />
 
       {/*<View style={styles.lottieContainer}>*/}
