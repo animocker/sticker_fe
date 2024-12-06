@@ -12,7 +12,7 @@ interface Props {
   elementType: ElementType;
 }
 
-const NO_SIZE_ELEMENTS = [ElementType.CLOTHES];
+const NO_SIZE_ELEMENTS = [ElementType.CLOTHES, ElementType.HAIR];
 
 export const ConstructorElements = (props: Props) => {
   const state = useMemo(() => AvatarService.getElementState(props.elementType), [props.elementType]);

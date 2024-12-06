@@ -7,8 +7,6 @@ import { ConstructorElements } from "../../components/constructor/ConstructorEle
 import { LottieWrapper } from "../../components/LottieWrapper";
 import { ICONS_APPEARANCE } from "../../components/constructor/icons/icons_element_menu";
 
-const FAR_TABS = [ElementType.CLOTHES];
-
 export const ConstructorAvatar = () => {
   const [selectedTab, setSelectedTab] = useState(constructorElementTypes[0]);
   const background = require("../../assets/background.png");
@@ -22,8 +20,8 @@ export const ConstructorAvatar = () => {
 
   return (
     <View style={styles.container}>
-      <ImageBackground source={background}>
-        <View style={FAR_TABS.includes(selectedTab) ? styles.lottieFar : styles.lottieClose}>
+      <ImageBackground source={background} style={styles.imageContainer}>
+        <View style={styles.lottie}>
           <LottieWrapper />
         </View>
       </ImageBackground>
@@ -75,15 +73,14 @@ const styles = StyleSheet.create({
     height: "100%",
     padding: 16,
   },
-  lottieClose: {
+  imageContainer: {
+    height: 400,
+    paddingTop: 50,
+  },
+  lottie: {
     alignSelf: "center",
     height: 300,
     transform: [{ scale: 2 }, { translateY: 40 }],
-    width: Dimensions.get("window").width * 0.7,
-  },
-  lottieFar: {
-    alignSelf: "center",
-    height: 300,
     width: Dimensions.get("window").width * 0.7,
   },
   menuContainer: {
