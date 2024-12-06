@@ -4,8 +4,6 @@ import Slider from "react-native-slider";
 import { styleAssets } from "../../styleAssets";
 
 export const RangeSlider = ({ initialSize, changeSize, step = 1 }) => {
-  const [size, setSize] = useState(initialSize);
-
   return (
     <View>
       <Slider
@@ -13,7 +11,8 @@ export const RangeSlider = ({ initialSize, changeSize, step = 1 }) => {
         minimumValue={-50}
         maximumValue={50}
         step={step}
-        value={size}
+        value={initialSize}
+        //onValueChange={changeSize}
         onSlidingComplete={changeSize}
         thumbStyle={styles.thumb}
         trackStyle={styles.track}

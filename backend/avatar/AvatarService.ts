@@ -77,6 +77,7 @@ class AvatarService {
     command.execute(this.state);
     undoStack.push(command);
     storage.set("isNewAvatarAvailable", true);
+    console.log("new avatar");
   }
 
   //$[layer.ind].ks.s.k=[width,height, ???]
@@ -167,14 +168,12 @@ class AvatarService {
 
   async getAnimation(animationType: string | AnimationType) {
     if (!this.isInitialized) {
-      await this.init();
+      this.init();
     }
-    const result =
-      /* animationType === AnimationType.IDLE
-        ? await this.changeStaticElements(animationType)
-        :*/ await this.getAnimationForAllElements(animationType);
+    const result = await this.getAnimationForAllElements(animationType);
     this.changeElementsSize(result);
     await this.changeElementsColor(result);
+    console.log("new avatar", result.nm);
     return result;
   }
 

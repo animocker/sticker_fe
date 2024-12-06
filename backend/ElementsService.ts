@@ -44,7 +44,7 @@ const ElementTypesToIcons = new Map<ElementType, unknown>();
   ElementTypesToIcons.set(ElementType.NOSE, nose);
 }
 
-const UNREMOVABLE_ELEMENTS = new Set([ElementType.HEAD, ElementType.CLOTHES]);
+const UNREMOVABLE_ELEMENTS = [ElementType.HEAD, ElementType.CLOTHES];
 
 class ElementsService {
   private elements = new Map<ElementType, Element[]>();
@@ -87,7 +87,7 @@ class ElementsService {
       }
       return { icon: icon, number: element.number };
     });
-    if (!UNREMOVABLE_ELEMENTS.has(elementType)) {
+    if (!UNREMOVABLE_ELEMENTS.includes(elementType)) {
       result.push({ icon: common.Disable, number: 0 });
     }
     return result.reverse();

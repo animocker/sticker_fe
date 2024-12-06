@@ -6,10 +6,13 @@ import AvatarService from "../../backend/avatar/AvatarService";
 import ElementsService, { ColorSet, Element } from "../../backend/ElementsService";
 import { ElementType } from "../../model/enum";
 import common from "../../codegen/icons/components/common";
+import { RangeSlider } from "../ui/RangeSlider";
 
 interface Props {
   elementType: ElementType;
 }
+
+const NO_SIZE_ELEMENTS = [ElementType.CLOTHES];
 
 export const ConstructorElements = (props: Props) => {
   const state = useMemo(() => AvatarService.getElementState(props.elementType), [props.elementType]);
@@ -40,8 +43,7 @@ export const ConstructorElements = (props: Props) => {
     <View>
       <View>
         <View>
-          <Text>size</Text>
-          {/*     <RangeSlider initialSize={size} changeSize={changeSize} />*/}
+          {elementNumber > 0 && !NO_SIZE_ELEMENTS.includes(props.elementType) && <RangeSlider initialSize={size} changeSize={changeSize} />}
         </View>
         {colors.length > 0 && (
           <View style={elementsMenuStyles.colorContainerWrapper}>
